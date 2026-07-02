@@ -62,7 +62,9 @@ const GAMES = [
 ];
 
 export function renderMainMenu(container, onGameSelect) {
+  console.log('renderMainMenu called');
   const progress = getGameProgress();
+  console.log('progress:', progress);
   
   container.innerHTML = `
     <div class="main-page">
@@ -157,14 +159,23 @@ function renderShop(container) {
   const backpackItems = container.querySelector('#backpack-items');
   const hint = container.querySelector('#next-item-hint');
   
+  if (!shelfItems || !backpackItems || !hint) {
+    console.error('Shop elements not found');
+    return;
+  }
+  
   shelfItems.innerHTML = '';
   backpackItems.innerHTML = '';
   
   // Обновляем прогресс-бар
   const readinessPercent = getReadinessPercent();
-  container.querySelector('#readiness-percent').textContent = `${readinessPercent}%`;
-  container.querySelector('#readiness-fill').style.width = `${readinessPercent}%`;
-  container.querySelector('#items-count').textContent = `${progress.purchasedItems.length}/${SHOP_ITEMS.length}`;
+  const readinessPercentEl = container.querySelector('#readiness-percent');
+  const readinessFillEl = container.querySelector('#readiness-fill');
+  const itemsCountEl = container.querySelector('#items-count');
+  
+  if (readinessPercentEl) readinessPercentEl.textContent = `${readinessPercent}%`;
+  if (readinessFillEl) readinessFillEl.style.width = `${readinessPercent}%`;
+  if (itemsCountEl) itemsCountEl.textContent = `${progress.purchasedItems.length}/${SHOP_ITEMS.length}`;
   
   let shelfPage = 0;
   let backpackPage = 0;
@@ -235,8 +246,10 @@ function renderShop(container) {
     const pageItems = shopItems.slice(start, end);
     pageItems.forEach(item => shelfItems.appendChild(item));
     
-    container.querySelector('#shelf-up').disabled = shelfPage === 0;
-    container.querySelector('#shelf-down').disabled = end >= shopItems.length;
+    const upBtn = container.querySelector('#shelf-up');
+    const downBtn = container.querySelector('#shelf-down');
+    if (upBtn) upBtn.disabled = shelfPage === 0;
+    if (downBtn) downBtn.disabled = end >= shopItems.length;
   }
   
   // Функции навигации для рюкзака
@@ -247,38 +260,53 @@ function renderShop(container) {
     const pageItems = ownedItems.slice(start, end);
     pageItems.forEach(item => backpackItems.appendChild(item));
     
-    container.querySelector('#backpack-up').disabled = backpackPage === 0;
-    container.querySelector('#backpack-down').disabled = end >= ownedItems.length;
+    const upBtn = container.querySelector('#backpack-up');
+    const downBtn = container.querySelector('#backpack-down');
+    if (upBtn) upBtn.disabled = backpackPage === 0;
+    if (downBtn) downBtn.disabled = end >= ownedItems.length;
   }
   
   // Обработчики кнопок
-  container.querySelector('#shelf-up').addEventListener('click', () => {
-    if (shelfPage > 0) {
-      shelfPage--;
-      updateShelfView();
-    }
-  });
+  const shelfUpBtn = container.querySelector('#shelf-up');
+  const shelfDownBtn = container.querySelector('#shelf-down');
+  const backpackUpBtn = container.querySelector('#backpack-up');
+  const backpackDownBtn = container.querySelector('#backpack-down');
   
-  container.querySelector('#shelf-down').addEventListener('click', () => {
-    if ((shelfPage + 1) * itemsPerPage < shopItems.length) {
-      shelfPage++;
-      updateShelfView();
-    }
-  });
+  if (shelfUpBtn) {
+    shelfUpBtn.addEventListener('click', () => {
+      if (shelfPage > 0) {
+        shelfPage--;
+        updateShelfView();
+      }
+    });
+  }
   
-  container.querySelector('#backpack-up').addEventListener('click', () => {
-    if (backpackPage > 0) {
-      backpackPage--;
-      updateBackpackView();
-    }
-  });
+  if (shelfDownBtn) {
+    shelfDownBtn.addEventListener('click', () => {
+      if ((shelfPage + 1) * itemsPerPage < shopItems.length) {
+        shelfPage++;
+        updateShelfView();
+      }
+    });
+  }
   
-  container.querySelector('#backpack-down').addEventListener('click', () => {
-    if ((backpackPage + 1) * itemsPerPage < ownedItems.length) {
-      backpackPage++;
-      updateBackpackView();
-    }
-  });
+  if (backpackUpBtn) {
+    backpackUpBtn.addEventListener('click', () => {
+      if (backpackPage > 0) {
+        backpackPage--;
+        updateBackpackView();
+      }
+    });
+  }
+  
+  if (backpackDownBtn) {
+    backpackDownBtn.addEventListener('click', () => {
+      if ((backpackPage + 1) * itemsPerPage < ownedItems.length) {
+        backpackPage++;
+        updateBackpackView();
+      }
+    });
+  }
   
   // Первичная отрисовка
   updateShelfView();
