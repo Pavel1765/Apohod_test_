@@ -1,7 +1,7 @@
 /** Игра-кликер с маршрутами */
 
 import { soundSystem } from '../hike-game/sounds.js';
-import { addCoins } from '../../shop.js';
+import { addCoins, getPurchasedItems, getClickPowerBonus } from '../../shop.js';
 
 const ROUTES = [
   {
@@ -63,6 +63,66 @@ const ROUTES = [
       { type: 'lake', icon: '🏞️', name: 'Байкал', clicks: 14 },
       { type: 'summit', icon: '⛰️', name: 'Вершина!', clicks: 20 }
     ]
+  },
+  {
+    id: 4,
+    name: 'Камчатка',
+    location: 'Вулканы Камчатки',
+    elevation: 4750,
+    season: '🌋 Круглый год',
+    reward: 150,
+    obstacles: [
+      { type: 'moon', icon: '🌙', name: 'Ночлег', clicks: 10 },
+      { type: 'helicopter', icon: '🚁', name: 'Заброска', clicks: 12 },
+      { type: 'volcano', icon: '🌋', name: 'Вулкан', clicks: 15 },
+      { type: 'hot', icon: '🔥', name: 'Горячие источники', clicks: 8 },
+      { type: 'bear', icon: '🐻', name: 'Медведи', clicks: 14 },
+      { type: 'compass', icon: '🧭', name: 'Навигация', clicks: 12 },
+      { type: 'rock', icon: '🪨', name: 'Лавовые поля', clicks: 16 },
+      { type: 'gas', icon: '💨', name: 'Газы', clicks: 13 },
+      { type: 'camp', icon: '⛺', name: 'Лагерь', clicks: 11 },
+      { type: 'summit', icon: '🏔️', name: 'Кратер!', clicks: 25 }
+    ]
+  },
+  {
+    id: 5,
+    name: 'Эльбрус',
+    location: 'Кавказ',
+    elevation: 5642,
+    season: '⛷️ Весна',
+    reward: 200,
+    obstacles: [
+      { type: 'moon', icon: '🌙', name: 'Ночной подъем', clicks: 12 },
+      { type: 'bus', icon: '🚌', name: 'Подъезд', clicks: 10 },
+      { type: 'cable', icon: '🚡', name: 'Канатка', clicks: 8 },
+      { type: 'snow', icon: '❄️', name: 'Снежные поля', clicks: 15 },
+      { type: 'ice', icon: '🧊', name: 'Ледник', clicks: 18 },
+      { type: 'wind', icon: '💨', name: 'Сильный ветер', clicks: 16 },
+      { type: 'altitude', icon: '😵', name: 'Высота', clicks: 20 },
+      { type: 'crevasse', icon: '🕳️', name: 'Трещины', clicks: 14 },
+      { type: 'camp', icon: '⛺', name: 'Высотный лагерь', clicks: 13 },
+      { type: 'oxygen', icon: '💨', name: 'Кислород', clicks: 12 },
+      { type: 'summit', icon: '🏔️', name: 'Вершина Эльбрус!', clicks: 30 }
+    ]
+  },
+  {
+    id: 6,
+    name: 'Саяны',
+    location: 'Западный Саян',
+    elevation: 2875,
+    season: '🌸 Весна',
+    reward: 120,
+    obstacles: [
+      { type: 'moon', icon: '🌙', name: 'Ночевка', clicks: 9 },
+      { type: 'bus', icon: '🚌', name: 'Переезд', clicks: 10 },
+      { type: 'water', icon: '💧', name: 'Переправа', clicks: 13 },
+      { type: 'tree', icon: '🌲', name: 'Тайга', clicks: 11 },
+      { type: 'bear', icon: '🐻', name: 'Медвежьи следы', clicks: 12 },
+      { type: 'compass', icon: '🧭', name: 'Ориентирование', clicks: 10 },
+      { type: 'rock', icon: '🪨', name: 'Скальный участок', clicks: 15 },
+      { type: 'camp', icon: '⛺', name: 'Лагерь', clicks: 9 },
+      { type: 'summit', icon: '⛰️', name: 'Вершина!', clicks: 22 }
+    ]
   }
 ];
 
@@ -80,6 +140,9 @@ export function renderHikeClickerGame(container, onExit) {
 }
 
 function showRouteSelection(container) {
+  const purchasedItems = getPurchasedItems();
+  const clickBonus = getClickPowerBonus();
+  
   container.innerHTML = `
     <div class="clicker-game">
       <div class="clicker-header">
@@ -89,6 +152,15 @@ function showRouteSelection(container) {
           <p>Выберите маршрут для прохождения</p>
         </div>
       </div>
+      
+      ${purchasedItems.length > 0 ? `
+      <div class="equipment-display">
+        <h3>🎒 Ваше снаряжение (Сила клика: ×${clickBonus.toFixed(2)})</h3>
+        <div class="equipment-icons">
+          ${purchasedItems.map(item => `<span class="equipment-icon" title="${item.name}">${item.icon}</span>`).join('')}
+        </div>
+      </div>
+      ` : ''}
       
       <div class="routes-container" id="routes"></div>
     </div>
@@ -201,9 +273,14 @@ function renderRoutePath() {
 }
 
 function handleClick() {
+  const clickPower = getClickPowerBonus();
+  const actualClicks = Math.max(1, Math.round(clickPower)); // Минимум 1 клик
+  
   soundSystem.click();
   totalClicks++;
-  clicksRemaining--;
+  clicksRemaining -= actualClicks;
+  
+  if (clicksRemaining < 0) clicksRemaining = 0;
   
   document.getElementById('total-clicks').textContent = totalClicks;
   document.getElementById('clicks-remaining').textContent = clicksRemaining;
@@ -217,9 +294,33 @@ function handleClick() {
   btn.classList.add('clicked');
   setTimeout(() => btn.classList.remove('clicked'), 150);
   
+  // Показываем бонус
+  if (clickPower > 1) {
+    showClickBonus(actualClicks);
+  }
+  
   if (clicksRemaining <= 0) {
     completeObstacle();
   }
+}
+
+function showClickBonus(clicks) {
+  const btn = document.getElementById('click-btn');
+  const bonus = document.createElement('div');
+  bonus.className = 'click-bonus';
+  bonus.textContent = clicks > 1 ? `+${clicks}` : '+1';
+  bonus.style.position = 'absolute';
+  bonus.style.left = `${Math.random() * 80 + 10}%`;
+  bonus.style.top = '50%';
+  bonus.style.color = var(--brand-orange);
+  bonus.style.fontWeight = 'bold';
+  bonus.style.fontSize = '24px';
+  bonus.style.animation = 'floatUp 1s ease-out forwards';
+  bonus.style.pointerEvents = 'none';
+  
+  btn.parentElement.style.position = 'relative';
+  btn.parentElement.appendChild(bonus);
+  setTimeout(() => bonus.remove(), 1000);
 }
 
 function completeObstacle() {

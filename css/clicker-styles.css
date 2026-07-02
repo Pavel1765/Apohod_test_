@@ -35,6 +35,56 @@
   margin: 0;
 }
 
+/* Отображение снаряжения */
+.equipment-display {
+  max-width: 1000px;
+  width: 100%;
+  background: var(--brand-white);
+  border-radius: var(--brand-radius);
+  box-shadow: var(--brand-shadow);
+  padding: 20px 24px;
+  margin-bottom: 24px;
+}
+
+.equipment-display h3 {
+  font-size: 18px;
+  color: var(--brand-purple);
+  margin: 0 0 12px;
+  text-align: center;
+}
+
+.equipment-icons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+}
+
+.equipment-icon {
+  font-size: 32px;
+  padding: 8px;
+  background: linear-gradient(135deg, var(--brand-green-light) 0%, var(--brand-white) 100%);
+  border-radius: var(--brand-radius-sm);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+  cursor: help;
+}
+
+.equipment-icon:hover {
+  transform: scale(1.1);
+}
+
+@keyframes floatUp {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-50px);
+  }
+}
+
 /* Выбор маршрутов */
 .routes-container {
   display: grid;
