@@ -158,7 +158,7 @@
   box-shadow: var(--brand-shadow);
   position: relative;
   overflow: hidden;
-  max-height: 440px;
+  min-height: 460px;
 }
 
 .shelf-nav {
@@ -204,7 +204,7 @@
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(2, 200px);
   gap: 16px;
-  transition: transform 0.3s ease;
+  min-height: 420px;
 }
 
 .backpack {
@@ -214,7 +214,7 @@
   box-shadow: var(--brand-shadow);
   position: relative;
   overflow: hidden;
-  max-height: 440px;
+  min-height: 460px;
 }
 
 .backpack-items-container {
@@ -222,11 +222,7 @@
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(2, 200px);
   gap: 16px;
-  transition: transform 0.3s ease;
-};
-  position: relative;
-  overflow: hidden;
-  max-height: 440px;
+  min-height: 420px;
 }
 
 .backpack-nav {
@@ -265,13 +261,6 @@
 .backpack-nav-btn:disabled {
   opacity: 0.3;
   cursor: not-allowed;
-}
-
-.backpack-items-container {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-  transition: transform 0.3s ease;
 }
 
 .shelf::before {
