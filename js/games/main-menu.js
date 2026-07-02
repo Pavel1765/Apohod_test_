@@ -86,7 +86,7 @@ export function renderMainMenu(container, onGameSelect) {
           </div>
           <div class="readiness-progress">
             <div class="readiness-fill" id="readiness-fill" style="width: 0%"></div>
-            <div class="readiness-label">Собрано снаряжения: <span id="items-count">0/${SHOP_ITEMS.length}</span></div>
+            <div class="readiness-label">Собрано снаряжения: <span id="items-count">0/20</span></div>
           </div>
         </div>
       </div>
