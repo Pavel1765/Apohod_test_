@@ -1,22 +1,22 @@
-/** Стили для игры-кликера с маршрутами */
+/** Стили для игры-кликера с маршрутами - расширенная версия */
 
 .clicker-game {
   min-height: 100vh;
   background: linear-gradient(180deg, var(--brand-cream) 0%, var(--brand-white) 100%);
   padding: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
 }
 
+/* Header */
 .clicker-header {
-  width: 100%;
-  max-width: 1000px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
   margin-bottom: 24px;
+  flex-wrap: wrap;
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .clicker-title {
@@ -33,14 +33,95 @@
 
 .clicker-title p {
   color: var(--brand-gray-dark);
-  font-size: 16px;
+  font-size: clamp(14px, 2.5vw, 16px);
   margin: 0;
 }
 
-/* Отображение снаряжения */
-.equipment-display {
-  max-width: 1000px;
+/* Main container with filters and content */
+.route-main-container {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+@media (max-width: 968px) {
+  .route-main-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Filters sidebar */
+.route-filters {
+  background: linear-gradient(135deg, var(--brand-white) 0%, #f8f9fa 100%);
+  padding: 20px;
+  border-radius: var(--brand-radius);
+  box-shadow: var(--brand-shadow);
+  height: fit-content;
+  position: sticky;
+  top: 20px;
+}
+
+.route-filters h3 {
+  margin: 0 0 20px 0;
+  color: var(--brand-purple);
+  font-size: 20px;
+  text-align: center;
+}
+
+.filter-group {
+  margin-bottom: 20px;
+}
+
+.filter-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+}
+
+.filter-group input[type="text"] {
   width: 100%;
+  padding: 10px 12px;
+  border: 2px solid #ddd;
+  border-radius: var(--brand-radius-sm);
+  font-size: 14px;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+}
+
+.filter-group input[type="text"]:focus {
+  outline: none;
+  border-color: var(--brand-purple);
+}
+
+.filter-group input[type="range"] {
+  width: 100%;
+  margin: 4px 0;
+  cursor: pointer;
+}
+
+.filter-group select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 2px solid #ddd;
+  border-radius: var(--brand-radius-sm);
+  font-size: 14px;
+  background-color: white;
+  cursor: pointer;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+}
+
+.filter-group select:focus {
+  outline: none;
+  border-color: var(--brand-purple);
+}
+
+/* Equipment display */
+.equipment-display {
   background: var(--brand-white);
   border-radius: var(--brand-radius);
   box-shadow: var(--brand-shadow);
@@ -65,132 +146,220 @@
 .equipment-icon {
   font-size: 32px;
   padding: 8px;
-  background: linear-gradient(135deg, var(--brand-green-light) 0%, var(--brand-white) 100%);
+  background: linear-gradient(135deg, var(--brand-cream) 0%, var(--brand-white) 100%);
   border-radius: var(--brand-radius-sm);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s ease;
   cursor: help;
+  transition: transform 0.2s;
 }
 
 .equipment-icon:hover {
   transform: scale(1.1);
 }
 
-@keyframes floatUp {
-  0% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  100% {
-    opacity: 0;
-    transform: translateY(-50px);
-  }
+/* Routes info */
+.routes-info {
+  background: var(--brand-white);
+  padding: 16px 20px;
+  border-radius: var(--brand-radius);
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  text-align: center;
 }
 
-/* Выбор маршрутов */
+.routes-info p {
+  margin: 0;
+  font-size: 16px;
+  color: #666;
+}
+
+.routes-info strong {
+  color: var(--brand-purple);
+  font-size: 18px;
+}
+
+/* Routes container - grid of route cards */
 .routes-container {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 24px;
-  max-width: 1000px;
-  width: 100%;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
 }
 
+@media (max-width: 768px) {
+  .routes-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Route card */
 .route-card {
   background: var(--brand-white);
   border-radius: var(--brand-radius);
   box-shadow: var(--brand-shadow);
-  padding: 24px;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  cursor: pointer;
+  padding: 0;
+  overflow: hidden;
+  transition: transform 0.3s, box-shadow 0.3s;
+  display: flex;
+  flex-direction: column;
 }
 
 .route-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+}
+
+/* Route image */
+.route-image {
+  width: 100%;
+  height: 180px;
+  background-size: cover;
+  background-position: center;
+  background-color: #e0e0e0;
 }
 
 .route-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
+  align-items: flex-start;
+  padding: 16px 20px 12px;
+  gap: 12px;
 }
 
 .route-header h2 {
+  margin: 0;
   font-size: 20px;
   color: var(--brand-purple);
-  margin: 0;
+  flex: 1;
 }
 
 .route-reward {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: bold;
   color: var(--brand-orange);
-  padding: 8px 16px;
-  background: var(--brand-cream);
+  background: linear-gradient(135deg, #FFF4E6 0%, #FFE8CC 100%);
+  padding: 6px 12px;
   border-radius: var(--brand-radius-sm);
+  white-space: nowrap;
 }
 
 .route-info {
+  padding: 0 20px 12px;
   display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 8px 16px;
 }
 
 .route-detail {
-  color: var(--brand-gray-dark);
   font-size: 14px;
+  color: #666;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Difficulty colors */
+.difficulty-легкий {
+  color: var(--brand-green) !important;
+  font-weight: 600;
+}
+
+.difficulty-средний {
+  color: var(--brand-orange) !important;
+  font-weight: 600;
+}
+
+.difficulty-сложный {
+  color: #FF6B35 !important;
+  font-weight: 600;
+}
+
+.difficulty-очень-сложный {
+  color: #D32F2F !important;
+  font-weight: 600;
+}
+
+/* Route fact */
+.route-fact {
+  padding: 0 20px 16px;
+  font-size: 13px;
+  color: #555;
+  font-style: italic;
+  line-height: 1.5;
+  background: linear-gradient(90deg, transparent 0%, rgba(143, 89, 187, 0.05) 50%, transparent 100%);
+  margin: 0 12px;
+  border-radius: 8px;
+  padding: 12px;
 }
 
 .route-obstacles-preview {
-  font-size: 24px;
-  margin: 16px 0;
+  padding: 12px 20px;
+  font-size: 20px;
   text-align: center;
-  opacity: 0.8;
+  letter-spacing: 4px;
+  background: linear-gradient(90deg, transparent 0%, rgba(143, 89, 187, 0.03) 50%, transparent 100%);
 }
 
 .route-start-btn {
-  width: 100%;
-  margin-top: 16px;
+  margin: 16px 20px 20px;
 }
 
-/* Прохождение маршрута */
-.route-progress {
+/* Route progress during hike */
+.route-hero-image {
   width: 100%;
-  max-width: 900px;
+  max-width: 1200px;
+  height: 300px;
+  background-size: cover;
+  background-position: center;
+  border-radius: var(--brand-radius);
+  margin: 0 auto 24px;
+  box-shadow: var(--brand-shadow);
+}
+
+@media (max-width: 768px) {
+  .route-hero-image {
+    height: 200px;
+  }
+}
+
+.route-progress {
+  max-width: 1000px;
+  width: 100%;
+  margin: 0 auto 24px;
   background: var(--brand-white);
   border-radius: var(--brand-radius);
   box-shadow: var(--brand-shadow);
   padding: 16px 24px;
-  margin-bottom: 24px;
 }
 
 .progress-text {
   display: flex;
   justify-content: space-between;
-  color: var(--brand-gray-dark);
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
   font-size: 16px;
+  color: #666;
 }
 
 .progress-text strong {
   color: var(--brand-purple);
 }
 
+/* Route path - horizontal obstacle tracker */
 .route-path {
+  max-width: 1000px;
+  width: 100%;
+  margin: 0 auto 32px;
+  background: var(--brand-white);
+  border-radius: var(--brand-radius);
+  box-shadow: var(--brand-shadow);
+  padding: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-wrap: wrap;
   gap: 8px;
-  max-width: 900px;
-  width: 100%;
-  background: linear-gradient(180deg, rgba(127, 176, 105, 0.1) 0%, transparent 100%);
-  border-radius: var(--brand-radius);
-  padding: 24px;
-  margin-bottom: 32px;
-  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.05);
+  overflow-x: auto;
+  flex-wrap: wrap;
 }
 
 .path-obstacle {
@@ -198,68 +367,64 @@
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  background: var(--brand-white);
-  border: 3px solid var(--brand-gray-light);
+  border: 3px solid #ddd;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 24px;
-  transition: all 0.3s ease;
+  background: var(--brand-white);
+  transition: all 0.3s;
 }
 
 .path-obstacle.completed {
-  background: var(--brand-green-light);
   border-color: var(--brand-green);
+  background: linear-gradient(135deg, var(--brand-green-light) 0%, var(--brand-green) 100%);
 }
 
 .path-obstacle.active {
-  background: var(--brand-orange);
-  border-color: var(--brand-purple);
-  animation: pathPulse 1.5s ease-in-out infinite;
-  box-shadow: 0 0 20px rgba(226, 96, 46, 0.5);
+  border-color: var(--brand-orange);
+  background: linear-gradient(135deg, #FFF4E6 0%, #FFE8CC 100%);
+  animation: pulse 2s ease-in-out infinite;
 }
 
-@keyframes pathPulse {
-  0%, 100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.1);
-  }
-}
-
-.path-line {
-  width: 20px;
-  height: 3px;
-  background: repeating-linear-gradient(
-    to right,
-    var(--brand-gray-light) 0px,
-    var(--brand-gray-light) 5px,
-    transparent 5px,
-    transparent 10px
-  );
+.path-icon {
+  font-size: 24px;
 }
 
 .check-mark {
   position: absolute;
-  bottom: -8px;
+  top: -8px;
   right: -8px;
   width: 24px;
   height: 24px;
   background: var(--brand-green);
+  color: white;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
   font-size: 14px;
   font-weight: bold;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
-/* Текущее препятствие */
+.path-line {
+  width: 12px;
+  height: 3px;
+  background: #ddd;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+}
+
+/* Current obstacle section */
 .current-obstacle-section {
-  max-width: 500px;
+  max-width: 1000px;
   width: 100%;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
 }
 
 .obstacle-card {
@@ -267,22 +432,21 @@
   border-radius: var(--brand-radius);
   box-shadow: var(--brand-shadow);
   padding: 32px;
+  width: 100%;
+  max-width: 500px;
   text-align: center;
 }
 
 .obstacle-icon {
   font-size: 80px;
   margin-bottom: 16px;
-  animation: obstacleFloat 2s ease-in-out infinite;
+  animation: bounceIn 0.5s ease-out;
 }
 
-@keyframes obstacleFloat {
-  0%, 100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
+@keyframes bounceIn {
+  0% { transform: scale(0); opacity: 0; }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); opacity: 1; }
 }
 
 .obstacle-name {
@@ -299,130 +463,166 @@
 .progress-bar {
   width: 100%;
   height: 24px;
-  background: var(--brand-gray-light);
+  background: #e0e0e0;
   border-radius: 12px;
   overflow: hidden;
-  margin-bottom: 12px;
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: relative;
 }
 
 .progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, var(--brand-green) 0%, var(--brand-green-light) 100%);
+  background: linear-gradient(90deg, var(--brand-purple) 0%, var(--brand-orange) 100%);
+  border-radius: 12px;
   transition: width 0.3s ease;
-  box-shadow: 0 0 10px rgba(127, 176, 105, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 8px;
+  color: white;
+  font-weight: bold;
+  font-size: 12px;
 }
 
 .clicks-remaining {
+  margin-top: 12px;
   font-size: 18px;
   font-weight: bold;
-  color: var(--brand-orange);
+  color: var(--brand-purple);
+}
+
+#click-btn {
+  font-size: 20px;
+  padding: 16px 48px;
+  min-width: 200px;
 }
 
 .btn-large {
-  font-size: 20px;
-  padding: 16px 32px;
-  width: 100%;
-  transition: all 0.1s ease;
+  font-size: 20px !important;
+  padding: 16px 48px !important;
 }
 
-.btn-large.clicked {
+#click-btn.clicked {
   transform: scale(0.95);
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: transform 0.1s;
 }
 
-/* Экран победы */
+.click-bonus {
+  position: absolute;
+  animation: floatUp 1s ease-out forwards;
+  pointer-events: none;
+  z-index: 100;
+}
+
+@keyframes floatUp {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100px) scale(1.5);
+    opacity: 0;
+  }
+}
+
+/* Victory screen */
 .victory-screen {
-  max-width: 600px;
+  max-width: 700px;
+  width: 100%;
+  margin: 0 auto;
   background: var(--brand-white);
   border-radius: var(--brand-radius);
   box-shadow: var(--brand-shadow);
-  padding: 48px;
+  padding: 48px 32px;
   text-align: center;
-  animation: victoryAppear 0.5s ease-out;
+  animation: slideUp 0.5s ease-out;
 }
 
-@keyframes victoryAppear {
+@keyframes slideUp {
   from {
+    transform: translateY(50px);
     opacity: 0;
-    transform: scale(0.9);
   }
   to {
+    transform: translateY(0);
     opacity: 1;
-    transform: scale(1);
   }
 }
 
 .victory-screen h1 {
   font-size: 32px;
   color: var(--brand-purple);
-  margin-bottom: 32px;
+  margin: 0 0 24px 0;
+  animation: celebrate 1s ease-in-out;
+}
+
+@keyframes celebrate {
+  0%, 100% { transform: scale(1); }
+  25% { transform: scale(1.1) rotate(-5deg); }
+  75% { transform: scale(1.1) rotate(5deg); }
+}
+
+.victory-image {
+  width: 100%;
+  height: 250px;
+  background-size: cover;
+  background-position: center;
+  border-radius: var(--brand-radius);
+  margin-bottom: 24px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .victory-stats {
-  margin-bottom: 32px;
+  background: linear-gradient(135deg, var(--brand-cream) 0%, var(--brand-white) 100%);
+  border-radius: var(--brand-radius);
+  padding: 24px;
+  margin-bottom: 24px;
 }
 
 .victory-stats p {
-  font-size: 18px;
-  color: var(--brand-gray-dark);
-  margin: 12px 0;
+  margin: 8px 0;
+  font-size: 16px;
+  color: #555;
 }
 
 .victory-route {
-  font-size: 24px;
+  font-size: 22px !important;
   font-weight: bold;
-  color: var(--brand-purple);
-  margin-bottom: 16px;
+  color: var(--brand-purple) !important;
+  margin-bottom: 12px !important;
 }
 
 .victory-reward {
-  font-size: 24px;
+  font-size: 24px !important;
   font-weight: bold;
-  color: var(--brand-orange);
-  margin-top: 24px;
-  padding: 16px;
-  background: var(--brand-cream);
+  color: var(--brand-orange) !important;
+  margin-top: 16px !important;
+}
+
+.victory-fact {
+  background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%);
+  border-left: 4px solid var(--brand-green);
+  padding: 16px 20px;
   border-radius: var(--brand-radius-sm);
+  font-size: 15px;
+  color: #2E7D32;
+  text-align: left;
+  margin-bottom: 24px;
+  line-height: 1.6;
 }
 
 .victory-buttons {
   display: flex;
   gap: 16px;
-  flex-direction: column;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
-/* Responsive */
 @media (max-width: 768px) {
-  .routes-container {
-    grid-template-columns: 1fr;
-  }
-  
-  .progress-text {
+  .victory-buttons {
     flex-direction: column;
-    gap: 8px;
-    text-align: center;
   }
   
-  .route-path {
-    padding: 16px;
-  }
-  
-  .path-obstacle {
-    width: 40px;
-    height: 40px;
-    font-size: 20px;
-  }
-  
-  .path-line {
-    width: 12px;
-  }
-  
-  .obstacle-icon {
-    font-size: 60px;
-  }
-  
-  .victory-screen {
-    padding: 32px 24px;
+  .victory-buttons button {
+    width: 100%;
   }
 }

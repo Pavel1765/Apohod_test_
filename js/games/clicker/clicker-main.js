@@ -1,16 +1,62 @@
-/** Игра-кликер с маршрутами */
+/** Игра-кликер с маршрутами - расширенная версия */
 
 import { soundSystem } from '../hike-game/sounds.js';
 import { addCoins, getPurchasedItems, getClickPowerBonus } from '../../shop.js';
 
 const ROUTES = [
+  // Короткие маршруты (1-3 дня)
   {
     id: 1,
+    name: 'Ленские столбы',
+    location: 'Якутия',
+    elevation: 220,
+    season: '☀️ Лето',
+    difficulty: 'Легкий',
+    duration: 2,
+    reward: 40,
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/Lena_Pillars.jpg/800px-Lena_Pillars.jpg',
+    fact: 'Ленские столбы - это вертикальные скальные образования высотой до 100 метров, которым около 500 тысяч лет',
+    obstacles: [
+      { type: 'bus', icon: '🚌', name: 'Дорога', clicks: 5 },
+      { type: 'boat', icon: '⛵', name: 'Переправа по Лене', clicks: 7 },
+      { type: 'photo', icon: '📸', name: 'Фотосессия', clicks: 4 },
+      { type: 'climb', icon: '🧗', name: 'Подъем на смотровую', clicks: 10 },
+      { type: 'camp', icon: '⛺', name: 'Лагерь у реки', clicks: 6 },
+      { type: 'summit', icon: '⛰️', name: 'Панорама!', clicks: 8 }
+    ]
+  },
+  {
+    id: 2,
+    name: 'Кольский полуостров',
+    location: 'Мурманская область',
+    elevation: 540,
+    season: '☀️ Лето',
+    difficulty: 'Легкий',
+    duration: 3,
+    reward: 50,
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Khibiny_Mountains.jpg/800px-Khibiny_Mountains.jpg',
+    fact: 'На Кольском полуострове можно увидеть полярное сияние даже летом в период полярного дня',
+    obstacles: [
+      { type: 'train', icon: '🚂', name: 'Поезд до Кировска', clicks: 6 },
+      { type: 'lake', icon: '🏞️', name: 'Озеро Имандра', clicks: 5 },
+      { type: 'tree', icon: '🌲', name: 'Хибинская тундра', clicks: 8 },
+      { type: 'compass', icon: '🧭', name: 'Ориентирование', clicks: 7 },
+      { type: 'camp', icon: '⛺', name: 'Ночевка', clicks: 6 },
+      { type: 'summit', icon: '⛰️', name: 'Горный перевал', clicks: 12 }
+    ]
+  },
+  // Средние маршруты (4-7 дней)
+  {
+    id: 3,
     name: 'Поднебесные Зубья',
     location: 'Кузнецкий Алатау',
     elevation: 2178,
     season: '☀️ Лето',
-    reward: 50,
+    difficulty: 'Средний',
+    duration: 5,
+    reward: 70,
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Kuznetsk_Alatau.jpg/800px-Kuznetsk_Alatau.jpg',
+    fact: 'Поднебесные Зубья - самая живописная часть Кузнецкого Алатау с острыми скальными вершинами',
     obstacles: [
       { type: 'moon', icon: '🌙', name: 'Ночевка', clicks: 5 },
       { type: 'bus', icon: '🚌', name: 'Дорога', clicks: 7 },
@@ -24,12 +70,40 @@ const ROUTES = [
     ]
   },
   {
-    id: 2,
+    id: 4,
+    name: 'Плато Путорана',
+    location: 'Красноярский край',
+    elevation: 1700,
+    season: '☀️ Лето',
+    difficulty: 'Сложный',
+    duration: 7,
+    reward: 120,
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Putorana_Plateau.jpg/800px-Putorana_Plateau.jpg',
+    fact: 'Плато Путорана называют "краем десяти тысяч озер и тысячи водопадов"',
+    obstacles: [
+      { type: 'plane', icon: '✈️', name: 'Перелет в Норильск', clicks: 10 },
+      { type: 'helicopter', icon: '🚁', name: 'Заброска вертолетом', clicks: 12 },
+      { type: 'water', icon: '💧', name: 'Водопад Тальниковый', clicks: 15 },
+      { type: 'boat', icon: '⛵', name: 'По озеру Лама', clicks: 13 },
+      { type: 'fish', icon: '🐟', name: 'Рыбалка', clicks: 8 },
+      { type: 'compass', icon: '🧭', name: 'Навигация', clicks: 14 },
+      { type: 'bear', icon: '🐻', name: 'След медведя', clicks: 10 },
+      { type: 'camp', icon: '⛺', name: 'Лагерь', clicks: 11 },
+      { type: 'sunset', icon: '🌅', name: 'Полуночное солнце', clicks: 9 },
+      { type: 'summit', icon: '⛰️', name: 'Плато!', clicks: 20 }
+    ]
+  },
+  {
+    id: 5,
     name: 'Алтайские горы',
     location: 'Горный Алтай',
     elevation: 3200,
     season: '🍂 Осень',
-    reward: 75,
+    difficulty: 'Средний',
+    duration: 6,
+    reward: 90,
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Belukha_Mountain.jpg/800px-Belukha_Mountain.jpg',
+    fact: 'Гора Белуха (4506 м) - высшая точка Алтая и считается священной у местных народов',
     obstacles: [
       { type: 'moon', icon: '🌙', name: 'Ночь', clicks: 6 },
       { type: 'bus', icon: '🚌', name: 'Переезд', clicks: 8 },
@@ -39,79 +113,48 @@ const ROUTES = [
       { type: 'rock', icon: '🪨', name: 'Скалы', clicks: 12 },
       { type: 'wind', icon: '💨', name: 'Ветер', clicks: 10 },
       { type: 'fire', icon: '🔥', name: 'Костер', clicks: 8 },
+      { type: 'horse', icon: '🐎', name: 'Конная тропа', clicks: 9 },
       { type: 'camp', icon: '⛺', name: 'Базовый лагерь', clicks: 10 },
       { type: 'summit', icon: '🏔️', name: 'Пик!', clicks: 18 }
     ]
   },
   {
-    id: 3,
+    id: 6,
     name: 'Байкальский хребет',
     location: 'Озеро Байкал',
     elevation: 2840,
     season: '❄️ Зима',
-    reward: 100,
+    difficulty: 'Сложный',
+    duration: 6,
+    reward: 110,
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c6/Lake_Baikal_ice.jpg/800px-Lake_Baikal_ice.jpg',
+    fact: 'Байкал - самое глубокое озеро в мире (1642 м) и содержит 20% мировых запасов пресной воды',
     obstacles: [
       { type: 'moon', icon: '🌙', name: 'Морозная ночь', clicks: 8 },
       { type: 'bus', icon: '🚌', name: 'Заброска', clicks: 9 },
-      { type: 'ice', icon: '🧊', name: 'Лед', clicks: 12 },
+      { type: 'ice', icon: '🧊', name: 'Лед Байкала', clicks: 12 },
       { type: 'snow', icon: '❄️', name: 'Снегопад', clicks: 10 },
       { type: 'compass', icon: '🧭', name: 'Ориентирование', clicks: 11 },
       { type: 'wind', icon: '💨', name: 'Буран', clicks: 15 },
       { type: 'tree', icon: '🌲', name: 'Тайга', clicks: 9 },
       { type: 'fire', icon: '🔥', name: 'Обогрев', clicks: 10 },
+      { type: 'seal', icon: '🦭', name: 'Нерпа на льду', clicks: 7 },
       { type: 'camp', icon: '⛺', name: 'Зимовка', clicks: 12 },
       { type: 'lake', icon: '🏞️', name: 'Байкал', clicks: 14 },
       { type: 'summit', icon: '⛰️', name: 'Вершина!', clicks: 20 }
     ]
   },
   {
-    id: 4,
-    name: 'Камчатка',
-    location: 'Вулканы Камчатки',
-    elevation: 4750,
-    season: '🌋 Круглый год',
-    reward: 150,
-    obstacles: [
-      { type: 'moon', icon: '🌙', name: 'Ночлег', clicks: 10 },
-      { type: 'helicopter', icon: '🚁', name: 'Заброска', clicks: 12 },
-      { type: 'volcano', icon: '🌋', name: 'Вулкан', clicks: 15 },
-      { type: 'hot', icon: '🔥', name: 'Горячие источники', clicks: 8 },
-      { type: 'bear', icon: '🐻', name: 'Медведи', clicks: 14 },
-      { type: 'compass', icon: '🧭', name: 'Навигация', clicks: 12 },
-      { type: 'rock', icon: '🪨', name: 'Лавовые поля', clicks: 16 },
-      { type: 'gas', icon: '💨', name: 'Газы', clicks: 13 },
-      { type: 'camp', icon: '⛺', name: 'Лагерь', clicks: 11 },
-      { type: 'summit', icon: '🏔️', name: 'Кратер!', clicks: 25 }
-    ]
-  },
-  {
-    id: 5,
-    name: 'Эльбрус',
-    location: 'Кавказ',
-    elevation: 5642,
-    season: '⛷️ Весна',
-    reward: 200,
-    obstacles: [
-      { type: 'moon', icon: '🌙', name: 'Ночной подъем', clicks: 12 },
-      { type: 'bus', icon: '🚌', name: 'Подъезд', clicks: 10 },
-      { type: 'cable', icon: '🚡', name: 'Канатка', clicks: 8 },
-      { type: 'snow', icon: '❄️', name: 'Снежные поля', clicks: 15 },
-      { type: 'ice', icon: '🧊', name: 'Ледник', clicks: 18 },
-      { type: 'wind', icon: '💨', name: 'Сильный ветер', clicks: 16 },
-      { type: 'altitude', icon: '😵', name: 'Высота', clicks: 20 },
-      { type: 'crevasse', icon: '🕳️', name: 'Трещины', clicks: 14 },
-      { type: 'camp', icon: '⛺', name: 'Высотный лагерь', clicks: 13 },
-      { type: 'oxygen', icon: '💨', name: 'Кислород', clicks: 12 },
-      { type: 'summit', icon: '🏔️', name: 'Вершина Эльбрус!', clicks: 30 }
-    ]
-  },
-  {
-    id: 6,
+    id: 7,
     name: 'Саяны',
     location: 'Западный Саян',
     elevation: 2875,
     season: '🌸 Весна',
-    reward: 120,
+    difficulty: 'Средний',
+    duration: 5,
+    reward: 85,
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Sayan_Mountains.jpg/800px-Sayan_Mountains.jpg',
+    fact: 'Саяны - дом для снежного барса, одного из самых редких животных России',
     obstacles: [
       { type: 'moon', icon: '🌙', name: 'Ночевка', clicks: 9 },
       { type: 'bus', icon: '🚌', name: 'Переезд', clicks: 10 },
@@ -120,8 +163,306 @@ const ROUTES = [
       { type: 'bear', icon: '🐻', name: 'Медвежьи следы', clicks: 12 },
       { type: 'compass', icon: '🧭', name: 'Ориентирование', clicks: 10 },
       { type: 'rock', icon: '🪨', name: 'Скальный участок', clicks: 15 },
+      { type: 'flower', icon: '🌸', name: 'Альпийские луга', clicks: 8 },
       { type: 'camp', icon: '⛺', name: 'Лагерь', clicks: 9 },
       { type: 'summit', icon: '⛰️', name: 'Вершина!', clicks: 22 }
+    ]
+  },
+  // Длинные маршруты (8+ дней)
+  {
+    id: 8,
+    name: 'Камчатка',
+    location: 'Вулканы Камчатки',
+    elevation: 4750,
+    season: '☀️ Лето',
+    difficulty: 'Очень сложный',
+    duration: 10,
+    reward: 180,
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Klyuchevskaya_Sopka.jpg/800px-Klyuchevskaya_Sopka.jpg',
+    fact: 'Ключевская Сопка - самый активный вулкан Евразии, извергается каждые 3-5 лет',
+    obstacles: [
+      { type: 'plane', icon: '✈️', name: 'Перелет', clicks: 10 },
+      { type: 'helicopter', icon: '🚁', name: 'Заброска', clicks: 12 },
+      { type: 'volcano', icon: '🌋', name: 'Вулкан Толбачик', clicks: 15 },
+      { type: 'hot', icon: '♨️', name: 'Горячие источники', clicks: 8 },
+      { type: 'bear', icon: '🐻', name: 'Медведи', clicks: 14 },
+      { type: 'compass', icon: '🧭', name: 'Навигация', clicks: 12 },
+      { type: 'rock', icon: '🪨', name: 'Лавовые поля', clicks: 16 },
+      { type: 'gas', icon: '💨', name: 'Вулканические газы', clicks: 13 },
+      { type: 'geyser', icon: '💦', name: 'Долина Гейзеров', clicks: 11 },
+      { type: 'camp', icon: '⛺', name: 'Лагерь', clicks: 11 },
+      { type: 'ash', icon: '🌫️', name: 'Пепел', clicks: 10 },
+      { type: 'summit', icon: '🏔️', name: 'Кратер!', clicks: 30 }
+    ]
+  },
+  {
+    id: 9,
+    name: 'Эльбрус',
+    location: 'Кавказ',
+    elevation: 5642,
+    season: '☀️ Лето',
+    difficulty: 'Очень сложный',
+    duration: 9,
+    reward: 220,
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Mount_Elbrus.jpg/800px-Mount_Elbrus.jpg',
+    fact: 'Эльбрус (5642 м) - высочайшая вершина России и Европы, потухший вулкан',
+    obstacles: [
+      { type: 'moon', icon: '🌙', name: 'Ночной подъем', clicks: 12 },
+      { type: 'bus', icon: '🚌', name: 'Подъезд', clicks: 10 },
+      { type: 'cable', icon: '🚡', name: 'Канатка', clicks: 8 },
+      { type: 'snow', icon: '❄️', name: 'Снежные поля', clicks: 15 },
+      { type: 'ice', icon: '🧊', name: 'Ледник', clicks: 18 },
+      { type: 'wind', icon: '💨', name: 'Сильный ветер', clicks: 16 },
+      { type: 'altitude', icon: '😵', name: 'Горная болезнь', clicks: 20 },
+      { type: 'crevasse', icon: '🕳️', name: 'Трещины', clicks: 14 },
+      { type: 'camp', icon: '⛺', name: 'Высотный лагерь', clicks: 13 },
+      { type: 'oxygen', icon: '💨', name: 'Разреженный воздух', clicks: 12 },
+      { type: 'rope', icon: '🪢', name: 'Связка', clicks: 15 },
+      { type: 'summit', icon: '🏔️', name: 'Вершина Эльбрус!', clicks: 35 }
+    ]
+  },
+  {
+    id: 10,
+    name: 'Уральские горы',
+    location: 'Приполярный Урал',
+    elevation: 1895,
+    season: '☀️ Лето',
+    difficulty: 'Средний',
+    duration: 7,
+    reward: 95,
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Ural_Mountains.jpg/800px-Ural_Mountains.jpg',
+    fact: 'Уральские горы - естественная граница между Европой и Азией, возрастом около 350 млн лет',
+    obstacles: [
+      { type: 'train', icon: '🚂', name: 'Поезд', clicks: 9 },
+      { type: 'river', icon: '💧', name: 'Река Щугор', clicks: 11 },
+      { type: 'tree', icon: '🌲', name: 'Тайга', clicks: 10 },
+      { type: 'rock', icon: '🪨', name: 'Скальные останцы', clicks: 13 },
+      { type: 'compass', icon: '🧭', name: 'Ориентирование', clicks: 11 },
+      { type: 'fish', icon: '🐟', name: 'Рыбалка', clicks: 7 },
+      { type: 'camp', icon: '⛺', name: 'Ночевка', clicks: 9 },
+      { type: 'cave', icon: '🕳️', name: 'Пещера', clicks: 12 },
+      { type: 'summit', icon: '⛰️', name: 'Перевал!', clicks: 18 }
+    ]
+  },
+  {
+    id: 11,
+    name: 'Карелия',
+    location: 'Республика Карелия',
+    elevation: 380,
+    season: '☀️ Лето',
+    difficulty: 'Легкий',
+    duration: 4,
+    reward: 60,
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Karelia_lake.jpg/800px-Karelia_lake.jpg',
+    fact: 'В Карелии более 60 000 озер и 27 000 рек - настоящий водный край',
+    obstacles: [
+      { type: 'train', icon: '🚂', name: 'Поезд в Петрозаводск', clicks: 8 },
+      { type: 'boat', icon: '⛵', name: 'Онежское озеро', clicks: 10 },
+      { type: 'island', icon: '🏝️', name: 'Остров Кижи', clicks: 9 },
+      { type: 'church', icon: '⛪', name: 'Деревянные церкви', clicks: 6 },
+      { type: 'kayak', icon: '🛶', name: 'Сплав на байдарках', clicks: 12 },
+      { type: 'fish', icon: '🐟', name: 'Рыбалка', clicks: 7 },
+      { type: 'camp', icon: '⛺', name: 'Лагерь у озера', clicks: 8 },
+      { type: 'waterfall', icon: '💦', name: 'Водопад Кивач', clicks: 10 }
+    ]
+  },
+  {
+    id: 12,
+    name: 'Кавказский заповедник',
+    location: 'Западный Кавказ',
+    elevation: 3256,
+    season: '🍂 Осень',
+    difficulty: 'Средний',
+    duration: 6,
+    reward: 100,
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Caucasus_Reserve.jpg/800px-Caucasus_Reserve.jpg',
+    fact: 'Кавказский заповедник - объект Всемирного наследия ЮНЕСКО, дом для зубров и туров',
+    obstacles: [
+      { type: 'bus', icon: '🚌', name: 'Дорога в Сочи', clicks: 9 },
+      { type: 'checkpoint', icon: '🚧', name: 'КПП заповедника', clicks: 6 },
+      { type: 'tree', icon: '🌲', name: 'Самшитовая роща', clicks: 10 },
+      { type: 'deer', icon: '🦌', name: 'Благородный олень', clicks: 8 },
+      { type: 'waterfall', icon: '💦', name: 'Водопад Безымянный', clicks: 12 },
+      { type: 'compass', icon: '🧭', name: 'Навигация', clicks: 11 },
+      { type: 'camp', icon: '⛺', name: 'Приют', clicks: 9 },
+      { type: 'mountain', icon: '⛰️', name: 'Гора Фишт', clicks: 16 },
+      { type: 'summit', icon: '🏔️', name: 'Панорама!', clicks: 19 }
+    ]
+  },
+  {
+    id: 13,
+    name: 'Хибины',
+    location: 'Кольский полуостров',
+    elevation: 1201,
+    season: '🌸 Весна',
+    difficulty: 'Средний',
+    duration: 5,
+    reward: 75,
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Khibiny.jpg/800px-Khibiny.jpg',
+    fact: 'Хибины - крупнейший горный массив на Кольском полуострове, богат редкими минералами',
+    obstacles: [
+      { type: 'train', icon: '🚂', name: 'Поезд до Апатитов', clicks: 10 },
+      { type: 'bus', icon: '🚌', name: 'До Кировска', clicks: 7 },
+      { type: 'ski', icon: '⛷️', name: 'Лыжный переход', clicks: 13 },
+      { type: 'avalanche', icon: '🏔️', name: 'Лавиноопасный участок', clicks: 15 },
+      { type: 'compass', icon: '🧭', name: 'Ориентирование', clicks: 11 },
+      { type: 'camp', icon: '⛺', name: 'Лагерь', clicks: 9 },
+      { type: 'lake', icon: '🏞️', name: 'Озеро', clicks: 8 },
+      { type: 'summit', icon: '⛰️', name: 'Перевал!', clicks: 17 }
+    ]
+  },
+  {
+    id: 14,
+    name: 'Тункинская долина',
+    location: 'Бурятия',
+    elevation: 2750,
+    season: '☀️ Лето',
+    difficulty: 'Средний',
+    duration: 6,
+    reward: 85,
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Tunka_Valley.jpg/800px-Tunka_Valley.jpg',
+    fact: 'Тункинская долина - живописная межгорная котловина между Саянами и хребтом Хамар-Дабан',
+    obstacles: [
+      { type: 'bus', icon: '🚌', name: 'Переезд из Иркутска', clicks: 9 },
+      { type: 'hot', icon: '♨️', name: 'Аршан - источники', clicks: 8 },
+      { type: 'waterfall', icon: '💦', name: 'Водопады', clicks: 11 },
+      { type: 'tree', icon: '🌲', name: 'Кедровая тайга', clicks: 10 },
+      { type: 'compass', icon: '🧭', name: 'Ориентирование', clicks: 12 },
+      { type: 'rock', icon: '🪨', name: 'Скальный пояс', clicks: 14 },
+      { type: 'camp', icon: '⛺', name: 'Ночевка', clicks: 9 },
+      { type: 'peak', icon: '⛰️', name: 'Пик Топографов', clicks: 18 },
+      { type: 'summit', icon: '🏔️', name: 'Вершина!', clicks: 20 }
+    ]
+  },
+  {
+    id: 15,
+    name: 'Таганай',
+    location: 'Южный Урал',
+    elevation: 1178,
+    season: '🍂 Осень',
+    difficulty: 'Легкий',
+    duration: 3,
+    reward: 55,
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Taganay.jpg/800px-Taganay.jpg',
+    fact: 'Таганай известен своими каменными реками - курумами из огромных валунов',
+    obstacles: [
+      { type: 'train', icon: '🚂', name: 'Поезд в Златоуст', clicks: 8 },
+      { type: 'entrance', icon: '🚪', name: 'Въезд в нацпарк', clicks: 5 },
+      { type: 'river', icon: '💧', name: 'Река Большой Киалим', clicks: 9 },
+      { type: 'rock', icon: '🪨', name: 'Каменная река', clicks: 12 },
+      { type: 'shelter', icon: '🏠', name: 'Приют Таганай', clicks: 7 },
+      { type: 'compass', icon: '🧭', name: 'Навигация', clicks: 10 },
+      { type: 'summit', icon: '⛰️', name: 'Двуглавая сопка', clicks: 15 }
+    ]
+  },
+  {
+    id: 16,
+    name: 'Домбай',
+    location: 'Карачаево-Черкесия',
+    elevation: 3200,
+    season: '🌸 Весна',
+    difficulty: 'Средний',
+    duration: 5,
+    reward: 90,
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Dombay.jpg/800px-Dombay.jpg',
+    fact: 'Домбай - горнолыжный курорт и центр альпинизма с видом на Эльбрус',
+    obstacles: [
+      { type: 'bus', icon: '🚌', name: 'Дорога в горы', clicks: 9 },
+      { type: 'cable', icon: '🚡', name: 'Канатная дорога', clicks: 7 },
+      { type: 'waterfall', icon: '💦', name: 'Алибекский водопад', clicks: 11 },
+      { type: 'glacier', icon: '🧊', name: 'Ледник Алибек', clicks: 13 },
+      { type: 'climb', icon: '🧗', name: 'Скальный участок', clicks: 15 },
+      { type: 'camp', icon: '⛺', name: 'Лагерь', clicks: 9 },
+      { type: 'compass', icon: '🧭', name: 'Ориентирование', clicks: 11 },
+      { type: 'summit', icon: '⛰️', name: 'Перевал!', clicks: 19 }
+    ]
+  },
+  {
+    id: 17,
+    name: 'Приэльбрусье',
+    location: 'Кабардино-Балкария',
+    elevation: 3800,
+    season: '☀️ Лето',
+    difficulty: 'Сложный',
+    duration: 7,
+    reward: 130,
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Elbrus_region.jpg/800px-Elbrus_region.jpg',
+    fact: 'Приэльбрусье - район вокруг Эльбруса с десятками вершин выше 4000 метров',
+    obstacles: [
+      { type: 'plane', icon: '✈️', name: 'Перелет в Нальчик', clicks: 10 },
+      { type: 'bus', icon: '🚌', name: 'Дорога в Терскол', clicks: 8 },
+      { type: 'cable', icon: '🚡', name: 'Подъемник на Чегет', clicks: 9 },
+      { type: 'waterfall', icon: '💦', name: 'Водопады Чегета', clicks: 11 },
+      { type: 'climb', icon: '🧗', name: 'Акклиматизационный выход', clicks: 14 },
+      { type: 'glacier', icon: '🧊', name: 'Ледник', clicks: 16 },
+      { type: 'compass', icon: '🧭', name: 'Навигация', clicks: 13 },
+      { type: 'altitude', icon: '😵', name: 'Высота', clicks: 18 },
+      { type: 'camp', icon: '⛺', name: 'Лагерь', clicks: 12 },
+      { type: 'summit', icon: '🏔️', name: 'Пик 4200!', clicks: 25 }
+    ]
+  },
+  {
+    id: 18,
+    name: 'Ергаки',
+    location: 'Красноярский край',
+    elevation: 2265,
+    season: '☀️ Лето',
+    difficulty: 'Средний',
+    duration: 6,
+    reward: 95,
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Ergaki.jpg/800px-Ergaki.jpg',
+    fact: 'Ергаки - природный парк с причудливыми скальными вершинами и кристальными озерами',
+    obstacles: [
+      { type: 'bus', icon: '🚌', name: 'Дорога из Абакана', clicks: 10 },
+      { type: 'entrance', icon: '🚪', name: 'КПП парка', clicks: 6 },
+      { type: 'lake', icon: '🏞️', name: 'Озеро Художников', clicks: 11 },
+      { type: 'waterfall', icon: '💦', name: 'Водопад', clicks: 9 },
+      { type: 'rock', icon: '🪨', name: 'Скала Звездный', clicks: 15 },
+      { type: 'compass', icon: '🧭', name: 'Ориентирование', clicks: 12 },
+      { type: 'pass', icon: '⛰️', name: 'Перевал Художников', clicks: 14 },
+      { type: 'camp', icon: '⛺', name: 'Лагерь', clicks: 10 },
+      { type: 'summit', icon: '🏔️', name: 'Пик Звездный!', clicks: 20 }
+    ]
+  },
+  {
+    id: 19,
+    name: 'Красноярские Столбы',
+    location: 'Красноярский край',
+    elevation: 840,
+    season: '🍂 Осень',
+    difficulty: 'Легкий',
+    duration: 2,
+    reward: 45,
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Stolby_Reserve.jpg/800px-Stolby_Reserve.jpg',
+    fact: 'Столбы - уникальные скалы из сиенита, место зарождения столбизма - особого вида скалолазания',
+    obstacles: [
+      { type: 'bus', icon: '🚌', name: 'От центра Красноярска', clicks: 6 },
+      { type: 'entrance', icon: '🚪', name: 'Въезд в заповедник', clicks: 5 },
+      { type: 'trail', icon: '🥾', name: 'Тропа', clicks: 8 },
+      { type: 'rock', icon: '🪨', name: 'Скала Дед', clicks: 12 },
+      { type: 'climb', icon: '🧗', name: 'Лазание', clicks: 14 },
+      { type: 'summit', icon: '⛰️', name: 'Второй Столб!', clicks: 16 }
+    ]
+  },
+  {
+    id: 20,
+    name: 'Арка��м',
+    location: 'Челябинская область',
+    elevation: 450,
+    season: '☀️ Лето',
+    difficulty: 'Легкий',
+    duration: 3,
+    reward: 50,
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Arkaim.jpg/800px-Arkaim.jpg',
+    fact: 'Аркаим - древний город бронзового века (около 4000 лет), современник Египетских пирамид',
+    obstacles: [
+      { type: 'bus', icon: '🚌', name: 'Дорога из Челябинска', clicks: 9 },
+      { type: 'site', icon: '🏛️', name: 'Археологический памятник', clicks: 10 },
+      { type: 'museum', icon: '🏺', name: 'Музей', clicks: 7 },
+      { type: 'mountain', icon: '⛰️', name: 'Гора Шаманка', clicks: 12 },
+      { type: 'camp', icon: '⛺', name: 'Лагерь', clicks: 8 },
+      { type: 'sunrise', icon: '🌅', name: 'Рассвет на горе', clicks: 9 },
+      { type: 'summit', icon: '⛰️', name: 'Панорама!', clicks: 15 }
     ]
   }
 ];
@@ -132,6 +473,15 @@ let clicksRemaining = 0;
 let totalClicks = 0;
 let onExitCallback = null;
 
+// Фильтры
+let filters = {
+  duration: { min: 0, max: 15 },
+  reward: { min: 0, max: 250 },
+  difficulty: 'all',
+  season: 'all',
+  search: ''
+};
+
 export function renderHikeClickerGame(container, onExit) {
   onExitCallback = onExit;
   soundSystem.init();
@@ -139,30 +489,112 @@ export function renderHikeClickerGame(container, onExit) {
   showRouteSelection(container);
 }
 
+function applyFilters(routes) {
+  return routes.filter(route => {
+    // Фильтр по длительности
+    if (route.duration < filters.duration.min || route.duration > filters.duration.max) return false;
+    
+    // Фильтр по награде
+    if (route.reward < filters.reward.min || route.reward > filters.reward.max) return false;
+    
+    // Фильтр по сложности
+    if (filters.difficulty !== 'all' && route.difficulty !== filters.difficulty) return false;
+    
+    // Фильтр по сезону
+    if (filters.season !== 'all' && !route.season.includes(filters.season)) return false;
+    
+    // Поиск по названию или локации
+    if (filters.search) {
+      const searchLower = filters.search.toLowerCase();
+      const matchName = route.name.toLowerCase().includes(searchLower);
+      const matchLocation = route.location.toLowerCase().includes(searchLower);
+      if (!matchName && !matchLocation) return false;
+    }
+    
+    return true;
+  });
+}
+
 function showRouteSelection(container) {
   const purchasedItems = getPurchasedItems();
   const clickBonus = getClickPowerBonus();
+  const filteredRoutes = applyFilters(ROUTES);
   
   container.innerHTML = `
     <div class="clicker-game">
       <div class="clicker-header">
         <button class="btn-back" id="backBtn">← В меню</button>
         <div class="clicker-title">
-          <h1>⛰️ Походные маршруты</h1>
+          <h1>⛰️ Походные маршруты по России</h1>
           <p>Выберите маршрут для прохождения</p>
         </div>
       </div>
       
-      ${purchasedItems.length > 0 ? `
-      <div class="equipment-display">
-        <h3>🎒 Ваше снаряжение (Сила клика: ×${clickBonus.toFixed(2)})</h3>
-        <div class="equipment-icons">
-          ${purchasedItems.map(item => `<span class="equipment-icon" title="${item.name}">${item.icon}</span>`).join('')}
+      <div class="route-main-container">
+        <!-- Фильтры слева -->
+        <div class="route-filters">
+          <h3>🔍 Фильтры</h3>
+          
+          <div class="filter-group">
+            <label>Поиск по названию:</label>
+            <input type="text" id="search-input" placeholder="Название или регион..." value="${filters.search}">
+          </div>
+          
+          <div class="filter-group">
+            <label>Длительность (дней): ${filters.duration.min}-${filters.duration.max}</label>
+            <input type="range" id="duration-min" min="0" max="15" value="${filters.duration.min}">
+            <input type="range" id="duration-max" min="0" max="15" value="${filters.duration.max}">
+          </div>
+          
+          <div class="filter-group">
+            <label>Награда (монет): ${filters.reward.min}-${filters.reward.max}</label>
+            <input type="range" id="reward-min" min="0" max="250" step="10" value="${filters.reward.min}">
+            <input type="range" id="reward-max" min="0" max="250" step="10" value="${filters.reward.max}">
+          </div>
+          
+          <div class="filter-group">
+            <label>Сложность:</label>
+            <select id="difficulty-select">
+              <option value="all" ${filters.difficulty === 'all' ? 'selected' : ''}>Все</option>
+              <option value="Легкий" ${filters.difficulty === 'Легкий' ? 'selected' : ''}>Легкий</option>
+              <option value="Средний" ${filters.difficulty === 'Средний' ? 'selected' : ''}>Средний</option>
+              <option value="Сложный" ${filters.difficulty === 'Сложный' ? 'selected' : ''}>Сложный</option>
+              <option value="Очень сложный" ${filters.difficulty === 'Очень сложный' ? 'selected' : ''}>Очень сложный</option>
+            </select>
+          </div>
+          
+          <div class="filter-group">
+            <label>Сезон:</label>
+            <select id="season-select">
+              <option value="all" ${filters.season === 'all' ? 'selected' : ''}>Все сезоны</option>
+              <option value="Лето" ${filters.season === 'Лето' ? 'selected' : ''}>☀️ Лето</option>
+              <option value="Осень" ${filters.season === 'Осень' ? 'selected' : ''}>🍂 Осень</option>
+              <option value="Зима" ${filters.season === 'Зима' ? 'selected' : ''}>❄️ Зима</option>
+              <option value="Весна" ${filters.season === 'Весна' ? 'selected' : ''}>🌸 Весна</option>
+            </select>
+          </div>
+          
+          <button class="btn-secondary" id="reset-filters">Сбросить фильтры</button>
+        </div>
+        
+        <!-- Маршруты справа -->
+        <div class="route-content">
+          ${purchasedItems.length > 0 ? `
+          <div class="equipment-display">
+            <h3>🎒 Ваше снаряжение (Сила клика: ×${clickBonus.toFixed(2)})</h3>
+            <div class="equipment-icons">
+              ${purchasedItems.map(item => `<span class="equipment-icon" title="${item.name}">${item.icon}</span>`).join('')}
+            </div>
+          </div>
+          ` : ''}
+          
+          <div class="routes-info">
+            <p>Найдено маршрутов: <strong>${filteredRoutes.length}</strong> из ${ROUTES.length}</p>
+          </div>
+          
+          <div class="routes-container" id="routes"></div>
         </div>
       </div>
-      ` : ''}
-      
-      <div class="routes-container" id="routes"></div>
     </div>
   `;
   
@@ -170,11 +602,60 @@ function showRouteSelection(container) {
   
   document.getElementById('backBtn').addEventListener('click', () => onExitCallback());
   
+  // Обработчики фильтров
+  document.getElementById('search-input').addEventListener('input', (e) => {
+    filters.search = e.target.value;
+    showRouteSelection(container);
+  });
+  
+  document.getElementById('duration-min').addEventListener('input', (e) => {
+    filters.duration.min = parseInt(e.target.value);
+    showRouteSelection(container);
+  });
+  
+  document.getElementById('duration-max').addEventListener('input', (e) => {
+    filters.duration.max = parseInt(e.target.value);
+    showRouteSelection(container);
+  });
+  
+  document.getElementById('reward-min').addEventListener('input', (e) => {
+    filters.reward.min = parseInt(e.target.value);
+    showRouteSelection(container);
+  });
+  
+  document.getElementById('reward-max').addEventListener('input', (e) => {
+    filters.reward.max = parseInt(e.target.value);
+    showRouteSelection(container);
+  });
+  
+  document.getElementById('difficulty-select').addEventListener('change', (e) => {
+    filters.difficulty = e.target.value;
+    showRouteSelection(container);
+  });
+  
+  document.getElementById('season-select').addEventListener('change', (e) => {
+    filters.season = e.target.value;
+    showRouteSelection(container);
+  });
+  
+  document.getElementById('reset-filters').addEventListener('click', () => {
+    filters = {
+      duration: { min: 0, max: 15 },
+      reward: { min: 0, max: 250 },
+      difficulty: 'all',
+      season: 'all',
+      search: ''
+    };
+    showRouteSelection(container);
+  });
+  
+  // Отрисовка маршрутов
   const routesContainer = container.querySelector('#routes');
-  ROUTES.forEach(route => {
+  filteredRoutes.forEach(route => {
     const routeCard = document.createElement('div');
     routeCard.className = 'route-card';
     routeCard.innerHTML = `
+      ${route.image ? `<div class="route-image" style="background-image: url('${route.image}')"></div>` : ''}
       <div class="route-header">
         <h2>⛰️ ${route.name}</h2>
         <div class="route-reward">💰 ${route.reward}</div>
@@ -183,7 +664,10 @@ function showRouteSelection(container) {
         <div class="route-detail">📍 ${route.location}</div>
         <div class="route-detail">📏 ${route.elevation} м</div>
         <div class="route-detail">${route.season}</div>
+        <div class="route-detail">⏱️ ${route.duration} ${route.duration === 1 ? 'день' : route.duration < 5 ? 'дня' : 'дней'}</div>
+        <div class="route-detail difficulty-${route.difficulty.replace(/\s/g, '-').toLowerCase()}">🎯 ${route.difficulty}</div>
       </div>
+      ${route.fact ? `<div class="route-fact">💡 ${route.fact}</div>` : ''}
       <div class="route-obstacles-preview">
         ${route.obstacles.map(o => o.icon).join(' ')}
       </div>
@@ -198,6 +682,7 @@ function showRouteSelection(container) {
   });
 }
 
+// Остальные функции остаются прежними
 function startRoute(container, route) {
   currentRoute = route;
   currentObstacleIndex = 0;
@@ -210,9 +695,11 @@ function startRoute(container, route) {
         <button class="btn-back" id="backBtn">← Выбор маршрута</button>
         <div class="clicker-title">
           <h1>⛰️ ${route.name}</h1>
-          <p>${route.location} · ${route.elevation} м · ${route.season}</p>
+          <p>${route.location} · ${route.elevation} м · ${route.season} · ${route.duration} дн.</p>
         </div>
       </div>
+      
+      ${route.image ? `<div class="route-hero-image" style="background-image: url('${route.image}')"></div>` : ''}
       
       <div class="route-progress">
         <div class="progress-text">
@@ -263,7 +750,6 @@ function renderRoutePath() {
     `;
     pathContainer.appendChild(obstacleEl);
     
-    // Добавляем пунктирную линию между препятствиями
     if (index < currentRoute.obstacles.length - 1) {
       const line = document.createElement('div');
       line.className = 'path-line';
@@ -274,7 +760,7 @@ function renderRoutePath() {
 
 function handleClick() {
   const clickPower = getClickPowerBonus();
-  const actualClicks = Math.max(1, Math.round(clickPower)); // Минимум 1 клик
+  const actualClicks = Math.max(1, Math.round(clickPower));
   
   soundSystem.click();
   totalClicks++;
@@ -289,12 +775,10 @@ function handleClick() {
   const progress = ((obstacle.clicks - clicksRemaining) / obstacle.clicks) * 100;
   document.getElementById('progress-fill').style.width = `${progress}%`;
   
-  // Анимация клика
   const btn = document.getElementById('click-btn');
   btn.classList.add('clicked');
   setTimeout(() => btn.classList.remove('clicked'), 150);
   
-  // Показываем бонус
   if (clickPower > 1) {
     showClickBonus(actualClicks);
   }
@@ -334,7 +818,6 @@ function completeObstacle() {
     return;
   }
   
-  // Переход к следующему препятствию
   const nextObstacle = currentRoute.obstacles[currentObstacleIndex];
   clicksRemaining = nextObstacle.clicks;
   
@@ -349,7 +832,6 @@ function completeObstacle() {
 function completeRoute() {
   soundSystem.victory();
   
-  // Добавляем монеты
   addCoins(currentRoute.reward);
   
   setTimeout(() => {
@@ -358,13 +840,16 @@ function completeRoute() {
       <div class="clicker-game">
         <div class="victory-screen">
           <h1>🎉 Маршрут пройден! 🎉</h1>
+          ${currentRoute.image ? `<div class="victory-image" style="background-image: url('${currentRoute.image}')"></div>` : ''}
           <div class="victory-stats">
             <p class="victory-route">⛰️ ${currentRoute.name}</p>
             <p>📍 ${currentRoute.location}</p>
             <p>📏 Высота: ${currentRoute.elevation} м</p>
+            <p>⏱️ Длительность: ${currentRoute.duration} ${currentRoute.duration === 1 ? 'день' : currentRoute.duration < 5 ? 'дня' : 'дней'}</p>
             <p>👆 Всего кликов: ${totalClicks}</p>
             <p class="victory-reward">💰 Получено: ${currentRoute.reward} монет</p>
           </div>
+          ${currentRoute.fact ? `<div class="victory-fact">💡 <strong>Интересный факт:</strong> ${currentRoute.fact}</div>` : ''}
           <div class="victory-buttons">
             <button class="btn-primary" id="newRouteBtn">Выбрать другой маршрут</button>
             <button class="btn-secondary" id="menuBtn">В главное меню</button>
