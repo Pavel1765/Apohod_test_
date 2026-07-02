@@ -1,4 +1,4 @@
-/** Игра 3 в ряд (Match-3) */
+/** Улучшенная игра 3 в ряд с бонусами */
 
 import { soundSystem } from '../hike-game/sounds.js';
 
@@ -9,6 +9,7 @@ const MIN_MATCH = 3;
 let grid = [];
 let score = 0;
 let moves = 0;
+let diamonds = 5; // Алмазики для подсказок
 let selectedCell = null;
 let onExitCallback = null;
 
@@ -22,7 +23,7 @@ export function renderMatch3Game(container, onExit) {
         <button class="btn-back" id="backBtn">← В меню</button>
         <div class="match3-title">
           <h1>🧩 Три в Ряд</h1>
-          <p>Составляйте комбинации из трех и более одинаковых символов!</p>
+          <p>Составляйте комбинации! Бонусы при 4+ совпадениях</p>
         </div>
       </div>
       <div class="match3-stats">
@@ -34,12 +35,18 @@ export function renderMatch3Game(container, onExit) {
           <div class="stat-label">Ходы</div>
           <div class="stat-value" id="moves">0</div>
         </div>
+        <div class="stat-card special">
+          <div class="stat-label">💎 Алмазы</div>
+          <div class="stat-value" id="diamonds">5</div>
+        </div>
+        <button class="btn-hint" id="hintBtn" title="Подсказка (1 💎)">💡 Подсказка</button>
         <button class="btn-primary" id="newGameBtn">Новая игра</button>
       </div>
       <div class="match3-board" id="board"></div>
-      <div class="match3-hint">
-        Нажмите на символ, затем на соседний, чтобы поменять их местами
-      </div>
+  <div class="match3-hint">
+    <strong>Бонусы:</strong> 4 в ряд = 💣 Бомба (взрыв 3x3) | 5 в ряд = ⚡ Молния (крест) | 6+ = 🌟 Звезда (все иконки типа)<br>
+    <strong>Подсказка:</strong> Каждые 100 очков = +1 💎 алмаз
+  </div>
     </div>
   `;
   
@@ -47,6 +54,7 @@ export function renderMatch3Game(container, onExit) {
   
   document.getElementById('backBtn').addEventListener('click', () => onExitCallback());
   document.getElementById('newGameBtn').addEventListener('click', () => initGame());
+  document.getElementById('hintBtn').addEventListener('click', () => useHint());
   
   initGame();
 }
@@ -63,6 +71,7 @@ function loadStyles() {
 function initGame() {
   score = 0;
   moves = 0;
+  diamonds = 5;
   selectedCell = null;
   updateStats();
   createGrid();
@@ -74,11 +83,10 @@ function createGrid() {
   for (let row = 0; row < GRID_SIZE; row++) {
     grid[row] = [];
     for (let col = 0; col < GRID_SIZE; col++) {
-      grid[row][col] = getRandomIcon();
+      grid[row][col] = { icon: getRandomIcon(), bonus: null };
     }
   }
   
-  // Удаляем начальные совпадения
   while (findMatches().length > 0) {
     removeMatches();
     fillEmptyCells();
@@ -100,7 +108,15 @@ function renderGrid() {
       cell.className = 'match3-cell';
       cell.dataset.row = row;
       cell.dataset.col = col;
-      cell.textContent = grid[row][col];
+      
+      const cellData = grid[row][col];
+      if (cellData.bonus) {
+        cell.classList.add('bonus-cell');
+        cell.textContent = cellData.bonus;
+      } else {
+        cell.textContent = cellData.icon;
+      }
+      
       cell.addEventListener('click', () => onCellClick(row, col));
       board.appendChild(cell);
     }
@@ -109,6 +125,14 @@ function renderGrid() {
 
 function onCellClick(row, col) {
   const cell = document.querySelector(`[data-row="${row}"][data-col="${col}"]`);
+  const cellData = grid[row][col];
+  
+  // Активация бонуса
+  if (cellData.bonus) {
+    activateBonus(row, col, cellData.bonus);
+    soundSystem.artifact();
+    return;
+  }
   
   if (!selectedCell) {
     selectedCell = { row, col };
@@ -130,10 +154,10 @@ function onCellClick(row, col) {
         soundSystem.ability();
         moves++;
         updateStats();
+        checkForBonuses(matches);
         processMatches();
       } else {
         soundSystem.error();
-        // Возвращаем обратно
         setTimeout(() => {
           swap(selectedCell.row, selectedCell.col, row, col);
           renderGrid();
@@ -148,6 +172,154 @@ function onCellClick(row, col) {
       cell.classList.add('selected');
     }
   }
+}
+
+function activateBonus(row, col, bonusType) {
+  grid[row][col] = { icon: null, bonus: null };
+  
+  if (bonusType === '💣') {
+    // Бомба - взрывает 3x3 область
+    for (let r = row - 1; r <= row + 1; r++) {
+      for (let c = col - 1; c <= col + 1; c++) {
+        if (r >= 0 && r < GRID_SIZE && c >= 0 && c < GRID_SIZE) {
+          grid[r][c] = { icon: null, bonus: null };
+        }
+      }
+    }
+    score += 50;
+  } else if (bonusType === '⚡') {
+    // Молния - убирает всю линию по горизонтали и вертикали
+    for (let c = 0; c < GRID_SIZE; c++) {
+      grid[row][c] = { icon: null, bonus: null };
+    }
+    for (let r = 0; r < GRID_SIZE; r++) {
+      grid[r][col] = { icon: null, bonus: null };
+    }
+    score += 100;
+  } else if (bonusType === '🌟') {
+    // Звезда - убирает все иконки одного типа
+    const targetIcon = getRandomIcon();
+    for (let r = 0; r < GRID_SIZE; r++) {
+      for (let c = 0; c < GRID_SIZE; c++) {
+        if (grid[r][c].icon === targetIcon) {
+          grid[r][c] = { icon: null, bonus: null };
+        }
+      }
+    }
+    score += 75;
+  }
+  
+  updateStats();
+  setTimeout(() => {
+    fillEmptyCells();
+    renderGrid();
+    setTimeout(() => processMatches(), 300);
+  }, 300);
+}
+
+function checkForBonuses(matches) {
+  const matchesByIcon = {};
+  
+  matches.forEach(m => {
+    const icon = grid[m.row][m.col].icon;
+    if (!matchesByIcon[icon]) matchesByIcon[icon] = [];
+    matchesByIcon[icon].push(m);
+  });
+  
+  for (const icon in matchesByIcon) {
+    const iconMatches = matchesByIcon[icon];
+    
+    if (iconMatches.length === 5) {
+      // 5 в ряд - молния
+      const pos = iconMatches[2];
+      grid[pos.row][pos.col] = { icon: null, bonus: '⚡' };
+    } else if (iconMatches.length === 4) {
+      // 4 в ряд - бомба
+      const pos = iconMatches[1];
+      grid[pos.row][pos.col] = { icon: null, bonus: '💣' };
+    } else if (iconMatches.length >= 6) {
+      // L или T форма - звезда
+      const pos = iconMatches[Math.floor(iconMatches.length / 2)];
+      grid[pos.row][pos.col] = { icon: null, bonus: '🌟' };
+    }
+  }
+}
+
+function useHint() {
+  if (diamonds <= 0) {
+    alert('Недостаточно алмазов! Заработайте больше очков.');
+    soundSystem.error();
+    return;
+  }
+  
+  const hint = findPossibleMove();
+  if (hint) {
+    diamonds--;
+    updateStats();
+    soundSystem.click();
+    
+    const cell1 = document.querySelector(`[data-row="${hint.row1}"][data-col="${hint.col1}"]`);
+    const cell2 = document.querySelector(`[data-row="${hint.row2}"][data-col="${hint.col2}"]`);
+    
+    cell1.classList.add('hint');
+    cell2.classList.add('hint');
+    
+    setTimeout(() => {
+      cell1.classList.remove('hint');
+      cell2.classList.remove('hint');
+    }, 2000);
+  } else {
+    alert('Нет доступных ходов! Перемешиваем поле...');
+    shuffleGrid();
+  }
+}
+
+function findPossibleMove() {
+  for (let row = 0; row < GRID_SIZE; row++) {
+    for (let col = 0; col < GRID_SIZE; col++) {
+      // Проверяем обмен с соседями
+      const neighbors = [
+        [row - 1, col], [row + 1, col], [row, col - 1], [row, col + 1]
+      ];
+      
+      for (const [nRow, nCol] of neighbors) {
+        if (nRow >= 0 && nRow < GRID_SIZE && nCol >= 0 && nCol < GRID_SIZE) {
+          swap(row, col, nRow, nCol);
+          if (findMatches().length > 0) {
+            swap(row, col, nRow, nCol);
+            return { row1: row, col1: col, row2: nRow, col2: nCol };
+          }
+          swap(row, col, nRow, nCol);
+        }
+      }
+    }
+  }
+  return null;
+}
+
+function shuffleGrid() {
+  const icons = [];
+  for (let row = 0; row < GRID_SIZE; row++) {
+    for (let col = 0; col < GRID_SIZE; col++) {
+      if (grid[row][col].icon) icons.push(grid[row][col].icon);
+    }
+  }
+  
+  for (let i = icons.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [icons[i], icons[j]] = [icons[j], icons[i]];
+  }
+  
+  let idx = 0;
+  for (let row = 0; row < GRID_SIZE; row++) {
+    for (let col = 0; col < GRID_SIZE; col++) {
+      if (grid[row][col].icon) {
+        grid[row][col].icon = icons[idx++];
+      }
+    }
+  }
+  
+  renderGrid();
 }
 
 function isAdjacent(cell1, cell2) {
@@ -166,12 +338,14 @@ function swap(row1, col1, row2, col2) {
 function findMatches() {
   const matches = [];
   
-  // Горизонтальные совпадения
+  // Горизонтальные
   for (let row = 0; row < GRID_SIZE; row++) {
     for (let col = 0; col < GRID_SIZE - 2; col++) {
-      const icon = grid[row][col];
+      const cell = grid[row][col];
+      if (!cell.icon || cell.bonus) continue;
+      
       let count = 1;
-      for (let c = col + 1; c < GRID_SIZE && grid[row][c] === icon; c++) {
+      for (let c = col + 1; c < GRID_SIZE && grid[row][c].icon === cell.icon; c++) {
         count++;
       }
       if (count >= MIN_MATCH) {
@@ -182,12 +356,14 @@ function findMatches() {
     }
   }
   
-  // Вертикальные совпадения
+  // Вертикальные
   for (let col = 0; col < GRID_SIZE; col++) {
     for (let row = 0; row < GRID_SIZE - 2; row++) {
-      const icon = grid[row][col];
+      const cell = grid[row][col];
+      if (!cell.icon || cell.bonus) continue;
+      
       let count = 1;
-      for (let r = row + 1; r < GRID_SIZE && grid[r][col] === icon; r++) {
+      for (let r = row + 1; r < GRID_SIZE && grid[r][col].icon === cell.icon; r++) {
         count++;
       }
       if (count >= MIN_MATCH) {
@@ -207,6 +383,11 @@ function processMatches() {
   
   removeMatches();
   score += matches.length * 10;
+  
+  if (score % 100 === 0 && score > 0) {
+    diamonds++;
+  }
+  
   updateStats();
   
   setTimeout(() => {
@@ -222,19 +403,18 @@ function processMatches() {
 function removeMatches() {
   const matches = findMatches();
   matches.forEach(({ row, col }) => {
-    grid[row][col] = null;
+    grid[row][col] = { icon: null, bonus: null };
   });
 }
 
 function fillEmptyCells() {
-  // Падение
   for (let col = 0; col < GRID_SIZE; col++) {
     for (let row = GRID_SIZE - 1; row >= 0; row--) {
-      if (grid[row][col] === null) {
+      if (!grid[row][col].icon && !grid[row][col].bonus) {
         for (let r = row - 1; r >= 0; r--) {
-          if (grid[r][col] !== null) {
+          if (grid[r][col].icon || grid[r][col].bonus) {
             grid[row][col] = grid[r][col];
-            grid[r][col] = null;
+            grid[r][col] = { icon: null, bonus: null };
             break;
           }
         }
@@ -242,11 +422,10 @@ function fillEmptyCells() {
     }
   }
   
-  // Заполнение пустых
   for (let row = 0; row < GRID_SIZE; row++) {
     for (let col = 0; col < GRID_SIZE; col++) {
-      if (grid[row][col] === null) {
-        grid[row][col] = getRandomIcon();
+      if (!grid[row][col].icon && !grid[row][col].bonus) {
+        grid[row][col] = { icon: getRandomIcon(), bonus: null };
       }
     }
   }
@@ -255,4 +434,11 @@ function fillEmptyCells() {
 function updateStats() {
   document.getElementById('score').textContent = score;
   document.getElementById('moves').textContent = moves;
+  document.getElementById('diamonds').textContent = diamonds;
+  
+  const hintBtn = document.getElementById('hintBtn');
+  if (hintBtn) {
+    hintBtn.disabled = diamonds <= 0;
+    hintBtn.style.opacity = diamonds <= 0 ? '0.5' : '1';
+  }
 }

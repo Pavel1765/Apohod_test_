@@ -1,10 +1,10 @@
 :root {
-  --forest: #2E6B3E;
-  --forest-dark: #1F4D2C;
-  --moss: #7FB069;
+  --forest: #7FB069;
+  --forest-dark: #5E8F4B;
+  --moss: #A4C89A;
   --moss-soft: #E7F1DE;
   --sky: #4E9FC4;
-  --sun: #E6A93C;
+  --sun: #FFD700;
   --fire: #E2602E;
   --paper: #FBF8F0;
   --paper2: #F2ECDD;
@@ -12,7 +12,7 @@
   --muted: #6b7a6f;
   --card: #ffffff;
   --line: #dfe6d9;
-  --shadow: 0 6px 22px rgba(31, 77, 44, 0.1);
+  --shadow: 0 6px 22px rgba(127, 176, 105, 0.15);
   --radius: 16px;
 }
 

@@ -1,0 +1,347 @@
+/** Стили для игры в шашки */
+
+.checkers-menu {
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--brand-purple) 0%, var(--brand-purple-dark) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.checkers-menu-card {
+  background: white;
+  border-radius: var(--brand-radius);
+  padding: 40px;
+  max-width: 600px;
+  width: 100%;
+  box-shadow: var(--brand-shadow);
+  position: relative;
+}
+
+.checkers-menu-card h1 {
+  text-align: center;
+  color: var(--brand-purple);
+  margin-bottom: 8px;
+  font-size: clamp(32px, 5vw, 48px);
+}
+
+.checkers-subtitle {
+  text-align: center;
+  color: var(--brand-gray);
+  font-size: 18px;
+  margin-bottom: 24px;
+}
+
+.mode-buttons {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.mode-card {
+  background: var(--brand-light-bg);
+  border: 3px solid transparent;
+  border-radius: var(--brand-radius-sm);
+  padding: 32px 24px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.mode-card:hover {
+  border-color: var(--brand-purple);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(61, 56, 148, 0.2);
+}
+
+.mode-card.selected {
+  border-color: var(--brand-green);
+  background: var(--brand-green-light);
+}
+
+.mode-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.mode-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--brand-purple);
+  margin-bottom: 8px;
+}
+
+.mode-desc {
+  font-size: 14px;
+  color: var(--brand-gray);
+}
+
+.difficulty-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.btn-difficulty {
+  background: white;
+  border: 2px solid var(--brand-gray-light);
+  color: var(--brand-purple);
+  padding: 12px 24px;
+  border-radius: var(--brand-radius-sm);
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-difficulty:hover {
+  border-color: var(--brand-purple);
+  transform: translateY(-2px);
+}
+
+.btn-difficulty.active {
+  background: var(--brand-green);
+  color: white;
+  border-color: var(--brand-green);
+}
+
+.checkers-game {
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--brand-purple) 0%, var(--brand-purple-dark) 100%);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.checkers-header {
+  width: 100%;
+  max-width: 800px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.checkers-title {
+  flex: 1;
+  text-align: center;
+}
+
+.checkers-title h1 {
+  color: white;
+  font-size: clamp(24px, 4vw, 36px);
+  margin: 0;
+}
+
+.current-turn {
+  color: var(--brand-green-light);
+  font-size: 18px;
+  font-weight: 600;
+  margin: 4px 0 0 0;
+}
+
+.checkers-info {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 800px;
+  width: 100%;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.player-info {
+  background: white;
+  padding: 16px 24px;
+  border-radius: var(--brand-radius-sm);
+  box-shadow: var(--brand-shadow);
+  text-align: center;
+  min-width: 150px;
+}
+
+.player-info.white {
+  border-left: 4px solid #f0f0f0;
+}
+
+.player-info.black {
+  border-left: 4px solid #333;
+}
+
+.player-label {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--brand-purple);
+  margin-bottom: 8px;
+}
+
+.captured {
+  font-size: 14px;
+  color: var(--brand-gray);
+}
+
+.btn-new-game {
+  background: var(--brand-green);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: var(--brand-radius-sm);
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(127, 176, 105, 0.3);
+}
+
+.btn-new-game:hover {
+  background: var(--brand-green-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(127, 176, 105, 0.4);
+}
+
+.checkers-board {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 0;
+  background: #333;
+  border: 4px solid var(--brand-purple-dark);
+  border-radius: var(--brand-radius-sm);
+  box-shadow: var(--brand-shadow-lg);
+  max-width: 600px;
+  width: 100%;
+  aspect-ratio: 1;
+}
+
+.checkers-cell {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.checkers-cell.light {
+  background: #f0d9b5;
+}
+
+.checkers-cell.dark {
+  background: #b58863;
+}
+
+.checkers-cell:hover {
+  filter: brightness(1.1);
+}
+
+.checkers-piece {
+  width: 75%;
+  height: 75%;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(16px, 3vw, 24px);
+  border: 3px solid rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.checkers-piece.white {
+  background: radial-gradient(circle at 30% 30%, #ffffff, #e0e0e0);
+}
+
+.checkers-piece.black {
+  background: radial-gradient(circle at 30% 30%, #555, #222);
+}
+
+.checkers-piece.king {
+  border-color: gold;
+  box-shadow: 0 4px 12px rgba(255, 215, 0, 0.5), 0 0 20px rgba(255, 215, 0, 0.3);
+}
+
+.checkers-piece.selected {
+  transform: scale(1.15);
+  box-shadow: 0 0 20px rgba(127, 176, 105, 0.8);
+  border-color: var(--brand-green);
+  animation: pieceSelected 0.5s infinite;
+}
+
+.move-indicator {
+  width: 30%;
+  height: 30%;
+  border-radius: 50%;
+  background: rgba(127, 176, 105, 0.6);
+  animation: moveIndicator 1s infinite;
+  cursor: pointer;
+}
+
+@keyframes pieceSelected {
+  0%, 100% {
+    transform: scale(1.15);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+}
+
+@keyframes moveIndicator {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  50% {
+    transform: scale(1.3);
+    opacity: 1;
+  }
+}
+
+.btn-back,
+.btn-back-small {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  padding: 8px 16px;
+  border-radius: var(--brand-radius-sm);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.btn-back-small {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background: white;
+  color: var(--brand-purple);
+  border: 2px solid var(--brand-purple);
+}
+
+.btn-back:hover,
+.btn-back-small:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+@media (max-width: 600px) {
+  .checkers-board {
+    max-width: 100%;
+  }
+  
+  .checkers-info {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .player-info {
+    width: 100%;
+  }
+}

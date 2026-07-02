@@ -67,6 +67,42 @@
   min-width: 120px;
 }
 
+.stat-card.special {
+  background: linear-gradient(135deg, #E6A93C 0%, #FFD700 100%);
+  color: white;
+}
+
+.stat-card.special .stat-label {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.stat-card.special .stat-value {
+  color: white;
+}
+
+.btn-hint {
+  background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: var(--brand-radius-sm);
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(255, 165, 0, 0.3);
+}
+
+.btn-hint:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 165, 0, 0.4);
+}
+
+.btn-hint:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .stat-label {
   font-size: 14px;
   color: var(--brand-gray);
@@ -143,6 +179,39 @@
   animation: pulse-match 0.6s infinite;
 }
 
+.match3-cell.bonus-cell {
+  background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+  font-size: clamp(32px, 5vw, 48px);
+  animation: bonusPulse 1s infinite;
+}
+
+.match3-cell.hint {
+  animation: hintFlash 0.5s 4;
+}
+
+@keyframes bonusPulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+  }
+  50% {
+    transform: scale(1.1);
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+  }
+}
+
+@keyframes hintFlash {
+  0%, 100% {
+    background: white;
+    border-color: var(--brand-gray-light);
+  }
+  50% {
+    background: #FFD700;
+    border-color: #FFA500;
+    transform: scale(1.1);
+  }
+}
+
 @keyframes pulse-match {
   0%, 100% {
     box-shadow: 0 0 0 0 rgba(127, 176, 105, 0.7);
@@ -155,9 +224,18 @@
 .match3-hint {
   margin-top: 20px;
   text-align: center;
+  background: white;
+  padding: 16px;
+  border-radius: var(--brand-radius-sm);
+  box-shadow: var(--brand-shadow);
   color: var(--brand-gray);
   font-size: 14px;
-  max-width: 400px;
+  max-width: 800px;
+}
+
+.match3-hint strong {
+  color: var(--brand-purple);
+  font-weight: 600;
 }
 
 /* Responsive */
