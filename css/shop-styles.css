@@ -152,10 +152,6 @@
 }
 
 .shelf {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(2, 200px);
-  gap: 16px;
   padding: 20px;
   background: linear-gradient(180deg, #7B5D47 0%, #9A7B5D 100%);
   border-radius: var(--brand-radius);
@@ -206,19 +202,28 @@
 .shelf-items-container {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 200px);
   gap: 16px;
   transition: transform 0.3s ease;
 }
 
 .backpack {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(2, 200px);
-  gap: 16px;
   padding: 20px;
   background: linear-gradient(180deg, var(--brand-green) 0%, var(--brand-green-light) 100%);
   border-radius: var(--brand-radius);
   box-shadow: var(--brand-shadow);
+  position: relative;
+  overflow: hidden;
+  max-height: 440px;
+}
+
+.backpack-items-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 200px);
+  gap: 16px;
+  transition: transform 0.3s ease;
+};
   position: relative;
   overflow: hidden;
   max-height: 440px;
