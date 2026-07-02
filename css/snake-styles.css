@@ -65,42 +65,20 @@
 
 .snake-cell.snake-segment {
   background: linear-gradient(135deg, var(--brand-green) 0%, var(--brand-green-light) 100%);
-  animation: segmentPulse 0.3s ease-out;
   position: relative;
 }
 
 .snake-cell.snake-segment.head {
   background: linear-gradient(135deg, #FF6B35 0%, #FFA500 100%);
-  box-shadow: 0 0 15px rgba(255, 107, 53, 0.6);
-  animation: headBounce 0.8s infinite;
+  box-shadow: 0 0 10px rgba(255, 107, 53, 0.4);
 }
 
 .hiker-head {
   font-size: 22px;
-  animation: hikerWalk 0.5s infinite;
 }
 
 .hiker-body {
   font-size: 18px;
-  animation: bodyFollow 1s infinite;
-}
-
-@keyframes hikerWalk {
-  0%, 100% {
-    transform: rotate(-5deg);
-  }
-  50% {
-    transform: rotate(5deg);
-  }
-}
-
-@keyframes bodyFollow {
-  0%, 100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.05);
-  }
 }
 
 @keyframes segmentPulse {
@@ -112,12 +90,21 @@
   }
 }
 
+@keyframes segmentPulse {
+  0% {
+    transform: scale(0.9);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
 @keyframes headBounce {
   0%, 100% {
     transform: scale(1);
   }
   50% {
-    transform: scale(1.15);
+    transform: scale(1.05);
   }
 }
 

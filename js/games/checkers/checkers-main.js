@@ -238,9 +238,44 @@ function onCellClick(row, col) {
   
   const piece = board[row][col];
   
-  // Если нужно продолжить взятие, разрешаем выбирать только эту фигуру
-  if (mustContinueCapture && (mustContinueCapture.row !== row || mustContinueCapture.col !== col)) {
-    soundSystem.error();
+  // Если нужно продолжить взятие, можно кликнуть только на доступные ходы
+  if (mustContinueCapture) {
+    if (piece && piece.player === currentPlayer && 
+        selectedPiece && selectedPiece.row === row && selectedPiece.col === col) {
+      // Клик на уже выбранную фигуру - ничего не делаем
+      return;
+    }
+    
+    // Проверяем, кликнули ли на возможный ход
+    const move = possibleMoves.find(m => m.to.row === row && m.to.col === col);
+    if (move) {
+      executeMove(move);
+      soundSystem.move();
+      
+      // Проверяем возможность продолжения взятия
+      const continueMoves = getCaptureMoves(move.to.row, move.to.col);
+      if (continueMoves.length > 0) {
+        mustContinueCapture = { row: move.to.row, col: move.to.col };
+        selectedPiece = { row: move.to.row, col: move.to.col };
+        possibleMoves = continueMoves;
+        renderBoard();
+        soundSystem.click();
+        return;
+      }
+      
+      // Взятие завершено
+      selectedPiece = null;
+      possibleMoves = [];
+      mustContinueCapture = null;
+      
+      if (checkWinCondition()) return;
+      
+      currentPlayer = currentPlayer === PLAYER_WHITE ? PLAYER_BLACK : PLAYER_WHITE;
+      const container = document.getElementById('board').closest('.checkers-game').parentElement;
+      renderGame(container);
+    } else {
+      soundSystem.error();
+    }
     return;
   }
   
