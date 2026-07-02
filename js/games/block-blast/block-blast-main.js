@@ -1,6 +1,7 @@
 /** Игра Block Blast - тетрис-подобная игра */
 
 import { soundSystem } from '../hike-game/sounds.js';
+import { addCoins } from '../../shop.js';
 
 const GRID_SIZE = 8;
 const CELL_SIZE = 50;
@@ -60,7 +61,14 @@ export function renderBlockBlastGame(container, onExit) {
   
   loadStyles();
   
-  document.getElementById('backBtn').addEventListener('click', () => onExitCallback());
+  document.getElementById('backBtn').addEventListener('click', () => {
+    // Сохраняем монеты перед выходом (игра без уровней)
+    const earnedCoins = Math.floor(score / 10);
+    if (earnedCoins > 0) {
+      addCoins(earnedCoins);
+    }
+    onExitCallback();
+  });
   document.getElementById('newGameBtn').addEventListener('click', () => initGame());
   
   initGame();
