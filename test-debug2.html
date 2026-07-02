@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <title>Test Debug v2</title>
+</head>
+<body>
+  <div id="debug"></div>
+  <script type="module">
+    const debug = document.getElementById('debug');
+    
+    async function test() {
+      debug.innerHTML = 'Starting...<br>';
+      
+      try {
+        debug.innerHTML += 'Loading hike-main.js...<br>';
+        await import('./js/games/hike-game/hike-main.js');
+        debug.innerHTML += 'hike-main.js OK<br>';
+        
+        debug.innerHTML += 'Loading match3-main.js...<br>';
+        await import('./js/games/match3/match3-main.js');
+        debug.innerHTML += 'match3-main.js OK<br>';
+        
+        debug.innerHTML += 'Loading puzzle-main.js...<br>';
+        await import('./js/games/puzzle/puzzle-main.js');
+        debug.innerHTML += 'puzzle-main.js OK<br>';
+        
+        debug.innerHTML += 'Loading arrows-main.js...<br>';
+        await import('./js/games/arrows/arrows-main.js');
+        debug.innerHTML += 'arrows-main.js OK<br>';
+        
+        debug.innerHTML += 'Loading block-blast-main.js...<br>';
+        await import('./js/games/block-blast/block-blast-main.js');
+        debug.innerHTML += 'block-blast-main.js OK<br>';
+        
+        debug.innerHTML += 'Loading checkers-main.js...<br>';
+        await import('./js/games/checkers/checkers-main.js');
+        debug.innerHTML += 'checkers-main.js OK<br>';
+        
+        debug.innerHTML += 'Loading snake-main.js...<br>';
+        await import('./js/games/snake/snake-main.js');
+        debug.innerHTML += 'snake-main.js OK<br>';
+        
+        debug.innerHTML += 'Loading clicker-main.js...<br>';
+        await import('./js/games/clicker/clicker-main.js');
+        debug.innerHTML += 'clicker-main.js OK<br>';
+        
+        debug.innerHTML += '<br><strong style="color: green;">ALL GAMES OK!</strong><br>';
+        
+        debug.innerHTML += '<br>Now loading app.js...<br>';
+        await import('./js/app.js');
+        debug.innerHTML += '<strong style="color: green;">APP.JS OK - ALL OK!</strong>';
+        
+      } catch (e) {
+        debug.innerHTML += `<br><strong style="color: red;">ERROR: ${e.message}</strong><br>`;
+        debug.innerHTML += `<pre>${e.stack}</pre>`;
+      }
+    }
+    
+    test();
+  </script>
+</body>
+</html>
