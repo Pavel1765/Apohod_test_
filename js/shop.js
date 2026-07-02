@@ -72,3 +72,19 @@ export function getNextAvailableItem() {
   const progress = getGameProgress();
   return SHOP_ITEMS.find(item => !progress.purchasedItems.includes(item.id));
 }
+
+export function getReadinessPercent() {
+  const progress = getGameProgress();
+  return Math.round((progress.purchasedItems.length / SHOP_ITEMS.length) * 100);
+}
+
+export function getPurchasedItems() {
+  const progress = getGameProgress();
+  return SHOP_ITEMS.filter(item => progress.purchasedItems.includes(item.id));
+}
+
+export function getClickPowerBonus() {
+  const purchasedCount = getGameProgress().purchasedItems.length;
+  // Каждый предмет дает 5% бонус к силе клика
+  return 1 + (purchasedCount * 0.05);
+}

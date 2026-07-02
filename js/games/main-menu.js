@@ -1,6 +1,6 @@
 /** Главное меню выбора игр */
 
-import { SHOP_ITEMS, getGameProgress, purchaseItem } from '../shop.js';
+import { SHOP_ITEMS, getGameProgress, purchaseItem, getReadinessPercent } from '../shop.js';
 
 const GAMES = [
   {
@@ -77,6 +77,20 @@ export function renderMainMenu(container, onGameSelect) {
         <p class="header-tagline">Игровая платформа</p>
       </header>
       
+      <!-- Прогресс-бар готовности -->
+      <div class="readiness-bar">
+        <div class="readiness-container">
+          <div class="readiness-title">
+            <h3>🎒 Готов к походу</h3>
+            <div class="readiness-percent" id="readiness-percent">0%</div>
+          </div>
+          <div class="readiness-progress">
+            <div class="readiness-fill" id="readiness-fill" style="width: 0%"></div>
+            <div class="readiness-label">Собрано снаряжения: <span id="items-count">0/${SHOP_ITEMS.length}</span></div>
+          </div>
+        </div>
+      </div>
+      
       <!-- Магазин предметов -->
       <div class="shop-section">
         <div class="shop-header">
@@ -134,14 +148,17 @@ function renderShop(container) {
   shelf.innerHTML = '';
   backpack.innerHTML = '';
   
-  // Найти следующий доступный предмет
-  const nextItem = SHOP_ITEMS.find(item => !progress.purchasedItems.includes(item.id));
+  // Обновляем прогресс-бар
+  const readinessPercent = getReadinessPercent();
+  container.querySelector('#readiness-percent').textContent = `${readinessPercent}%`;
+  container.querySelector('#readiness-fill').style.width = `${readinessPercent}%`;
+  container.querySelector('#items-count').textContent = `${progress.purchasedItems.length}/${SHOP_ITEMS.length}`;
   
   // Отображаем предметы
   SHOP_ITEMS.forEach(item => {
     const isPurchased = progress.purchasedItems.includes(item.id);
-    const isNext = nextItem && nextItem.id === item.id;
-    const isLocked = !isPurchased && !isNext;
+    const canAfford = progress.coins >= item.price;
+    const isLocked = !isPurchased && !canAfford;
     
     const itemEl = document.createElement('div');
     itemEl.className = `shop-item ${isPurchased ? 'purchased' : ''} ${isLocked ? 'locked' : ''}`;
@@ -163,9 +180,10 @@ function renderShop(container) {
       </div>
     `;
     
-    if (isNext && !isPurchased) {
-      itemEl.addEventListener('click', (e) => {
-        // Предотвращаем переворот при клике на покупку
+    // Переворот по клику на любую карточку
+    itemEl.addEventListener('click', (e) => {
+      // Проверяем, не кликнули ли на кнопку покупки
+      if (e.target.closest('.item-price') && !isPurchased && canAfford) {
         e.stopPropagation();
         const result = purchaseItem(item.id);
         if (result.success) {
@@ -176,8 +194,11 @@ function renderShop(container) {
         } else {
           alert(result.message);
         }
-      });
-    }
+      } else {
+        // Просто переворачиваем карточку
+        itemEl.classList.toggle('flipped');
+      }
+    });
     
     // Распределяем по колонкам
     if (isPurchased) {
@@ -188,15 +209,16 @@ function renderShop(container) {
   });
   
   // Подсказка
-  if (nextItem) {
+  const unpurchasedCount = SHOP_ITEMS.length - progress.purchasedItems.length;
+  if (unpurchasedCount > 0) {
     hint.innerHTML = `
-      <span class="highlight">Следующий предмет:</span> ${nextItem.icon} ${nextItem.name} - ${nextItem.price} 💰<br>
-      <small>Зарабатывайте монеты в играх, чтобы купить снаряжение для похода!</small>
+      <span class="highlight">Осталось купить: ${unpurchasedCount} предметов</span><br>
+      <small>Зарабатывайте монеты в играх! Предметы увеличивают силу клика в походах.</small>
     `;
   } else {
     hint.innerHTML = `
       <span class="highlight">🎉 Поздравляем! Все снаряжение собрано!</span><br>
-      <small>Вы полностью экипированы для любого похода!</small>
+      <small>Вы полностью экипированы для любого похода! Сила клика максимальна!</small>
     `;
   }
 }
