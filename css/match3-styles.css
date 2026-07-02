@@ -24,24 +24,6 @@
   margin-bottom: 20px;
 }
 
-.btn-back {
-  background: none;
-  border: 2px solid var(--brand-purple);
-  color: var(--brand-purple);
-  padding: 10px 20px;
-  border-radius: var(--brand-radius-sm);
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  margin-bottom: 16px;
-}
-
-.btn-back:hover {
-  background: var(--brand-purple);
-  color: white;
-}
-
 .match3-title {
   text-align: center;
 }

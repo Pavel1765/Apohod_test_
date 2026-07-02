@@ -1,6 +1,7 @@
 /** Главное меню выбора игр */
 
 import { SHOP_ITEMS, getGameProgress, purchaseItem, getReadinessPercent } from '../shop.js';
+import { soundSystem } from './hike-game/sounds.js';
 
 const GAMES = [
   {
@@ -208,8 +209,8 @@ function renderShop(container) {
       </div>
     `;
     
-    // Покупка по клику на цену
-    if (!isPurchased && canAfford) {
+    // Покупка по клику на цену (только если не locked)
+    if (!isPurchased && canAfford && !isLocked) {
       const priceEl = itemEl.querySelector('.item-price');
       if (priceEl) {
         priceEl.style.cursor = 'pointer';
@@ -217,6 +218,7 @@ function renderShop(container) {
           e.stopPropagation();
           const result = purchaseItem(item.id);
           if (result.success) {
+            soundSystem.click();
             itemEl.classList.add('just-purchased');
             setTimeout(() => {
               renderShop(container);

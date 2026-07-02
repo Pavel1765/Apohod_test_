@@ -333,12 +333,16 @@
 
 .shop-item-front {
   gap: 8px;
+  background: linear-gradient(135deg, var(--brand-cream) 0%, var(--brand-white) 100%);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .shop-item-back {
   transform: rotateY(180deg);
   padding: 20px;
   text-align: center;
+  background: linear-gradient(135deg, var(--brand-white) 0%, var(--brand-cream) 100%);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .shop-item.purchased .shop-item-front,
