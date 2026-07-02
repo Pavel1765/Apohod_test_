@@ -161,21 +161,28 @@ function startDrag(e, shape, index) {
   const startX = e.clientX || e.touches?.[0]?.clientX;
   const startY = e.clientY || e.touches?.[0]?.clientY;
   
-  // Вычисляем смещение клика относительно центра фигуры
-  const offsetX = startX - rect.left - rect.width / 2;
-  const offsetY = startY - rect.top - rect.height / 2;
-  
   const ghost = createGhostShape(shape);
   document.body.appendChild(ghost);
+  
+  // Вычисляем, за какую ячейку фигуры взяли (в grid-координатах)
+  const relativeX = startX - rect.left;
+  const relativeY = startY - rect.top;
+  const cellSize = rect.width / shape[0].length;
+  const clickedCol = Math.floor(relativeX / cellSize);
+  const clickedRow = Math.floor(relativeY / cellSize);
+  
+  // Смещение от начала ghost до кликнутой ячейки
+  const ghostOffsetX = clickedCol * 40 + 20; // 40px = размер ячейки ghost, 20 = половина
+  const ghostOffsetY = clickedRow * 40 + 20;
   
   function onMove(e) {
     const x = e.clientX || e.touches?.[0]?.clientX;
     const y = e.clientY || e.touches?.[0]?.clientY;
     
     if (ghost && x && y) {
-      // Используем вычисленное смещение для плавного следования за курсором
-      ghost.style.left = `${x - offsetX - ghost.offsetWidth / 2}px`;
-      ghost.style.top = `${y - offsetY - ghost.offsetHeight / 2}px`;
+      // Позиционируем ghost так, чтобы кликнутая ячейка была под курсором
+      ghost.style.left = `${x - ghostOffsetX}px`;
+      ghost.style.top = `${y - ghostOffsetY}px`;
     }
     
     highlightValidPlacement(x, y, shape);

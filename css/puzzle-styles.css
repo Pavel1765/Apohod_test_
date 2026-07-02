@@ -52,15 +52,16 @@
   background: white;
   border-radius: var(--brand-radius);
   box-shadow: var(--brand-shadow);
-  display: grid;
-  grid-template-columns: repeat(6, 80px);
-  grid-template-rows: repeat(6, 80px);
-  gap: 0;
+  overflow: hidden;
 }
 
 .puzzle-cell {
   border: 1px solid var(--brand-gray-light);
   background: linear-gradient(135deg, rgba(61, 56, 148, 0.02) 0%, transparent 100%);
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  pointer-events: none;
 }
 
 .puzzle-block {

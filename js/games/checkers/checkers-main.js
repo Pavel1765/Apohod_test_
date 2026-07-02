@@ -257,12 +257,12 @@ function onCellClick(row, col) {
       
       // Проверяем возможность продолжения взятия
       if (move.captured) {
-        const continueMoves = getValidMoves(move.to.row, move.to.col).filter(m => m.captured);
+        const continueMoves = getCaptureMoves(move.to.row, move.to.col);
         if (continueMoves.length > 0) {
           mustContinueCapture = { row: move.to.row, col: move.to.col };
           selectedPiece = mustContinueCapture;
           possibleMoves = continueMoves;
-          renderBoard();
+          renderBoard(); // Обновляем только доску, не всю игру
           return;
         }
       }
@@ -274,7 +274,8 @@ function onCellClick(row, col) {
       if (checkWinCondition()) return;
       
       currentPlayer = currentPlayer === PLAYER_WHITE ? PLAYER_BLACK : PLAYER_WHITE;
-      renderGame(document.getElementById('board').closest('.checkers-game').parentElement);
+      const container = document.getElementById('board').closest('.checkers-game').parentElement;
+      renderGame(container);
     } else {
       soundSystem.error();
     }
