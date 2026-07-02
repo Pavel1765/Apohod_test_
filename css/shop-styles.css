@@ -157,12 +157,57 @@
   grid-template-rows: repeat(2, 200px);
   gap: 16px;
   padding: 20px;
-  background: linear-gradient(180deg, #8B7355 0%, #A0826D 100%);
+  background: linear-gradient(180deg, #7B5D47 0%, #9A7B5D 100%);
   border-radius: var(--brand-radius);
   box-shadow: var(--brand-shadow);
   position: relative;
-  overflow-y: auto;
+  overflow: hidden;
   max-height: 440px;
+}
+
+.shelf-nav {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 10;
+}
+
+.shelf-nav-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--brand-white);
+  border: 2px solid var(--brand-purple);
+  color: var(--brand-purple);
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.shelf-nav-btn:hover:not(:disabled) {
+  background: var(--brand-purple);
+  color: var(--brand-white);
+  transform: scale(1.1);
+}
+
+.shelf-nav-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.shelf-items-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  transition: transform 0.3s ease;
 }
 
 .backpack {
@@ -175,8 +220,53 @@
   border-radius: var(--brand-radius);
   box-shadow: var(--brand-shadow);
   position: relative;
-  overflow-y: auto;
+  overflow: hidden;
   max-height: 440px;
+}
+
+.backpack-nav {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 10;
+}
+
+.backpack-nav-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--brand-white);
+  border: 2px solid var(--brand-purple);
+  color: var(--brand-purple);
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.backpack-nav-btn:hover:not(:disabled) {
+  background: var(--brand-purple);
+  color: var(--brand-white);
+  transform: scale(1.1);
+}
+
+.backpack-nav-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.backpack-items-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  transition: transform 0.3s ease;
 }
 
 .shelf::before {
@@ -213,11 +303,11 @@
 }
 
 .shop-item:hover .shop-item-inner {
-  /* Убираем автоматический переворот при hover */
+  transform: rotateY(180deg);
 }
 
 .shop-item.flipped .shop-item-inner {
-  transform: rotateY(180deg);
+  /* Класс flipped больше не используется */
 }
 
 .shop-item-front,

@@ -108,13 +108,25 @@ export function renderMainMenu(container, onGameSelect) {
           <!-- Магазин (слева) -->
           <div class="shop-column">
             <div class="shop-column-title">🏪 Магазин</div>
-            <div class="shelf" id="shop-shelf"></div>
+            <div class="shelf" id="shop-shelf">
+              <div class="shelf-nav">
+                <button class="shelf-nav-btn" id="shelf-up">▲</button>
+                <button class="shelf-nav-btn" id="shelf-down">▼</button>
+              </div>
+              <div class="shelf-items-container" id="shelf-items"></div>
+            </div>
           </div>
           
           <!-- Рюкзак (справа) -->
           <div class="shop-column">
             <div class="shop-column-title">🎒 Мой рюкзак</div>
-            <div class="backpack" id="backpack"></div>
+            <div class="backpack" id="backpack">
+              <div class="backpack-nav">
+                <button class="backpack-nav-btn" id="backpack-up">▲</button>
+                <button class="backpack-nav-btn" id="backpack-down">▼</button>
+              </div>
+              <div class="backpack-items-container" id="backpack-items"></div>
+            </div>
           </div>
         </div>
         
@@ -141,12 +153,12 @@ export function renderMainMenu(container, onGameSelect) {
 
 function renderShop(container) {
   const progress = getGameProgress();
-  const shelf = container.querySelector('#shop-shelf');
-  const backpack = container.querySelector('#backpack');
+  const shelfItems = container.querySelector('#shelf-items');
+  const backpackItems = container.querySelector('#backpack-items');
   const hint = container.querySelector('#next-item-hint');
   
-  shelf.innerHTML = '';
-  backpack.innerHTML = '';
+  shelfItems.innerHTML = '';
+  backpackItems.innerHTML = '';
   
   // Обновляем прогресс-бар
   const readinessPercent = getReadinessPercent();
@@ -154,7 +166,14 @@ function renderShop(container) {
   container.querySelector('#readiness-fill').style.width = `${readinessPercent}%`;
   container.querySelector('#items-count').textContent = `${progress.purchasedItems.length}/${SHOP_ITEMS.length}`;
   
+  let shelfPage = 0;
+  let backpackPage = 0;
+  const itemsPerPage = 6;
+  
   // Отображаем предметы
+  const shopItems = [];
+  const ownedItems = [];
+  
   SHOP_ITEMS.forEach(item => {
     const isPurchased = progress.purchasedItems.includes(item.id);
     const canAfford = progress.coins >= item.price;
@@ -180,39 +199,96 @@ function renderShop(container) {
       </div>
     `;
     
-    // Переворот по клику на любую карточку
-    itemEl.addEventListener('click', (e) => {
-      // Проверяем, не кликнули ли на кнопку покупки
-      if (e.target.closest('.item-price') && !isPurchased && canAfford) {
-        e.stopPropagation();
-        const result = purchaseItem(item.id);
-        if (result.success) {
-          itemEl.classList.add('just-purchased');
-          setTimeout(() => {
-            renderShop(container);
-          }, 800);
-        } else {
-          alert(result.message);
-        }
-      } else {
-        // Просто переворачиваем карточку
-        itemEl.classList.toggle('flipped');
+    // Покупка по клику на цену
+    if (!isPurchased && canAfford) {
+      const priceEl = itemEl.querySelector('.item-price');
+      if (priceEl) {
+        priceEl.style.cursor = 'pointer';
+        priceEl.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const result = purchaseItem(item.id);
+          if (result.success) {
+            itemEl.classList.add('just-purchased');
+            setTimeout(() => {
+              renderShop(container);
+            }, 800);
+          } else {
+            alert(result.message);
+          }
+        });
       }
-    });
+    }
     
     // Распределяем по колонкам
     if (isPurchased) {
-      backpack.appendChild(itemEl);
+      ownedItems.push(itemEl);
     } else {
-      shelf.appendChild(itemEl);
+      shopItems.push(itemEl);
     }
   });
+  
+  // Функции навигации для магазина
+  function updateShelfView() {
+    shelfItems.innerHTML = '';
+    const start = shelfPage * itemsPerPage;
+    const end = start + itemsPerPage;
+    const pageItems = shopItems.slice(start, end);
+    pageItems.forEach(item => shelfItems.appendChild(item));
+    
+    container.querySelector('#shelf-up').disabled = shelfPage === 0;
+    container.querySelector('#shelf-down').disabled = end >= shopItems.length;
+  }
+  
+  // Функции навигации для рюкзака
+  function updateBackpackView() {
+    backpackItems.innerHTML = '';
+    const start = backpackPage * itemsPerPage;
+    const end = start + itemsPerPage;
+    const pageItems = ownedItems.slice(start, end);
+    pageItems.forEach(item => backpackItems.appendChild(item));
+    
+    container.querySelector('#backpack-up').disabled = backpackPage === 0;
+    container.querySelector('#backpack-down').disabled = end >= ownedItems.length;
+  }
+  
+  // Обработчики кнопок
+  container.querySelector('#shelf-up').addEventListener('click', () => {
+    if (shelfPage > 0) {
+      shelfPage--;
+      updateShelfView();
+    }
+  });
+  
+  container.querySelector('#shelf-down').addEventListener('click', () => {
+    if ((shelfPage + 1) * itemsPerPage < shopItems.length) {
+      shelfPage++;
+      updateShelfView();
+    }
+  });
+  
+  container.querySelector('#backpack-up').addEventListener('click', () => {
+    if (backpackPage > 0) {
+      backpackPage--;
+      updateBackpackView();
+    }
+  });
+  
+  container.querySelector('#backpack-down').addEventListener('click', () => {
+    if ((backpackPage + 1) * itemsPerPage < ownedItems.length) {
+      backpackPage++;
+      updateBackpackView();
+    }
+  });
+  
+  // Первичная отрисовка
+  updateShelfView();
+  updateBackpackView();
   
   // Подсказка
   const unpurchasedCount = SHOP_ITEMS.length - progress.purchasedItems.length;
   if (unpurchasedCount > 0) {
     hint.innerHTML = `
-      <span class="highlight">Осталось купить: ${unpurchasedCount} предметов</span><br>
+      <span class="highlight">До похода осталось: ${unpurchasedCount} ${unpurchasedCount === 1 ? 'предмет' : unpurchasedCount < 5 ? 'предмета' : 'предметов'}</span><br>
       <small>Зарабатывайте монеты в играх! Предметы увеличивают силу клика в походах.</small>
     `;
   } else {

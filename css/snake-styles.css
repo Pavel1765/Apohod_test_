@@ -141,6 +141,7 @@
 
 .snake-cell.item {
   animation: itemPulse 1.5s ease-in-out infinite;
+  box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.4);
 }
 
 .item-icon {
@@ -155,16 +156,18 @@
     transform: translateY(0px) scale(1);
   }
   50% {
-    transform: translateY(-4px) scale(1.1);
+    transform: translateY(-4px) scale(1.2);
   }
 }
 
 @keyframes itemPulse {
   0%, 100% {
-    box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.4);
+    box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.7), 0 0 20px rgba(255, 193, 7, 0.4);
+    background: linear-gradient(135deg, #FFC107 0%, #FFD54F 100%);
   }
   50% {
-    box-shadow: 0 0 0 10px rgba(255, 193, 7, 0);
+    box-shadow: 0 0 0 10px rgba(255, 193, 7, 0), 0 0 30px rgba(255, 193, 7, 0.6);
+    background: linear-gradient(135deg, #FFD54F 0%, #FFC107 100%);
   }
 }
 
