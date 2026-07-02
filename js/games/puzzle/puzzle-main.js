@@ -120,14 +120,10 @@ function renderBoard() {
   board.style.height = `${GRID_SIZE * CELL_SIZE}px`;
   
   // Рисуем сетку
-  for (let row = 0; row < GRID_SIZE; row++) {
-    for (let col = 0; col < GRID_SIZE; col++) {
-      const cell = document.createElement('div');
-      cell.className = 'puzzle-cell';
-      cell.style.left = `${col * CELL_SIZE}px`;
-      cell.style.top = `${row * CELL_SIZE}px`;
-      board.appendChild(cell);
-    }
+  for (let i = 0; i < GRID_SIZE * GRID_SIZE; i++) {
+    const cell = document.createElement('div');
+    cell.className = 'puzzle-cell';
+    board.appendChild(cell);
   }
   
   // Рисуем блоки
@@ -136,8 +132,8 @@ function renderBoard() {
     blockEl.className = `puzzle-block ${block.isTarget ? 'target' : ''}`;
     blockEl.dataset.id = block.id;
     blockEl.style.backgroundColor = block.color;
-    blockEl.style.left = `${block.col * CELL_SIZE + 5}px`;
-    blockEl.style.top = `${block.row * CELL_SIZE + 5}px`;
+    blockEl.style.left = `${block.col * CELL_SIZE}px`;
+    blockEl.style.top = `${block.row * CELL_SIZE}px`;
     
     if (block.isHorizontal) {
       blockEl.style.width = `${block.length * CELL_SIZE - 10}px`;

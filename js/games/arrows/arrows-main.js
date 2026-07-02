@@ -37,18 +37,7 @@ const LEVELS = [
     ]
   },
   
-  // Уровень 3 - (4x4)
-  { 
-    size: 4, 
-    arrows: [
-      [1, null, null, 0],
-      [null, null, null, null],
-      [null, null, null, null],
-      [2, null, null, 3]
-    ]
-  },
-  
-  // Уровень 4 - средний (4x4)
+  // Уровень 3 - крест (4x4)
   { 
     size: 4, 
     arrows: [
@@ -59,78 +48,90 @@ const LEVELS = [
     ]
   },
   
-  // Уровень 5 - сложнее (5x5)
+  // Уровень 4 - зигзаг (4x4)
   { 
-    size: 5, 
+    size: 4, 
     arrows: [
-      [null, 0, null, 0, null],
-      [3, null, null, null, 1],
-      [null, null, null, null, null],
-      [3, null, null, null, 1],
-      [null, 2, null, 2, null]
+      [1, 0, null, 0],
+      [null, 1, 3, null],
+      [null, 1, 3, null],
+      [2, null, 2, 3]
     ]
   },
   
-  // Уровень 6 - более сложный (5x5)
+  // Уровень 5 - спираль (5x5)
   { 
     size: 5, 
     arrows: [
-      [1, null, 0, null, 1],
-      [null, 3, null, 1, null],
-      [0, null, null, null, 0],
-      [null, 3, null, 1, null],
-      [3, null, 2, null, 3]
+      [1, 1, 1, 1, 2],
+      [0, null, null, null, 2],
+      [0, null, 1, 2, 2],
+      [0, null, null, null, null],
+      [0, 3, 3, 3, 3]
     ]
   },
   
-  // Уровень 7 - сложный (5x5)
+  // Уровень 6 - хаос (5x5)
+  { 
+    size: 5, 
+    arrows: [
+      [1, 0, null, 0, 3],
+      [null, 1, 2, 3, null],
+      [0, null, null, null, 2],
+      [null, 1, 0, 3, null],
+      [1, null, 2, null, 3]
+    ]
+  },
+  
+  // Уровень 7 - плотно (5x5)
   { 
     size: 5, 
     arrows: [
       [null, 0, 1, 0, null],
-      [3, null, null, null, 1],
+      [3, 1, null, 3, 1],
       [2, null, null, null, 2],
-      [3, null, null, null, 1],
+      [3, 1, null, 3, 1],
       [null, 2, 3, 2, null]
     ]
   },
   
-  // Уровень 8 - очень сложный (6x6)
+  // Уровень 8 - двойная спираль (6x6)
   { 
     size: 6, 
     arrows: [
-      [null, 0, null, null, 0, null],
-      [3, null, 1, 1, null, 1],
-      [null, null, null, null, null, null],
-      [null, null, null, null, null, null],
-      [3, null, 1, 1, null, 1],
-      [null, 2, null, null, 2, null]
+      [1, 1, 1, 1, 1, 2],
+      [0, 1, 1, 1, 2, 2],
+      [0, 1, 2, 2, 2, 2],
+      [0, 0, 0, 0, 0, 2],
+      [0, 3, 3, 3, 2, 2],
+      [0, 3, 3, 3, 3, 3]
     ]
   },
   
-  // Уровень 9 - мастер (6x6)
+  // Уровень 9 - лабиринт (6x6)
   { 
     size: 6, 
     arrows: [
-      [1, 0, null, null, 0, 1],
-      [null, null, 3, 1, null, null],
-      [0, null, null, null, null, 0],
-      [0, null, null, null, null, 0],
-      [null, null, 3, 1, null, null],
-      [3, 2, null, null, 2, 3]
+      [1, 0, null, null, 0, 3],
+      [null, 1, 3, 1, 3, null],
+      [0, null, 0, 2, null, 2],
+      [0, null, 2, 0, null, 2],
+      [null, 1, 3, 1, 3, null],
+      [1, 2, null, null, 2, 3]
     ]
   },
   
-  // Уровень 10 - финальный (6x6)
+  // Уровень 10 - финальный хаос (7x7)
   { 
-    size: 6, 
+    size: 7, 
     arrows: [
-      [null, 0, 1, 1, 0, null],
-      [3, null, null, null, null, 1],
-      [2, null, 0, 0, null, 2],
-      [2, null, 0, 0, null, 2],
-      [3, null, null, null, null, 1],
-      [null, 2, 3, 3, 2, null]
+      [null, 1, 0, null, 0, 3, null],
+      [3, null, 1, 2, 3, null, 1],
+      [0, 1, null, 0, null, 3, 2],
+      [null, null, 2, null, 0, null, null],
+      [0, 1, null, 2, null, 3, 2],
+      [3, null, 1, 0, 3, null, 1],
+      [null, 1, 2, null, 2, 3, null]
     ]
   }
 ];

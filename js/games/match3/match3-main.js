@@ -20,7 +20,7 @@ let activeAbility = null; // 'swap', 'remove', 'bomb'
 const ABILITIES = [
   { id: 'swap', name: 'Поменять', icon: '🔄', cost: 3 },
   { id: 'remove', name: 'Убрать', icon: '🗑️', cost: 2 },
-  { id: 'bomb', name: 'Бомба', icon: '💥', cost: 5 }
+  { id: 'bomb', name: 'Бомба', icon: '💣', cost: 5 }
 ];
 
 export function renderMatch3Game(container, onExit) {
@@ -60,7 +60,7 @@ export function renderMatch3Game(container, onExit) {
         </div>
       </div>
       <div class="match3-hint">
-        <strong>Бонусы:</strong> 4 в ряд = 💥 Бомба (взрыв 3x3) | 5 в ряд = 🚀 Ракета (линия) | L/T = 🌟 Звезда<br>
+        <strong>Бонусы:</strong> 4 в ряд = 💣 Бомба (взрыв 3x3) | 5 в ряд = 🚀 Ракета (линия) | L/T = 🌟 Звезда<br>
         <strong>💎 Алмазы:</strong> Собирайте алмазы в ряд — каждый дает +1 💎 для способностей!
       </div>
     </div>
@@ -317,6 +317,11 @@ function handleAbility(row, col) {
 
 function addExplosionAnimation(row, col) {
   const board = document.getElementById('board');
+  
+  // Добавляем тряску поля
+  board.classList.add('shake');
+  setTimeout(() => board.classList.remove('shake'), 600);
+  
   const explosion = document.createElement('div');
   explosion.className = 'explosion-effect';
   explosion.style.gridRow = row + 1;
@@ -331,7 +336,7 @@ function activateBonus(row, col, bonusType) {
   grid[row][col] = { icon: null, bonus: null };
   isAnimating = true;
   
-  if (bonusType === '💥') {
+  if (bonusType === '💣') {
     // Бомба - взрывает 3x3 область
     addExplosionAnimation(row, col);
     soundSystem.dice();
@@ -383,6 +388,10 @@ function activateBonus(row, col, bonusType) {
     
   } else if (bonusType === '🌟') {
     // Звезда - убирает все иконки одного типа
+    const board = document.getElementById('board');
+    board.classList.add('shake');
+    setTimeout(() => board.classList.remove('shake'), 600);
+    
     soundSystem.victory();
     const targetIcon = getRandomIcon();
     for (let r = 0; r < GRID_SIZE; r++) {
@@ -405,6 +414,11 @@ function activateBonus(row, col, bonusType) {
 
 function addRocketAnimation(index, direction) {
   const board = document.getElementById('board');
+  
+  // Добавляем тряску поля
+  board.classList.add('shake');
+  setTimeout(() => board.classList.remove('shake'), 600);
+  
   const rocket = document.createElement('div');
   rocket.className = `rocket-effect ${direction}`;
   
@@ -442,7 +456,7 @@ function checkForBonuses(matches) {
     } else if (iconMatches.length === 4) {
       // 4 в ряд - бомба
       const pos = iconMatches[1];
-      grid[pos.row][pos.col] = { icon: null, bonus: '💥' };
+      grid[pos.row][pos.col] = { icon: null, bonus: '💣' };
     } else if (iconMatches.length >= 6) {
       // L или T форма - звезда
       const pos = iconMatches[Math.floor(iconMatches.length / 2)];
