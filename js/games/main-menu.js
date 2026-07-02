@@ -62,9 +62,7 @@ const GAMES = [
 ];
 
 export function renderMainMenu(container, onGameSelect) {
-  console.log('renderMainMenu called');
   const progress = getGameProgress();
-  console.log('progress:', progress);
   
   container.innerHTML = `
     <div class="main-page">
