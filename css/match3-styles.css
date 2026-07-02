@@ -106,28 +106,6 @@
   color: var(--brand-purple);
 }
 
-.btn-primary {
-  background: var(--brand-gradient);
-  color: white;
-  border: none;
-  padding: 12px 28px;
-  border-radius: var(--brand-radius-sm);
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(61, 56, 148, 0.3);
-}
-
-.btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(61, 56, 148, 0.4);
-}
-
-.btn-primary:active {
-  transform: translateY(0);
-}
-
 .match3-board {
   display: grid;
   gap: 8px;
