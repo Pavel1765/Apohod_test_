@@ -17,36 +17,122 @@ let moves = 0;
 let onExitCallback = null;
 
 const LEVELS = [
-  // Уровень 1 - очень простой (3x3) - Решение: сначала угловые, потом центр
+  // Уровень 1 - очень простой (3x3)
   { 
     size: 3, 
     arrows: [
-      [1, null, 1],    // → пусто →
-      [null, null, null],  // все пусто
-      [null, null, null]   // все пусто
+      [1, null, 1],
+      [null, null, null],
+      [null, null, null]
     ]
   },
   
-  // Уровень 2 - простой (3x3) - стрелки только по краям
+  // Уровень 2 - простой (3x3)
   { 
     size: 3, 
     arrows: [
-      [null, 0, null],     // пусто ↑ пусто
-      [3, null, 1],        // ← пусто →
-      [null, 2, null]      // пусто ↓ пусто
+      [null, 0, null],
+      [3, null, 1],
+      [null, 2, null]
     ]
   },
   
-  // Уровень 3 - средний (4x4) - только угловые стрелки
+  // Уровень 3 - (4x4)
   { 
     size: 4, 
     arrows: [
-      [1, null, null, 0],      // → пусто пусто ↑
+      [1, null, null, 0],
       [null, null, null, null],
       [null, null, null, null],
-      [2, null, null, 3]       // ↓ пусто пусто ←
+      [2, null, null, 3]
     ]
   },
+  
+  // Уровень 4 - средний (4x4)
+  { 
+    size: 4, 
+    arrows: [
+      [null, 0, 0, null],
+      [3, null, null, 1],
+      [3, null, null, 1],
+      [null, 2, 2, null]
+    ]
+  },
+  
+  // Уровень 5 - сложнее (5x5)
+  { 
+    size: 5, 
+    arrows: [
+      [null, 0, null, 0, null],
+      [3, null, null, null, 1],
+      [null, null, null, null, null],
+      [3, null, null, null, 1],
+      [null, 2, null, 2, null]
+    ]
+  },
+  
+  // Уровень 6 - более сложный (5x5)
+  { 
+    size: 5, 
+    arrows: [
+      [1, null, 0, null, 1],
+      [null, 3, null, 1, null],
+      [0, null, null, null, 0],
+      [null, 3, null, 1, null],
+      [3, null, 2, null, 3]
+    ]
+  },
+  
+  // Уровень 7 - сложный (5x5)
+  { 
+    size: 5, 
+    arrows: [
+      [null, 0, 1, 0, null],
+      [3, null, null, null, 1],
+      [2, null, null, null, 2],
+      [3, null, null, null, 1],
+      [null, 2, 3, 2, null]
+    ]
+  },
+  
+  // Уровень 8 - очень сложный (6x6)
+  { 
+    size: 6, 
+    arrows: [
+      [null, 0, null, null, 0, null],
+      [3, null, 1, 1, null, 1],
+      [null, null, null, null, null, null],
+      [null, null, null, null, null, null],
+      [3, null, 1, 1, null, 1],
+      [null, 2, null, null, 2, null]
+    ]
+  },
+  
+  // Уровень 9 - мастер (6x6)
+  { 
+    size: 6, 
+    arrows: [
+      [1, 0, null, null, 0, 1],
+      [null, null, 3, 1, null, null],
+      [0, null, null, null, null, 0],
+      [0, null, null, null, null, 0],
+      [null, null, 3, 1, null, null],
+      [3, 2, null, null, 2, 3]
+    ]
+  },
+  
+  // Уровень 10 - финальный (6x6)
+  { 
+    size: 6, 
+    arrows: [
+      [null, 0, 1, 1, 0, null],
+      [3, null, null, null, null, 1],
+      [2, null, 0, 0, null, 2],
+      [2, null, 0, 0, null, 2],
+      [3, null, null, null, null, 1],
+      [null, 2, 3, 3, 2, null]
+    ]
+  }
 ];
 
 export function renderArrowsGame(container, onExit) {

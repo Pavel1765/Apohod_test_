@@ -1,4 +1,4 @@
-/** Игра в шашки с ИИ ботом и локальной игрой */
+/** Игра в шашки с правильными правилами */
 
 import { soundSystem } from '../hike-game/sounds.js';
 
@@ -10,12 +10,13 @@ let board = [];
 let currentPlayer = PLAYER_WHITE;
 let selectedPiece = null;
 let possibleMoves = [];
-let gameMode = null; // 'ai' или 'local'
-let aiDifficulty = 'medium'; // 'easy', 'medium', 'hard'
+let gameMode = null;
+let aiDifficulty = 'medium';
 let isAiThinking = false;
 let onExitCallback = null;
 let capturedWhite = 0;
 let capturedBlack = 0;
+let mustContinueCapture = null; // Для множественного взятия
 
 export function renderCheckersGame(container, onExit) {
   onExitCallback = onExit;
@@ -106,6 +107,7 @@ function initGame(container) {
   currentPlayer = PLAYER_WHITE;
   selectedPiece = null;
   possibleMoves = [];
+  mustContinueCapture = null;
   isAiThinking = false;
   capturedWhite = 0;
   capturedBlack = 0;
@@ -236,6 +238,12 @@ function onCellClick(row, col) {
   
   const piece = board[row][col];
   
+  // Если нужно продолжить взятие, разрешаем выбирать только эту фигуру
+  if (mustContinueCapture && (mustContinueCapture.row !== row || mustContinueCapture.col !== col)) {
+    soundSystem.error();
+    return;
+  }
+  
   if (piece && piece.player === currentPlayer) {
     selectedPiece = { row, col };
     possibleMoves = getValidMoves(row, col);
@@ -247,8 +255,21 @@ function onCellClick(row, col) {
       executeMove(move);
       soundSystem.move();
       
+      // Проверяем возможность продолжения взятия
+      if (move.captured) {
+        const continueMoves = getValidMoves(move.to.row, move.to.col).filter(m => m.captured);
+        if (continueMoves.length > 0) {
+          mustContinueCapture = { row: move.to.row, col: move.to.col };
+          selectedPiece = mustContinueCapture;
+          possibleMoves = continueMoves;
+          renderBoard();
+          return;
+        }
+      }
+      
       selectedPiece = null;
       possibleMoves = [];
+      mustContinueCapture = null;
       
       if (checkWinCondition()) return;
       
@@ -264,46 +285,145 @@ function getValidMoves(row, col) {
   const piece = board[row][col];
   if (!piece) return [];
   
+  const allCaptures = getAllCaptureMoves(piece.player);
+  
+  // Обязательное взятие
+  if (allCaptures.length > 0 && !mustContinueCapture) {
+    return allCaptures.filter(m => m.from.row === row && m.from.col === col);
+  }
+  
+  // Если продолжаем взятие, возвращаем только взятия с этой позиции
+  if (mustContinueCapture) {
+    return getCaptureMoves(row, col);
+  }
+  
+  // Обычные ходы
   const moves = [];
-  const directions = piece.isKing 
-    ? [[1, 1], [1, -1], [-1, 1], [-1, -1]]
-    : piece.player === PLAYER_WHITE 
+  
+  if (piece.isKing) {
+    // Дамка ходит на любое расстояние по диагонали
+    const directions = [[1, 1], [1, -1], [-1, 1], [-1, -1]];
+    for (const [dr, dc] of directions) {
+      let distance = 1;
+      while (true) {
+        const newRow = row + dr * distance;
+        const newCol = col + dc * distance;
+        
+        if (!isValidCell(newRow, newCol)) break;
+        if (board[newRow][newCol]) break;
+        
+        moves.push({
+          from: { row, col },
+          to: { row: newRow, col: newCol },
+          captured: null
+        });
+        distance++;
+      }
+    }
+  } else {
+    // Обычная шашка ходит только вперед
+    const directions = piece.player === PLAYER_WHITE 
       ? [[-1, -1], [-1, 1]]
       : [[1, -1], [1, 1]];
-  
-  const captures = [];
-  
-  for (const [dr, dc] of directions) {
-    const newRow = row + dr;
-    const newCol = col + dc;
     
-    if (isValidCell(newRow, newCol) && !board[newRow][newCol]) {
-      moves.push({
-        from: { row, col },
-        to: { row: newRow, col: newCol },
-        captured: null
-      });
-    }
-    
-    const captureRow = row + dr * 2;
-    const captureCol = col + dc * 2;
-    const middleRow = row + dr;
-    const middleCol = col + dc;
-    
-    if (isValidCell(captureRow, captureCol) && 
-        isValidCell(middleRow, middleCol) &&
-        !board[captureRow][captureCol] &&
-        board[middleRow][middleCol] &&
-        board[middleRow][middleCol].player !== piece.player) {
-      captures.push({
-        from: { row, col },
-        to: { row: captureRow, col: captureCol },
-        captured: { row: middleRow, col: middleCol }
-      });
+    for (const [dr, dc] of directions) {
+      const newRow = row + dr;
+      const newCol = col + dc;
+      
+      if (isValidCell(newRow, newCol) && !board[newRow][newCol]) {
+        moves.push({
+          from: { row, col },
+          to: { row: newRow, col: newCol },
+          captured: null
+        });
+      }
     }
   }
   
-  return captures.length > 0 ? captures : moves;
+  return moves;
+}
+
+function getCaptureMoves(row, col) {
+  const piece = board[row][col];
+  if (!piece) return [];
+  
+  const captures = [];
+  const directions = [[1, 1], [1, -1], [-1, 1], [-1, -1]]; // Взятие возможно во все стороны
+  
+  if (piece.isKing) {
+    // Дамка может перепрыгивать на любое расстояние
+    for (const [dr, dc] of directions) {
+      let distance = 1;
+      let foundEnemy = null;
+      
+      while (true) {
+        const checkRow = row + dr * distance;
+        const checkCol = col + dc * distance;
+        
+        if (!isValidCell(checkRow, checkCol)) break;
+        
+        const checkPiece = board[checkRow][checkCol];
+        
+        if (checkPiece) {
+          if (!foundEnemy && checkPiece.player !== piece.player) {
+            foundEnemy = { row: checkRow, col: checkCol };
+            distance++;
+            continue;
+          } else {
+            break; // Вторая фигура на пути
+          }
+        }
+        
+        if (foundEnemy) {
+          captures.push({
+            from: { row, col },
+            to: { row: checkRow, col: checkCol },
+            captured: foundEnemy
+          });
+        }
+        
+        distance++;
+      }
+    }
+  } else {
+    // Обычная шашка может есть вперед и назад
+    for (const [dr, dc] of directions) {
+      const middleRow = row + dr;
+      const middleCol = col + dc;
+      const captureRow = row + dr * 2;
+      const captureCol = col + dc * 2;
+      
+      if (isValidCell(captureRow, captureCol) && 
+          isValidCell(middleRow, middleCol) &&
+          !board[captureRow][captureCol] &&
+          board[middleRow][middleCol] &&
+          board[middleRow][middleCol].player !== piece.player) {
+        captures.push({
+          from: { row, col },
+          to: { row: captureRow, col: captureCol },
+          captured: { row: middleRow, col: middleCol }
+        });
+      }
+    }
+  }
+  
+  return captures;
+}
+
+function getAllCaptureMoves(player) {
+  const allCaptures = [];
+  
+  for (let row = 0; row < BOARD_SIZE; row++) {
+    for (let col = 0; col < BOARD_SIZE; col++) {
+      const piece = board[row][col];
+      if (piece && piece.player === player) {
+        const captures = getCaptureMoves(row, col);
+        allCaptures.push(...captures);
+      }
+    }
+  }
+  
+  return allCaptures;
 }
 
 function isValidCell(row, col) {
@@ -328,8 +448,10 @@ function executeMove(move) {
   
   if ((piece.player === PLAYER_WHITE && move.to.row === 0) ||
       (piece.player === PLAYER_BLACK && move.to.row === BOARD_SIZE - 1)) {
-    piece.isKing = true;
-    soundSystem.ability();
+    if (!piece.isKing) {
+      piece.isKing = true;
+      soundSystem.ability();
+    }
   }
 }
 
@@ -347,13 +469,13 @@ function checkWinCondition() {
     }
   }
   
-  if (whitePieces.length === 0) {
+  if (whitePieces.length === 0 || getAllCaptureMoves(PLAYER_WHITE).length === 0 && getSimpleMoves(PLAYER_WHITE).length === 0) {
     soundSystem.victory();
     setTimeout(() => alert('Черные победили!'), 300);
     return true;
   }
   
-  if (blackPieces.length === 0) {
+  if (blackPieces.length === 0 || getAllCaptureMoves(PLAYER_BLACK).length === 0 && getSimpleMoves(PLAYER_BLACK).length === 0) {
     soundSystem.victory();
     setTimeout(() => alert('Белые победили!'), 300);
     return true;
@@ -362,18 +484,35 @@ function checkWinCondition() {
   return false;
 }
 
+function getSimpleMoves(player) {
+  const moves = [];
+  for (let row = 0; row < BOARD_SIZE; row++) {
+    for (let col = 0; col < BOARD_SIZE; col++) {
+      const piece = board[row][col];
+      if (piece && piece.player === player) {
+        const pieceMoves = getValidMoves(row, col).filter(m => !m.captured);
+        moves.push(...pieceMoves);
+      }
+    }
+  }
+  return moves;
+}
+
 function makeAiMove(container) {
   isAiThinking = true;
   
   setTimeout(() => {
-    const allMoves = [];
+    const allCaptures = getAllCaptureMoves(PLAYER_BLACK);
+    let allMoves = allCaptures.length > 0 ? allCaptures : [];
     
-    for (let row = 0; row < BOARD_SIZE; row++) {
-      for (let col = 0; col < BOARD_SIZE; col++) {
-        const piece = board[row][col];
-        if (piece && piece.player === PLAYER_BLACK) {
-          const moves = getValidMoves(row, col);
-          allMoves.push(...moves);
+    if (allMoves.length === 0) {
+      for (let row = 0; row < BOARD_SIZE; row++) {
+        for (let col = 0; col < BOARD_SIZE; col++) {
+          const piece = board[row][col];
+          if (piece && piece.player === PLAYER_BLACK) {
+            const moves = getValidMoves(row, col);
+            allMoves.push(...moves);
+          }
         }
       }
     }
@@ -384,23 +523,26 @@ function makeAiMove(container) {
       return;
     }
     
-    let bestMove;
-    
-    if (aiDifficulty === 'easy') {
-      bestMove = allMoves[Math.floor(Math.random() * allMoves.length)];
-    } else if (aiDifficulty === 'medium') {
-      const captureMoves = allMoves.filter(m => m.captured);
-      if (captureMoves.length > 0) {
-        bestMove = captureMoves[Math.floor(Math.random() * captureMoves.length)];
-      } else {
-        bestMove = allMoves[Math.floor(Math.random() * allMoves.length)];
-      }
-    } else {
-      bestMove = findBestMove(allMoves);
-    }
+    let bestMove = aiDifficulty === 'easy' 
+      ? allMoves[Math.floor(Math.random() * allMoves.length)]
+      : aiDifficulty === 'medium'
+        ? (allCaptures.length > 0 ? allCaptures[Math.floor(Math.random() * allCaptures.length)] : allMoves[Math.floor(Math.random() * allMoves.length)])
+        : findBestMove(allMoves);
     
     executeMove(bestMove);
     soundSystem.move();
+    
+    // Проверяем продолжение взятия для ИИ
+    if (bestMove.captured) {
+      const continueMoves = getCaptureMoves(bestMove.to.row, bestMove.to.col);
+      if (continueMoves.length > 0) {
+        mustContinueCapture = { row: bestMove.to.row, col: bestMove.to.col };
+        setTimeout(() => makeAiMove(container), 500);
+        return;
+      }
+    }
+    
+    mustContinueCapture = null;
     
     if (checkWinCondition()) return;
     
@@ -424,7 +566,6 @@ function findBestMove(moves) {
     if (piece.isKing) score += 3;
     
     score += (move.to.row - move.from.row);
-    
     score += Math.random() * 2;
     
     if (score > bestScore) {

@@ -156,6 +156,15 @@ function startDrag(e, shape, index) {
   draggedShape = shape;
   draggedShapeIndex = index;
   
+  const target = e.currentTarget;
+  const rect = target.getBoundingClientRect();
+  const startX = e.clientX || e.touches?.[0]?.clientX;
+  const startY = e.clientY || e.touches?.[0]?.clientY;
+  
+  // Вычисляем смещение клика относительно центра фигуры
+  const offsetX = startX - rect.left - rect.width / 2;
+  const offsetY = startY - rect.top - rect.height / 2;
+  
   const ghost = createGhostShape(shape);
   document.body.appendChild(ghost);
   
@@ -164,12 +173,16 @@ function startDrag(e, shape, index) {
     const y = e.clientY || e.touches?.[0]?.clientY;
     
     if (ghost && x && y) {
-      ghost.style.left = `${x - 30}px`;
-      ghost.style.top = `${y - 30}px`;
+      // Используем вычисленное смещение для плавного следования за курсором
+      ghost.style.left = `${x - offsetX - ghost.offsetWidth / 2}px`;
+      ghost.style.top = `${y - offsetY - ghost.offsetHeight / 2}px`;
     }
     
     highlightValidPlacement(x, y, shape);
   }
+  
+  // Вызываем onMove сразу для начальной позиции
+  onMove(e);
   
   function onEnd(e) {
     document.removeEventListener('mousemove', onMove);

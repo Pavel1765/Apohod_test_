@@ -185,6 +185,11 @@
   animation: bonusPulse 1s infinite;
 }
 
+.match3-cell.diamond-cell {
+  background: linear-gradient(135deg, #E0F7FF 0%, #B0E0FF 100%);
+  animation: diamondSparkle 2s infinite;
+}
+
 .match3-cell.hint {
   animation: hintFlash 0.5s 4;
 }
@@ -197,6 +202,17 @@
   50% {
     transform: scale(1.1);
     box-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+  }
+}
+
+@keyframes diamondSparkle {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 5px rgba(0, 200, 255, 0.3);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px rgba(0, 200, 255, 0.6);
   }
 }
 

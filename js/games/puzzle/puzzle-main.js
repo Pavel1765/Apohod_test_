@@ -132,15 +132,15 @@ function renderBoard() {
     blockEl.className = `puzzle-block ${block.isTarget ? 'target' : ''}`;
     blockEl.dataset.id = block.id;
     blockEl.style.backgroundColor = block.color;
-    blockEl.style.left = `${block.col * CELL_SIZE}px`;
-    blockEl.style.top = `${block.row * CELL_SIZE}px`;
+    blockEl.style.left = `${block.col * CELL_SIZE + 3}px`;
+    blockEl.style.top = `${block.row * CELL_SIZE + 3}px`;
     
     if (block.isHorizontal) {
-      blockEl.style.width = `${block.length * CELL_SIZE - 10}px`;
-      blockEl.style.height = `${CELL_SIZE - 10}px`;
+      blockEl.style.width = `${block.length * CELL_SIZE - 6}px`;
+      blockEl.style.height = `${CELL_SIZE - 6}px`;
     } else {
-      blockEl.style.width = `${CELL_SIZE - 10}px`;
-      blockEl.style.height = `${block.length * CELL_SIZE - 10}px`;
+      blockEl.style.width = `${CELL_SIZE - 6}px`;
+      blockEl.style.height = `${block.length * CELL_SIZE - 6}px`;
     }
     
     blockEl.addEventListener('mousedown', (e) => startDrag(e, block));

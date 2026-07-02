@@ -3,8 +3,10 @@
 import { soundSystem } from '../hike-game/sounds.js';
 
 const ICONS = ['⛰️', '🌲', '🏕️', '💧', '🧭', '🔬', '🎶', '📸', '⛑️'];
+const DIAMOND_ICON = '💎';
 const GRID_SIZE = 8;
 const MIN_MATCH = 3;
+const DIAMOND_SPAWN_CHANCE = 0.03; // 3% шанс появления алмаза
 
 let grid = [];
 let score = 0;
@@ -45,7 +47,7 @@ export function renderMatch3Game(container, onExit) {
       <div class="match3-board" id="board"></div>
   <div class="match3-hint">
     <strong>Бонусы:</strong> 4 в ряд = 💣 Бомба (взрыв 3x3) | 5 в ряд = ⚡ Молния (крест) | 6+ = 🌟 Звезда (все иконки типа)<br>
-    <strong>Подсказка:</strong> Каждые 100 очков = +1 💎 алмаз
+    <strong>💎 Алмазы:</strong> Собирайте алмазы в ряд — каждый дает +1 💎 для подсказок! Появляются редко на поле.
   </div>
     </div>
   `;
@@ -94,6 +96,10 @@ function createGrid() {
 }
 
 function getRandomIcon() {
+  // Небольшой шанс получить алмаз
+  if (Math.random() < DIAMOND_SPAWN_CHANCE) {
+    return DIAMOND_ICON;
+  }
   return ICONS[Math.floor(Math.random() * ICONS.length)];
 }
 
@@ -113,6 +119,9 @@ function renderGrid() {
       if (cellData.bonus) {
         cell.classList.add('bonus-cell');
         cell.textContent = cellData.bonus;
+      } else if (cellData.icon === DIAMOND_ICON) {
+        cell.classList.add('diamond-cell');
+        cell.textContent = cellData.icon;
       } else {
         cell.textContent = cellData.icon;
       }
@@ -179,6 +188,7 @@ function activateBonus(row, col, bonusType) {
   
   if (bonusType === '💣') {
     // Бомба - взрывает 3x3 область
+    soundSystem.dice(); // Звук взрыва
     for (let r = row - 1; r <= row + 1; r++) {
       for (let c = col - 1; c <= col + 1; c++) {
         if (r >= 0 && r < GRID_SIZE && c >= 0 && c < GRID_SIZE) {
@@ -189,6 +199,7 @@ function activateBonus(row, col, bonusType) {
     score += 50;
   } else if (bonusType === '⚡') {
     // Молния - убирает всю линию по горизонтали и вертикали
+    soundSystem.ability(); // Звук молнии
     for (let c = 0; c < GRID_SIZE; c++) {
       grid[row][c] = { icon: null, bonus: null };
     }
@@ -198,6 +209,7 @@ function activateBonus(row, col, bonusType) {
     score += 100;
   } else if (bonusType === '🌟') {
     // Звезда - убирает все иконки одного типа
+    soundSystem.victory(); // Звук звезды
     const targetIcon = getRandomIcon();
     for (let r = 0; r < GRID_SIZE; r++) {
       for (let c = 0; c < GRID_SIZE; c++) {
@@ -380,6 +392,20 @@ function findMatches() {
 function processMatches() {
   const matches = findMatches();
   if (matches.length === 0) return;
+  
+  // Подсчитываем алмазы в матчах
+  let diamondCount = 0;
+  matches.forEach(({ row, col }) => {
+    if (grid[row][col].icon === DIAMOND_ICON) {
+      diamondCount++;
+    }
+  });
+  
+  // За каждый алмаз в матче дать бонус
+  if (diamondCount > 0) {
+    diamonds += diamondCount;
+    soundSystem.artifact(); // Звук сбора алмазов
+  }
   
   removeMatches();
   score += matches.length * 10;
