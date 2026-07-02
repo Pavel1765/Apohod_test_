@@ -27,7 +27,7 @@ function renderLobby() {
     <section class="screen lobby">
       <header class="hero-mini">
         <div class="ridge">⛰ 🌲 🏕 🌲 ⛰</div>
-        <h1>В Поход!</h1>
+        <h1>В Поход! <span style="font-size: 0.5em; opacity: 0.8;">v2.0 🎵</span></h1>
         <p class="lead">Кооперативное путешествие · 2–6 игроков · по очереди на одном устройстве</p>
       </header>
       <div class="panel">
