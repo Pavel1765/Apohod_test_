@@ -1,0 +1,34 @@
+/** Корпоративные цвета "Больше, чем путешествие" */
+
+:root {
+  /* Основная палитра */
+  --brand-purple: #3D3894;
+  --brand-purple-dark: #2B2667;
+  --brand-purple-light: #5A52B8;
+  --brand-green: #7FB069;
+  --brand-green-dark: #5E8F4B;
+  --brand-green-light: #A4C89A;
+  
+  /* Дополнительные цвета */
+  --brand-blue: #4E9FC4;
+  --brand-orange: #E6A93C;
+  --brand-coral: #E2602E;
+  
+  /* Нейтральные */
+  --brand-white: #FFFFFF;
+  --brand-cream: #FBF8F0;
+  --brand-gray-light: #F2F2F2;
+  --brand-gray: #8E8E8E;
+  --brand-gray-dark: #4A4A4A;
+  --brand-text: #2D2D2D;
+  
+  /* Тени и эффекты */
+  --brand-shadow: 0 4px 20px rgba(61, 56, 148, 0.15);
+  --brand-shadow-hover: 0 8px 32px rgba(61, 56, 148, 0.25);
+  --brand-radius: 16px;
+  --brand-radius-sm: 12px;
+  
+  /* Градиенты */
+  --brand-gradient: linear-gradient(135deg, var(--brand-purple) 0%, var(--brand-blue) 100%);
+  --brand-gradient-green: linear-gradient(135deg, var(--brand-green-dark) 0%, var(--brand-green) 100%);
+}

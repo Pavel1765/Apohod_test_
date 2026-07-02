@@ -1,0 +1,152 @@
+/** Стили для игры со стрелками */
+
+.arrows-game {
+  min-height: 100vh;
+  background: linear-gradient(180deg, var(--brand-cream) 0%, var(--brand-white) 100%);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.arrows-header {
+  width: 100%;
+  max-width: 600px;
+  margin-bottom: 20px;
+}
+
+.arrows-title {
+  text-align: center;
+}
+
+.arrows-title h1 {
+  font-size: 32px;
+  color: var(--brand-purple);
+  margin: 0 0 8px;
+}
+
+.arrows-title p {
+  color: var(--brand-gray-dark);
+  font-size: 16px;
+  margin: 0;
+}
+
+.arrows-stats {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.arrows-board {
+  display: grid;
+  gap: 12px;
+  background: white;
+  padding: 20px;
+  border-radius: var(--brand-radius);
+  box-shadow: var(--brand-shadow);
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.arrows-cell {
+  aspect-ratio: 1;
+  background: linear-gradient(135deg, var(--brand-cream) 0%, white 100%);
+  border: 2px solid var(--brand-gray-light);
+  border-radius: var(--brand-radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 80px;
+}
+
+.arrow {
+  font-size: 48px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  user-select: none;
+  padding: 10px;
+  border-radius: var(--brand-radius-sm);
+}
+
+.arrow:hover {
+  transform: scale(1.15);
+}
+
+.arrow.can-exit {
+  color: var(--brand-green);
+  animation: pulse-green 1.5s infinite;
+}
+
+.arrow.can-exit:hover {
+  background: var(--brand-green-light);
+  box-shadow: 0 4px 16px rgba(127, 176, 105, 0.4);
+}
+
+.arrow.blocked {
+  color: var(--brand-gray);
+  cursor: not-allowed;
+}
+
+.arrow.blocked:hover {
+  transform: scale(1.05);
+  color: var(--brand-coral);
+}
+
+@keyframes pulse-green {
+  0%, 100% {
+    text-shadow: 0 0 10px rgba(127, 176, 105, 0.5);
+  }
+  50% {
+    text-shadow: 0 0 20px rgba(127, 176, 105, 0.8);
+  }
+}
+
+.shake {
+  animation: shake 0.5s;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+  20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+.arrows-hint {
+  margin-top: 24px;
+  text-align: center;
+  color: var(--brand-gray-dark);
+  font-size: 14px;
+  max-width: 500px;
+  background: white;
+  padding: 16px;
+  border-radius: var(--brand-radius-sm);
+  box-shadow: var(--brand-shadow);
+}
+
+.arrows-hint p {
+  margin: 8px 0;
+}
+
+.arrows-hint strong {
+  color: var(--brand-purple);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .arrows-board {
+    gap: 8px;
+    padding: 16px;
+    max-width: 100%;
+  }
+  
+  .arrows-cell {
+    min-height: 60px;
+  }
+  
+  .arrow {
+    font-size: 36px;
+  }
+}

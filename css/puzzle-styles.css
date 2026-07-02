@@ -1,0 +1,144 @@
+/** Стили для игры Puzzle Breaks */
+
+.puzzle-game {
+  min-height: 100vh;
+  background: linear-gradient(180deg, var(--brand-cream) 0%, var(--brand-white) 100%);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.puzzle-header {
+  width: 100%;
+  max-width: 600px;
+  margin-bottom: 20px;
+}
+
+.puzzle-title {
+  text-align: center;
+}
+
+.puzzle-title h1 {
+  font-size: 32px;
+  color: var(--brand-purple);
+  margin: 0 0 8px;
+}
+
+.puzzle-title p {
+  color: var(--brand-gray-dark);
+  font-size: 16px;
+  margin: 0;
+}
+
+.puzzle-stats {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.puzzle-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.puzzle-board {
+  position: relative;
+  background: white;
+  border-radius: var(--brand-radius);
+  box-shadow: var(--brand-shadow);
+  display: grid;
+  grid-template-columns: repeat(6, 80px);
+  grid-template-rows: repeat(6, 80px);
+  gap: 0;
+}
+
+.puzzle-cell {
+  border: 1px solid var(--brand-gray-light);
+  background: linear-gradient(135deg, rgba(61, 56, 148, 0.02) 0%, transparent 100%);
+}
+
+.puzzle-block {
+  position: absolute;
+  border-radius: var(--brand-radius-sm);
+  cursor: move;
+  transition: box-shadow 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  z-index: 10;
+  margin: 5px;
+  user-select: none;
+  touch-action: none;
+}
+
+.puzzle-block:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+  z-index: 20;
+}
+
+.puzzle-block.target {
+  border: 3px solid var(--brand-white);
+  box-shadow: 0 0 20px rgba(226, 96, 46, 0.5);
+  animation: glow 2s infinite;
+}
+
+@keyframes glow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(226, 96, 46, 0.5), 0 2px 8px rgba(0, 0, 0, 0.15);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(226, 96, 46, 0.8), 0 2px 8px rgba(0, 0, 0, 0.15);
+  }
+}
+
+.puzzle-exit {
+  font-size: 48px;
+  color: var(--brand-green);
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(10px);
+  }
+}
+
+.puzzle-hint {
+  margin-top: 20px;
+  text-align: center;
+  color: var(--brand-gray);
+  font-size: 14px;
+  max-width: 500px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .puzzle-board {
+    grid-template-columns: repeat(6, 60px);
+    grid-template-rows: repeat(6, 60px);
+    width: 360px !important;
+    height: 360px !important;
+  }
+  
+  .puzzle-block {
+    margin: 3px;
+  }
+  
+  .puzzle-container {
+    flex-direction: column;
+  }
+  
+  .puzzle-exit {
+    transform: rotate(90deg);
+  }
+}
