@@ -71,10 +71,10 @@ export function renderMainMenu(container, onGameSelect) {
       <footer class="footer">
         <p>
           Программа Росмолодёжи 
-          <a href="https://morethantrip.ru" target="_blank" class="footer-link">«Больше, чем путешествие»</a>
+          <a href="https://morethantrip.ru" target="_blank" class="footer-link">«Больше, чем путежествие»</a>
         </p>
         <p style="margin-top: 8px; font-size: 12px; color: var(--brand-gray);">
-          v3.0 • 2026
+          v4.0 • 2026 • 🎮 Обновлено!
         </p>
       </footer>
     </div>
