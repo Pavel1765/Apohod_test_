@@ -2,7 +2,7 @@
 
 import { soundSystem } from '../hike-game/sounds.js';
 
-const ICONS = ['🏠', '🌲', '⛰️', '🟩', '💧', '🧭', '🔬', '🏕️', '🎶', '📸', '⛑️'];
+const ICONS = ['⛰️', '🌲', '🏕️', '💧', '🧭', '🔬', '🎶', '📸', '⛑️'];
 const GRID_SIZE = 8;
 const MIN_MATCH = 3;
 

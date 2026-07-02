@@ -289,20 +289,22 @@ function tryPlaceShape(x, y, shape, index) {
     renderShapes();
     
     // Если все фигуры использованы, генерируем новые
-    if (currentShapes.every(s => s === null)) {
+    const allUsed = currentShapes.every(s => s === null);
+    if (allUsed) {
       setTimeout(() => {
         generateNewShapes();
         renderShapes();
+        soundSystem.ability();
       }, 500);
-    }
-    
-    // Проверка на game over
-    if (!hasValidMoves()) {
-      setTimeout(() => {
-        soundSystem.error();
-        alert(`Игра окончена! Ваш счет: ${score}`);
-        initGame();
-      }, 600);
+    } else {
+      // Проверка на game over только если есть неиспользованные фигуры
+      if (!hasValidMoves()) {
+        setTimeout(() => {
+          soundSystem.error();
+          alert(`Игра окончена! Ваш счет: ${score}`);
+          initGame();
+        }, 600);
+      }
     }
   } else {
     soundSystem.error();
