@@ -113,6 +113,110 @@ html, body {
   animation: fadeIn 1s ease 0.5s both;
 }
 
+/* Информационный блок о программе */
+.info-section {
+  width: 100%;
+  max-width: 1400px;
+  margin: 32px auto;
+  padding: 0 20px;
+}
+
+.info-container {
+  background: linear-gradient(135deg, var(--brand-white) 0%, var(--brand-cream) 100%);
+  border-radius: var(--brand-radius);
+  padding: 32px;
+  box-shadow: var(--brand-shadow);
+  animation: fadeIn 1s ease 0.8s both;
+}
+
+.info-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.info-header h2 {
+  font-size: clamp(24px, 5vw, 32px);
+  color: var(--brand-purple);
+  margin: 0 0 12px;
+}
+
+.info-header p {
+  font-size: 16px;
+  color: var(--brand-gray-dark);
+  max-width: 700px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.info-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+  margin-bottom: 32px;
+}
+
+.info-card {
+  background: white;
+  padding: 24px;
+  border-radius: var(--brand-radius-sm);
+  text-align: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.info-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(61, 56, 148, 0.15);
+}
+
+.info-icon {
+  font-size: 48px;
+  margin-bottom: 12px;
+}
+
+.info-card h3 {
+  font-size: 18px;
+  color: var(--brand-purple);
+  margin: 0 0 8px;
+}
+
+.info-card p {
+  font-size: 14px;
+  color: var(--brand-gray-dark);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.info-cta {
+  text-align: center;
+  padding: 24px;
+  background: linear-gradient(135deg, var(--brand-purple) 0%, var(--brand-blue) 100%);
+  border-radius: var(--brand-radius-sm);
+  color: white;
+}
+
+.info-cta p {
+  margin: 0 0 16px;
+  font-size: 16px;
+}
+
+.info-link {
+  display: inline-block;
+  background: white;
+  color: var(--brand-purple);
+  padding: 12px 32px;
+  border-radius: var(--brand-radius-sm);
+  text-decoration: none;
+  font-weight: 700;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.info-link:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }

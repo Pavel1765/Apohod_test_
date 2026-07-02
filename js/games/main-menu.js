@@ -79,6 +79,47 @@ export function renderMainMenu(container, onGameSelect) {
         <p class="header-tagline">Игровая платформа</p>
       </header>
       
+      <!-- Информационный блок о программе -->
+      <div class="info-section">
+        <div class="info-container">
+          <div class="info-header">
+            <h2>⛰️ Подготовьтесь к настоящему походу через игры!</h2>
+            <p>Игровая платформа программы «Больше, чем путешествие» поможет вам развить навыки, необходимые для настоящих походов по России</p>
+          </div>
+          
+          <div class="info-cards">
+            <div class="info-card">
+              <div class="info-icon">🧭</div>
+              <h3>Логика и планирование</h3>
+              <p>Стрелки, пазлы и Match-3 развивают стратегическое мышление и умение принимать быстрые решения на маршруте</p>
+            </div>
+            
+            <div class="info-card">
+              <div class="info-icon">🎒</div>
+              <h3>Подготовка снаряжения</h3>
+              <p>Собирайте виртуальное походное снаряжение в магазине - каждый предмет основан на реальном туристическом оборудовании</p>
+            </div>
+            
+            <div class="info-card">
+              <div class="info-icon">🏔️</div>
+              <h3>Походные маршруты</h3>
+              <p>Проходите виртуальные маршруты по реальным местам России: Алтай, Байкал, Камчатка, Эльбрус и другие</p>
+            </div>
+            
+            <div class="info-card">
+              <div class="info-icon">🐍</div>
+              <h3>Ориентирование</h3>
+              <p>Змейка учит навигации на местности и умению избегать препятствий в условиях дикой природы</p>
+            </div>
+          </div>
+          
+          <div class="info-cta">
+            <p><strong>Зарабатывайте монеты в играх</strong> и покупайте снаряжение для виртуальных походов!</p>
+            <a href="https://morethantrip.ru" target="_blank" class="info-link">Узнать больше о программе →</a>
+          </div>
+        </div>
+      </div>
+      
       <!-- Прогресс-бар готовности -->
       <div class="readiness-bar">
         <div class="readiness-container">
@@ -143,7 +184,7 @@ export function renderMainMenu(container, onGameSelect) {
           <a href="https://morethantrip.ru" target="_blank" class="footer-link">«Больше, чем путежествие»</a>
         </p>
         <p style="margin-top: 8px; font-size: 12px; color: var(--brand-gray);">
-          v4.4 • 2026 • ⛰️ Новая игра!
+          v5.6 • 2026 • 📚 Информация о программе
         </p>
       </footer>
     </div>

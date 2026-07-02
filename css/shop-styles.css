@@ -308,7 +308,7 @@
 }
 
 .shop-item:hover .shop-item-inner {
-  transform: rotateY(180deg);
+  /* Убираем переворот при наведении для лучшей доступности покупки */
 }
 
 .shop-item.flipped .shop-item-inner {
@@ -381,6 +381,18 @@
   font-weight: bold;
   color: var(--brand-orange);
   margin: 4px 0;
+  padding: 8px 16px;
+  background: linear-gradient(135deg, rgba(255, 193, 7, 0.2), rgba(255, 152, 0, 0.2));
+  border-radius: var(--brand-radius-sm);
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 10;
+}
+
+.item-price[style*="cursor: pointer"]:hover {
+  background: linear-gradient(135deg, rgba(255, 193, 7, 0.4), rgba(255, 152, 0, 0.4));
+  transform: scale(1.08);
+  box-shadow: 0 4px 12px rgba(255, 152, 0, 0.4);
 }
 
 .item-status {
