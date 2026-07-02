@@ -63,6 +63,7 @@ const GAMES = [
 ];
 
 export function renderMainMenu(container, onGameSelect) {
+  soundSystem.init();
   const progress = getGameProgress();
   
   container.innerHTML = `
