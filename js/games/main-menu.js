@@ -4,6 +4,13 @@ import { SHOP_ITEMS, getGameProgress, purchaseItem } from '../shop.js';
 
 const GAMES = [
   {
+    id: 'clicker',
+    title: 'Походные маршруты',
+    icon: '⛰️',
+    description: 'Проходите маршруты, кликая на препятствия! Горы, реки, леса - преодолевайте все и получайте награды за походы.',
+    badge: '🆕 Новое'
+  },
+  {
     id: 'hike',
     title: 'В Поход!',
     icon: '🏕️',
@@ -15,7 +22,7 @@ const GAMES = [
     title: 'Походная Змейка',
     icon: '🥾',
     description: 'Собирайте походников, избегайте препятствий и пройдите поход! Классическая змейка в походном стиле.',
-    badge: '⭐ Обновлено'
+    badge: null
   },
   {
     id: 'blockblast',
@@ -36,7 +43,7 @@ const GAMES = [
     title: 'Шашки',
     icon: '♟️',
     description: 'Классическая игра в шашки! Играйте против умного ИИ на разной сложности или с другом на одном устройстве.',
-    badge: '⭐ Обновлено'
+    badge: null
   },
   {
     id: 'puzzle',
@@ -75,14 +82,28 @@ export function renderMainMenu(container, onGameSelect) {
         <div class="shop-header">
           <div class="shop-title">
             <span style="font-size: 32px;">🎒</span>
-            <h2>Магазин походного снаряжения</h2>
+            <h2>Походное снаряжение</h2>
           </div>
           <div class="coins-display">
             <span>💰</span>
             <span id="coins-value">${progress.coins}</span>
           </div>
         </div>
-        <div class="shelf" id="shop-shelf"></div>
+        
+        <div class="shop-container">
+          <!-- Магазин (слева) -->
+          <div class="shop-column">
+            <div class="shop-column-title">🏪 Магазин</div>
+            <div class="shelf" id="shop-shelf"></div>
+          </div>
+          
+          <!-- Рюкзак (справа) -->
+          <div class="shop-column">
+            <div class="shop-column-title">🎒 Мой рюкзак</div>
+            <div class="backpack" id="backpack"></div>
+          </div>
+        </div>
+        
         <div class="next-item-hint" id="next-item-hint"></div>
       </div>
       
@@ -94,7 +115,7 @@ export function renderMainMenu(container, onGameSelect) {
           <a href="https://morethantrip.ru" target="_blank" class="footer-link">«Больше, чем путежествие»</a>
         </p>
         <p style="margin-top: 8px; font-size: 12px; color: var(--brand-gray);">
-          v4.3 • 2026 • 🎮 Магазин открыт!
+          v4.4 • 2026 • ⛰️ Новая игра!
         </p>
       </footer>
     </div>
@@ -107,12 +128,16 @@ export function renderMainMenu(container, onGameSelect) {
 function renderShop(container) {
   const progress = getGameProgress();
   const shelf = container.querySelector('#shop-shelf');
+  const backpack = container.querySelector('#backpack');
   const hint = container.querySelector('#next-item-hint');
+  
+  shelf.innerHTML = '';
+  backpack.innerHTML = '';
   
   // Найти следующий доступный предмет
   const nextItem = SHOP_ITEMS.find(item => !progress.purchasedItems.includes(item.id));
   
-  // Отображаем купленные предметы и следующий доступный
+  // Отображаем предметы
   SHOP_ITEMS.forEach(item => {
     const isPurchased = progress.purchasedItems.includes(item.id);
     const isNext = nextItem && nextItem.id === item.id;
@@ -145,7 +170,12 @@ function renderShop(container) {
       });
     }
     
-    shelf.appendChild(itemEl);
+    // Распределяем по колонкам
+    if (isPurchased) {
+      backpack.appendChild(itemEl);
+    } else {
+      shelf.appendChild(itemEl);
+    }
   });
   
   // Подсказка

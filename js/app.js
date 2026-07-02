@@ -8,6 +8,7 @@ import { renderArrowsGame } from './games/arrows/arrows-main.js';
 import { renderBlockBlastGame } from './games/block-blast/block-blast-main.js';
 import { renderCheckersGame } from './games/checkers/checkers-main.js';
 import { renderSnakeGame } from './games/snake/snake-main.js';
+import { renderHikeClickerGame } from './games/clicker/clicker-main.js';
 
 class GameApp {
   constructor() {
@@ -42,6 +43,9 @@ class GameApp {
         break;
       case 'snake':
         renderSnakeGame(this.app, () => this.showMainMenu());
+        break;
+      case 'clicker':
+        renderHikeClickerGame(this.app, () => this.showMainMenu());
         break;
       case 'match3':
         renderMatch3Game(this.app, () => this.showMainMenu());

@@ -1,0 +1,376 @@
+/** Стили для игры-кликера с маршрутами */
+
+.clicker-game {
+  min-height: 100vh;
+  background: linear-gradient(180deg, var(--brand-cream) 0%, var(--brand-white) 100%);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.clicker-header {
+  width: 100%;
+  max-width: 1000px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.clicker-title {
+  flex: 1;
+  text-align: center;
+}
+
+.clicker-title h1 {
+  font-size: clamp(24px, 4vw, 36px);
+  color: var(--brand-purple);
+  margin: 0 0 8px;
+}
+
+.clicker-title p {
+  color: var(--brand-gray-dark);
+  font-size: 16px;
+  margin: 0;
+}
+
+/* Выбор маршрутов */
+.routes-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+  max-width: 1000px;
+  width: 100%;
+}
+
+.route-card {
+  background: var(--brand-white);
+  border-radius: var(--brand-radius);
+  box-shadow: var(--brand-shadow);
+  padding: 24px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+.route-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.route-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.route-header h2 {
+  font-size: 20px;
+  color: var(--brand-purple);
+  margin: 0;
+}
+
+.route-reward {
+  font-size: 20px;
+  font-weight: bold;
+  color: var(--brand-orange);
+  padding: 8px 16px;
+  background: var(--brand-cream);
+  border-radius: var(--brand-radius-sm);
+}
+
+.route-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.route-detail {
+  color: var(--brand-gray-dark);
+  font-size: 14px;
+}
+
+.route-obstacles-preview {
+  font-size: 24px;
+  margin: 16px 0;
+  text-align: center;
+  opacity: 0.8;
+}
+
+.route-start-btn {
+  width: 100%;
+  margin-top: 16px;
+}
+
+/* Прохождение маршрута */
+.route-progress {
+  width: 100%;
+  max-width: 900px;
+  background: var(--brand-white);
+  border-radius: var(--brand-radius);
+  box-shadow: var(--brand-shadow);
+  padding: 16px 24px;
+  margin-bottom: 24px;
+}
+
+.progress-text {
+  display: flex;
+  justify-content: space-between;
+  color: var(--brand-gray-dark);
+  font-size: 16px;
+}
+
+.progress-text strong {
+  color: var(--brand-purple);
+}
+
+.route-path {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  max-width: 900px;
+  width: 100%;
+  background: linear-gradient(180deg, rgba(127, 176, 105, 0.1) 0%, transparent 100%);
+  border-radius: var(--brand-radius);
+  padding: 24px;
+  margin-bottom: 32px;
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.path-obstacle {
+  position: relative;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: var(--brand-white);
+  border: 3px solid var(--brand-gray-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  transition: all 0.3s ease;
+}
+
+.path-obstacle.completed {
+  background: var(--brand-green-light);
+  border-color: var(--brand-green);
+}
+
+.path-obstacle.active {
+  background: var(--brand-orange);
+  border-color: var(--brand-purple);
+  animation: pathPulse 1.5s ease-in-out infinite;
+  box-shadow: 0 0 20px rgba(226, 96, 46, 0.5);
+}
+
+@keyframes pathPulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+.path-line {
+  width: 20px;
+  height: 3px;
+  background: repeating-linear-gradient(
+    to right,
+    var(--brand-gray-light) 0px,
+    var(--brand-gray-light) 5px,
+    transparent 5px,
+    transparent 10px
+  );
+}
+
+.check-mark {
+  position: absolute;
+  bottom: -8px;
+  right: -8px;
+  width: 24px;
+  height: 24px;
+  background: var(--brand-green);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+/* Текущее препятствие */
+.current-obstacle-section {
+  max-width: 500px;
+  width: 100%;
+}
+
+.obstacle-card {
+  background: var(--brand-white);
+  border-radius: var(--brand-radius);
+  box-shadow: var(--brand-shadow);
+  padding: 32px;
+  text-align: center;
+}
+
+.obstacle-icon {
+  font-size: 80px;
+  margin-bottom: 16px;
+  animation: obstacleFloat 2s ease-in-out infinite;
+}
+
+@keyframes obstacleFloat {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.obstacle-name {
+  font-size: 24px;
+  font-weight: bold;
+  color: var(--brand-purple);
+  margin-bottom: 24px;
+}
+
+.obstacle-progress {
+  margin-bottom: 24px;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 24px;
+  background: var(--brand-gray-light);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 12px;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--brand-green) 0%, var(--brand-green-light) 100%);
+  transition: width 0.3s ease;
+  box-shadow: 0 0 10px rgba(127, 176, 105, 0.5);
+}
+
+.clicks-remaining {
+  font-size: 18px;
+  font-weight: bold;
+  color: var(--brand-orange);
+}
+
+.btn-large {
+  font-size: 20px;
+  padding: 16px 32px;
+  width: 100%;
+  transition: all 0.1s ease;
+}
+
+.btn-large.clicked {
+  transform: scale(0.95);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Экран победы */
+.victory-screen {
+  max-width: 600px;
+  background: var(--brand-white);
+  border-radius: var(--brand-radius);
+  box-shadow: var(--brand-shadow);
+  padding: 48px;
+  text-align: center;
+  animation: victoryAppear 0.5s ease-out;
+}
+
+@keyframes victoryAppear {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.victory-screen h1 {
+  font-size: 32px;
+  color: var(--brand-purple);
+  margin-bottom: 32px;
+}
+
+.victory-stats {
+  margin-bottom: 32px;
+}
+
+.victory-stats p {
+  font-size: 18px;
+  color: var(--brand-gray-dark);
+  margin: 12px 0;
+}
+
+.victory-route {
+  font-size: 24px;
+  font-weight: bold;
+  color: var(--brand-purple);
+  margin-bottom: 16px;
+}
+
+.victory-reward {
+  font-size: 24px;
+  font-weight: bold;
+  color: var(--brand-orange);
+  margin-top: 24px;
+  padding: 16px;
+  background: var(--brand-cream);
+  border-radius: var(--brand-radius-sm);
+}
+
+.victory-buttons {
+  display: flex;
+  gap: 16px;
+  flex-direction: column;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .routes-container {
+    grid-template-columns: 1fr;
+  }
+  
+  .progress-text {
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
+  }
+  
+  .route-path {
+    padding: 16px;
+  }
+  
+  .path-obstacle {
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+  }
+  
+  .path-line {
+    width: 12px;
+  }
+  
+  .obstacle-icon {
+    font-size: 60px;
+  }
+  
+  .victory-screen {
+    padding: 32px 24px;
+  }
+}
