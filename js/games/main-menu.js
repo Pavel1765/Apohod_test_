@@ -1,5 +1,7 @@
 /** Главное меню выбора игр */
 
+import { SHOP_ITEMS, getGameProgress, purchaseItem } from '../shop.js';
+
 const GAMES = [
   {
     id: 'hike',
@@ -53,6 +55,8 @@ const GAMES = [
 ];
 
 export function renderMainMenu(container, onGameSelect) {
+  const progress = getGameProgress();
+  
   container.innerHTML = `
     <div class="main-page">
       <header class="header">
@@ -66,6 +70,22 @@ export function renderMainMenu(container, onGameSelect) {
         <p class="header-tagline">Игровая платформа</p>
       </header>
       
+      <!-- Магазин предметов -->
+      <div class="shop-section">
+        <div class="shop-header">
+          <div class="shop-title">
+            <span style="font-size: 32px;">🎒</span>
+            <h2>Магазин походного снаряжения</h2>
+          </div>
+          <div class="coins-display">
+            <span>💰</span>
+            <span id="coins-value">${progress.coins}</span>
+          </div>
+        </div>
+        <div class="shelf" id="shop-shelf"></div>
+        <div class="next-item-hint" id="next-item-hint"></div>
+      </div>
+      
       <div class="games-grid" id="games-grid"></div>
       
       <footer class="footer">
@@ -74,12 +94,75 @@ export function renderMainMenu(container, onGameSelect) {
           <a href="https://morethantrip.ru" target="_blank" class="footer-link">«Больше, чем путежествие»</a>
         </p>
         <p style="margin-top: 8px; font-size: 12px; color: var(--brand-gray);">
-          v4.0 • 2026 • 🎮 Обновлено!
+          v4.3 • 2026 • 🎮 Магазин открыт!
         </p>
       </footer>
     </div>
   `;
 
+  renderShop(container);
+  renderGames(container, onGameSelect);
+}
+
+function renderShop(container) {
+  const progress = getGameProgress();
+  const shelf = container.querySelector('#shop-shelf');
+  const hint = container.querySelector('#next-item-hint');
+  
+  // Найти следующий доступный предмет
+  const nextItem = SHOP_ITEMS.find(item => !progress.purchasedItems.includes(item.id));
+  
+  // Отображаем купленные предметы и следующий доступный
+  SHOP_ITEMS.forEach(item => {
+    const isPurchased = progress.purchasedItems.includes(item.id);
+    const isNext = nextItem && nextItem.id === item.id;
+    const isLocked = !isPurchased && !isNext;
+    
+    const itemEl = document.createElement('div');
+    itemEl.className = `shop-item ${isPurchased ? 'purchased' : ''} ${isLocked ? 'locked' : ''}`;
+    
+    itemEl.innerHTML = `
+      <div class="item-tooltip">${item.description}</div>
+      <div class="item-icon">${item.icon}</div>
+      <div class="item-name">${item.name}</div>
+      ${isPurchased ? 
+        '<div class="item-status">✓ Куплено</div>' : 
+        `<div class="item-price"><span>💰</span>${item.price}</div>`
+      }
+    `;
+    
+    if (isNext && !isPurchased) {
+      itemEl.addEventListener('click', () => {
+        const result = purchaseItem(item.id);
+        if (result.success) {
+          itemEl.classList.add('just-purchased');
+          setTimeout(() => {
+            renderShop(container);
+          }, 500);
+        } else {
+          alert(result.message);
+        }
+      });
+    }
+    
+    shelf.appendChild(itemEl);
+  });
+  
+  // Подсказка
+  if (nextItem) {
+    hint.innerHTML = `
+      <span class="highlight">Следующий предмет:</span> ${nextItem.icon} ${nextItem.name} - ${nextItem.price} 💰<br>
+      <small>Зарабатывайте монеты в играх, чтобы купить снаряжение для похода!</small>
+    `;
+  } else {
+    hint.innerHTML = `
+      <span class="highlight">🎉 Поздравляем! Все снаряжение собрано!</span><br>
+      <small>Вы полностью экипированы для любого похода!</small>
+    `;
+  }
+}
+
+function renderGames(container, onGameSelect) {
   const gamesGrid = container.querySelector('#games-grid');
   
   GAMES.forEach(game => {
