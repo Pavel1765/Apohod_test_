@@ -17,6 +17,27 @@ html, body {
   min-height: 100vh;
   background: linear-gradient(180deg, var(--brand-cream) 0%, var(--brand-white) 100%);
   padding: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Походные элементы фона */
+.main-page::before {
+  content: '⛰️ 🌲 🏕️ 🌲 ⛰️';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 120px;
+  opacity: 0.03;
+  white-space: nowrap;
+  pointer-events: none;
+  animation: floatBackground 20s infinite ease-in-out;
+}
+
+@keyframes floatBackground {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); }
+  50% { transform: translate(-50%, -45%) scale(1.1); }
 }
 
 /* Шапка с логотипом */
@@ -25,6 +46,8 @@ html, body {
   margin: 0 auto 40px;
   text-align: center;
   padding: 30px 20px;
+  position: relative;
+  z-index: 1;
 }
 
 .logo-container {
@@ -34,6 +57,18 @@ html, body {
   gap: 20px;
   margin-bottom: 16px;
   flex-wrap: wrap;
+  animation: slideDown 0.8s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .logo-waves {
@@ -46,6 +81,13 @@ html, body {
   justify-content: center;
   font-size: 36px;
   box-shadow: var(--brand-shadow);
+  animation: waveAnimation 3s infinite ease-in-out;
+}
+
+@keyframes waveAnimation {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  25% { transform: translateY(-5px) rotate(-2deg); }
+  75% { transform: translateY(-5px) rotate(2deg); }
 }
 
 .logo-text h1 {
@@ -60,6 +102,7 @@ html, body {
   font-size: clamp(14px, 3vw, 16px);
   color: var(--brand-gray);
   margin: 8px 0 0;
+  animation: fadeIn 1s ease 0.3s both;
 }
 
 .header-tagline {
@@ -67,6 +110,12 @@ html, body {
   color: var(--brand-purple);
   font-weight: 600;
   margin-top: 20px;
+  animation: fadeIn 1s ease 0.5s both;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 /* Сетка игр */
@@ -77,6 +126,8 @@ html, body {
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 24px;
   padding: 0 20px 40px;
+  position: relative;
+  z-index: 1;
 }
 
 /* Карточка игры */
@@ -87,7 +138,7 @@ html, body {
   border-radius: var(--brand-radius);
   overflow: hidden;
   border: 2px solid transparent;
-  transition: all 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
   box-shadow: var(--brand-shadow);
   min-height: 320px;
@@ -95,11 +146,28 @@ html, body {
   flex-direction: column;
 }
 
+.game-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(127, 176, 105, 0.1) 0%, rgba(61, 56, 148, 0.1) 100%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+
 .game-card:hover {
-  transform: translateY(-8px);
+  transform: translateY(-12px) scale(1.02);
   box-shadow: var(--brand-shadow-hover);
   border-color: var(--brand-purple);
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.98);
+}
+
+.game-card:hover::before {
+  opacity: 1;
 }
 
 .game-card-icon {
@@ -107,6 +175,22 @@ html, body {
   text-align: center;
   padding: 40px 20px 20px;
   background: linear-gradient(180deg, rgba(61, 56, 148, 0.05) 0%, transparent 100%);
+  animation: iconBounce 2s infinite ease-in-out;
+}
+
+@keyframes iconBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.game-card:hover .game-card-icon {
+  animation: iconSpin 0.6s ease;
+}
+
+@keyframes iconSpin {
+  0% { transform: rotate(0deg) scale(1); }
+  50% { transform: rotate(180deg) scale(1.2); }
+  100% { transform: rotate(360deg) scale(1); }
 }
 
 .game-card-content {
@@ -121,6 +205,11 @@ html, body {
   font-weight: 700;
   color: var(--brand-purple);
   margin-bottom: 12px;
+  transition: color 0.3s ease;
+}
+
+.game-card:hover .game-card-title {
+  color: var(--brand-green-dark);
 }
 
 .game-card-description {
@@ -131,7 +220,7 @@ html, body {
   opacity: 0;
   max-height: 0;
   overflow: hidden;
-  transition: all 0.3s ease;
+  transition: all 0.4s ease;
 }
 
 .game-card:hover .game-card-description {
@@ -160,8 +249,8 @@ html, body {
 }
 
 .game-card-button:hover {
-  transform: scale(1.05);
-  box-shadow: 0 6px 20px rgba(61, 56, 148, 0.4);
+  transform: scale(1.05) translateY(-2px);
+  box-shadow: 0 6px 20px rgba(61, 56, 148, 0.5);
 }
 
 .game-card-button:active {
@@ -180,7 +269,13 @@ html, body {
   font-size: 12px;
   font-weight: 700;
   text-transform: uppercase;
-  box-shadow: 0 2px 8px rgba(226, 96, 46, 0.3);
+  box-shadow: 0 2px 8px rgba(226, 96, 46, 0.4);
+  animation: badgePulse 2s infinite;
+}
+
+@keyframes badgePulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
 }
 
 /* Футер */
@@ -189,24 +284,43 @@ html, body {
   padding: 40px 20px;
   color: var(--brand-gray);
   font-size: 14px;
+  position: relative;
+  z-index: 1;
+  animation: fadeIn 1.5s ease 1s both;
 }
 
 .footer-link {
   color: var(--brand-purple);
   text-decoration: none;
   font-weight: 600;
-  transition: color 0.2s;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.footer-link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--brand-green);
+  transition: width 0.3s ease;
 }
 
 .footer-link:hover {
-  color: var(--brand-purple-light);
+  color: var(--brand-green-dark);
+}
+
+.footer-link:hover::after {
+  width: 100%;
 }
 
 /* Анимация загрузки */
-@keyframes fadeIn {
+@keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(30px);
   }
   to {
     opacity: 1;
@@ -215,13 +329,15 @@ html, body {
 }
 
 .game-card {
-  animation: fadeIn 0.5s ease forwards;
+  animation: fadeInUp 0.6s ease forwards;
+  opacity: 0;
 }
 
 .game-card:nth-child(1) { animation-delay: 0.1s; }
 .game-card:nth-child(2) { animation-delay: 0.2s; }
 .game-card:nth-child(3) { animation-delay: 0.3s; }
 .game-card:nth-child(4) { animation-delay: 0.4s; }
+.game-card:nth-child(5) { animation-delay: 0.5s; }
 
 /* Responsive */
 @media (max-width: 768px) {
@@ -242,5 +358,9 @@ html, body {
   .game-card-button {
     opacity: 1;
     transform: translateY(0);
+  }
+  
+  .main-page::before {
+    font-size: 60px;
   }
 }

@@ -1,0 +1,205 @@
+/** Стили для игры Block Blast */
+
+.block-blast-game {
+  min-height: 100vh;
+  background: linear-gradient(180deg, var(--brand-cream) 0%, var(--brand-white) 100%);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.block-blast-header {
+  width: 100%;
+  max-width: 600px;
+  margin-bottom: 20px;
+}
+
+.block-blast-title {
+  text-align: center;
+}
+
+.block-blast-title h1 {
+  font-size: 32px;
+  color: var(--brand-purple);
+  margin: 0 0 8px;
+}
+
+.block-blast-title p {
+  color: var(--brand-gray-dark);
+  font-size: 16px;
+  margin: 0;
+}
+
+.block-blast-stats {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.block-blast-board {
+  display: grid;
+  gap: 2px;
+  background: var(--brand-gray-light);
+  padding: 4px;
+  border-radius: var(--brand-radius);
+  box-shadow: var(--brand-shadow);
+  margin: 0 auto 24px;
+}
+
+.bb-cell {
+  width: 50px;
+  height: 50px;
+  background: white;
+  border: 1px solid var(--brand-gray-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.bb-cell.filled {
+  background: var(--brand-green-light);
+  animation: placeBlock 0.3s ease;
+}
+
+@keyframes placeBlock {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.bb-cell.valid {
+  background: rgba(127, 176, 105, 0.3);
+  border-color: var(--brand-green);
+}
+
+.bb-cell.invalid {
+  background: rgba(226, 96, 46, 0.2);
+  border-color: var(--brand-coral);
+}
+
+.block-blast-shapes {
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+
+.bb-shape-container {
+  cursor: grab;
+  padding: 12px;
+  background: white;
+  border-radius: var(--brand-radius-sm);
+  box-shadow: var(--brand-shadow);
+  transition: all 0.3s ease;
+}
+
+.bb-shape-container:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--brand-shadow-hover);
+}
+
+.bb-shape-container:active {
+  cursor: grabbing;
+}
+
+.bb-shape {
+  display: grid;
+  gap: 2px;
+}
+
+.bb-shape-cell {
+  width: 40px;
+  height: 40px;
+  background: transparent;
+}
+
+.bb-shape-cell.active {
+  background: var(--brand-gradient-green);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.bb-ghost {
+  position: fixed;
+  pointer-events: none;
+  z-index: 1000;
+  display: grid;
+  gap: 2px;
+  opacity: 0.8;
+  transform: scale(1.1);
+}
+
+.bb-ghost-cell {
+  width: 40px;
+  height: 40px;
+  background: var(--brand-green);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.block-blast-hint {
+  text-align: center;
+  color: var(--brand-gray-dark);
+  font-size: 14px;
+  max-width: 500px;
+  background: white;
+  padding: 16px;
+  border-radius: var(--brand-radius-sm);
+  box-shadow: var(--brand-shadow);
+}
+
+.block-blast-hint p {
+  margin: 8px 0;
+}
+
+.block-blast-hint strong {
+  color: var(--brand-green-dark);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .bb-cell {
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+  }
+  
+  .block-blast-board {
+    gap: 1px;
+  }
+  
+  .bb-shape-cell {
+    width: 30px;
+    height: 30px;
+    font-size: 18px;
+  }
+  
+  .bb-shape-cell.active {
+    font-size: 18px;
+  }
+}

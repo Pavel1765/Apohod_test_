@@ -5,6 +5,7 @@ import { renderHikeGame } from './games/hike-game/hike-main.js';
 import { renderMatch3Game } from './games/match3/match3-main.js';
 import { renderPuzzleGame } from './games/puzzle/puzzle-main.js';
 import { renderArrowsGame } from './games/arrows/arrows-main.js';
+import { renderBlockBlastGame } from './games/block-blast/block-blast-main.js';
 
 class GameApp {
   constructor() {
@@ -45,6 +46,9 @@ class GameApp {
         break;
       case 'arrows':
         renderArrowsGame(this.app, () => this.showMainMenu());
+        break;
+      case 'blockblast':
+        renderBlockBlastGame(this.app, () => this.showMainMenu());
         break;
       default:
         this.showMainMenu();
