@@ -81,14 +81,21 @@ h2 { font-size: 18px; color: var(--forest-dark); }
   background: var(--card);
   cursor: pointer;
   text-align: left;
-  transition: 0.15s;
+  transition: all 0.15s ease;
   box-shadow: var(--shadow);
 }
 
 .role-card .emoji { font-size: 28px; }
 .role-card small { color: var(--muted); font-size: 11px; font-style: italic; }
-.role-card.selected { border-color: var(--forest); background: var(--moss-soft); }
-.role-card:hover { transform: translateY(-2px); }
+.role-card.selected { 
+  border-color: var(--forest); 
+  background: var(--moss-soft);
+  transform: translateY(-2px);
+}
+.role-card:hover { 
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(31, 77, 44, 0.15);
+}
 
 .btn {
   background: var(--forest);
@@ -127,6 +134,12 @@ h2 { font-size: 18px; color: var(--forest-dark); }
   border-right: 1px solid var(--line);
   padding: 14px;
   overflow-y: auto;
+}
+
+.sound-toggle {
+  width: 100%;
+  margin-bottom: 12px;
+  font-size: 12px;
 }
 
 .roster { border-right: 0; border-left: 1px solid var(--line); }
@@ -224,7 +237,7 @@ h2 { font-size: 18px; color: var(--forest-dark); }
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  transition: 0.12s;
+  transition: all 0.12s ease;
   box-shadow: var(--shadow);
 }
 
@@ -232,19 +245,64 @@ h2 { font-size: 18px; color: var(--forest-dark); }
 .tile.easy { background: linear-gradient(180deg, #f8fff4, #fff); }
 .tile.hard { background: linear-gradient(180deg, #fff4ee, #fff); border-color: #e8c4b0; }
 .tile.fog { background: #e8ede3; cursor: default; }
+
+.tile.available {
+  border-color: var(--forest);
+  border-width: 3px;
+  animation: pulse 2s infinite;
+  box-shadow: 0 0 0 0 rgba(46, 107, 62, 0.4);
+}
+
+.tile.available:hover {
+  border-color: var(--moss);
+  transform: scale(1.08);
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(46, 107, 62, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(46, 107, 62, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(46, 107, 62, 0);
+  }
+}
+
 .tile .terr { font-size: 26px; }
 .tile .tname { font-size: 10px; color: var(--muted); text-align: center; }
 .tile .fog-mark { font-size: 28px; opacity: 0.5; }
-.tile .loot { position: absolute; top: 4px; right: 6px; font-size: 12px; }
+.tile .loot { 
+  position: absolute; 
+  top: 4px; 
+  right: 6px; 
+  font-size: 12px;
+  animation: sparkle 2s infinite;
+}
+
+@keyframes sparkle {
+  0%, 100% { transform: scale(1) rotate(0deg); opacity: 1; }
+  50% { transform: scale(1.2) rotate(180deg); opacity: 0.7; }
+}
 
 .hiker {
   position: absolute;
   bottom: 2px;
   font-size: 16px;
   filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));
+  transition: transform 0.2s ease;
 }
 
-.hiker.current { transform: scale(1.2); }
+.hiker.current { 
+  transform: scale(1.2); 
+  animation: bounce 1s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: scale(1.2) translateY(0); }
+  50% { transform: scale(1.2) translateY(-3px); }
+}
 
 .action-panel {
   margin-top: 12px;
@@ -253,6 +311,18 @@ h2 { font-size: 18px; color: var(--forest-dark); }
   border-radius: 14px;
   box-shadow: var(--shadow);
   font-size: 14px;
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .dice-row, .btn-row, .coop-grid {
@@ -274,6 +344,22 @@ h2 { font-size: 18px; color: var(--forest-dark); }
   color: var(--forest-dark);
   cursor: pointer;
   box-shadow: var(--shadow);
+  transition: all 0.15s ease;
+}
+
+.die:hover {
+  transform: scale(1.05) rotate(5deg);
+}
+
+.die:active {
+  transform: scale(0.95) rotate(-5deg);
+  animation: shake 0.3s;
+}
+
+@keyframes shake {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(5deg); }
+  75% { transform: rotate(-5deg); }
 }
 
 .die.big { width: 72px; height: 72px; font-size: 32px; }
@@ -348,13 +434,28 @@ h2 { font-size: 18px; color: var(--forest-dark); }
   border-radius: 999px;
   font-size: 14px;
   z-index: 100;
-  box-shadow: var(--shadow);
+  box-shadow: 0 8px 24px rgba(31, 77, 44, 0.3);
   animation: fadeUp 0.25s ease;
 }
 
 @keyframes fadeUp {
   from { opacity: 0; transform: translateX(-50%) translateY(8px); }
   to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+.victory {
+  animation: fadeInScale 0.6s ease;
+}
+
+@keyframes fadeInScale {
+  from { 
+    opacity: 0; 
+    transform: scale(0.95);
+  }
+  to { 
+    opacity: 1; 
+    transform: scale(1);
+  }
 }
 
 @media (max-width: 520px) {

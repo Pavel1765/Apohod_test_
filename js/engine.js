@@ -125,7 +125,8 @@ export function canEnterTile(state, player, toTileId, movementLeft) {
   }
 
   if (state.weather?.id === 'wind' && !state.weatherCancelled) {
-    const back = dist(from, tile) < dist(from, getTile(state.map, state.map.main));
+    const mainGoal = getTile(state.map, state.map.main);
+    const back = dist(mainGoal, tile) > dist(mainGoal, from);
     if (back && tile.id !== from.id) return { ok: false, reason: 'Ветер — нельзя назад' };
   }
 

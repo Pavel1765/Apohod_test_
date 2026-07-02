@@ -7,6 +7,7 @@ import {
   revealTile, scoutRevealAdjacent, canEnterTile, applyMove, computeStepPoints,
   checkVictory, nextPhase, endTurn, exchangeArtifacts, hasArtifact,
 } from './engine.js';
+import { soundSystem } from './sounds.js';
 
 let state = null;
 let selectedRoles = [];
@@ -17,6 +18,7 @@ const $ = (sel) => document.querySelector(sel);
 const app = () => $('#app');
 
 export function initUI() {
+  soundSystem.init();
   renderLobby();
 }
 
@@ -48,11 +50,17 @@ function renderLobby() {
     card.className = 'role-card';
     card.dataset.id = r.id;
     card.innerHTML = `<span class="emoji">${r.emoji}</span><strong>${r.name}</strong><small>${r.quote}</small>`;
-    card.addEventListener('click', () => toggleRole(r.id, card));
+    card.addEventListener('click', () => {
+      soundSystem.click();
+      toggleRole(r.id, card);
+    });
     pick.appendChild(card);
   });
 
-  $('#startBtn').addEventListener('click', startGame);
+  $('#startBtn').addEventListener('click', () => {
+    soundSystem.click();
+    startGame();
+  });
 }
 
 function toggleRole(id, el) {
@@ -90,6 +98,9 @@ function renderGame() {
     <div class="game-layout">
       <aside class="sidebar">
         <div class="brand">🏕 В Поход!</div>
+        <button class="btn ghost sm sound-toggle" id="soundToggle" title="Вкл/выкл звук">
+          ${soundSystem.enabled ? '🔊' : '🔇'} Звук
+        </button>
         <div class="stat"><span>Тур</span><strong>${state.round}</strong></div>
         <div class="stat"><span>История</span><strong>${state.storyTokens} 🎖️</strong></div>
         <div class="weather-box ${state.weather ? '' : 'empty'}">
@@ -116,6 +127,12 @@ function renderGame() {
       </aside>
     </div>`;
 
+  $('#soundToggle')?.addEventListener('click', () => {
+    soundSystem.toggle();
+    soundSystem.click();
+    renderGame();
+  });
+
   renderMap();
   renderActions();
 }
@@ -135,6 +152,8 @@ function renderMap() {
   const mapEl = $('#map');
   const player = currentPlayer(state);
   const compass = hasArtifact(player, 'compass') || state.players.some((p) => hasArtifact(p, 'compass'));
+  const isMoving = state.phase === 'move';
+  const adjacents = isMoving ? adjacentIds(state.map, player.tileId) : [];
 
   state.map.tiles.forEach((tile) => {
     const el = document.createElement('button');
@@ -144,6 +163,8 @@ function renderMap() {
 
     const hidden = !tile.revealed;
     const forestHide = hidden && !compass && isForestHidden(tile);
+    const isAdjacent = adjacents.includes(tile.id);
+    const canMove = isAdjacent && tile.revealed && canEnterTile(state, player, tile.id, state.movementLeft).ok;
 
     if (hidden && !forestHide && tile.special !== 'base') {
       el.classList.add('fog');
@@ -160,6 +181,10 @@ function renderMap() {
       el.innerHTML = `<span class="terr">${label}</span><span class="tname">${tile.special ? specialName(tile.special) : terr.name}</span>`;
       if (tile.artifact) el.innerHTML += '<span class="loot">✨</span>';
       el.classList.add(terr.kind);
+      
+      if (canMove) {
+        el.classList.add('available');
+      }
     }
 
     state.players.filter((p) => p.tileId === tile.id).forEach((p) => {
@@ -193,6 +218,7 @@ function onTileClick(tileId) {
 
   if (pendingReveal === 'explorer') {
     revealTile(state, tileId);
+    soundSystem.reveal();
     pendingReveal = null;
     renderGame();
     return;
@@ -200,9 +226,13 @@ function onTileClick(tileId) {
 
   if (pendingRescue !== null) {
     const target = state.players[pendingRescue];
-    if (!adjacentIds(state.map, target.tileId).includes(tileId)) return;
+    if (!adjacentIds(state.map, target.tileId).includes(tileId)) {
+      soundSystem.error();
+      return;
+    }
     target.tileId = tileId;
     state.history.push(`Спасатель переместил ${target.name}.`);
+    soundSystem.ability();
     pendingRescue = null;
     renderGame();
     return;
@@ -210,13 +240,22 @@ function onTileClick(tileId) {
 
   if (state.phase !== 'move') return;
 
+  const tile = getTile(state.map, tileId);
+  const hadArtifact = tile?.artifact;
+
   const res = applyMove(state, player, tileId);
   if (!res.ok) {
+    soundSystem.error();
     flash(res.reason);
     return;
   }
 
+  soundSystem.move();
   revealTile(state, tileId);
+
+  if (hadArtifact && !tile.artifact) {
+    soundSystem.artifact();
+  }
 
   if (state.movementLeft <= 0 || getTile(state.map, tileId)?.terrain === 'mountain') {
     state.phase = 'effects';
@@ -244,6 +283,7 @@ function renderActions() {
       </div>`;
     $('#rollWeather').addEventListener('click', () => {
       state.weather = rollWeather();
+      soundSystem.weather(state.weather.id);
       state.history.push(`Погода: ${state.weather.name}.`);
       scoutRevealAdjacent(state, player.id);
       $('#skipWeather').disabled = false;
@@ -251,6 +291,7 @@ function renderActions() {
     });
     $('#skipWeather').addEventListener('click', () => {
       if (!state.weather) state.weather = rollWeather();
+      soundSystem.click();
       state.phase = 'role';
       renderGame();
     });
@@ -266,7 +307,11 @@ function renderActions() {
         <button class="btn ghost" id="skipRole">Пропустить →</button>
       </div>`;
     bindRoleButtons(player, role);
-    $('#skipRole').addEventListener('click', () => { state.phase = 'roll'; renderGame(); });
+    $('#skipRole').addEventListener('click', () => { 
+      soundSystem.click();
+      state.phase = 'roll'; 
+      renderGame(); 
+    });
     return;
   }
 
@@ -279,16 +324,19 @@ function renderActions() {
         <button class="btn" id="confirmRoll" ${state.lastRoll ? '' : 'disabled'}>К движению →</button>
       </div>`;
     $('#rollStep').addEventListener('click', () => {
+      soundSystem.dice();
       state.lastRoll = rollD6();
       state.rerollAvailable = false;
       renderGame();
     });
     $('#reroll')?.addEventListener('click', () => {
+      soundSystem.dice();
       state.lastRoll = rollD6();
       state.rerollAvailable = false;
       renderGame();
     });
     $('#confirmRoll').addEventListener('click', () => {
+      soundSystem.click();
       state.movementLeft = computeStepPoints(state, player);
       state.phase = 'move';
       renderGame();
@@ -301,7 +349,11 @@ function renderActions() {
       <p>Очков движения: <strong>${state.movementLeft}</strong> (бросок ${state.lastRoll})</p>
       <p class="hint">Нажмите на соседнюю открытую плитку. Сложные участки требуют больше очков.</p>
       <button class="btn ghost" id="endMove">Закончить движение →</button>`;
-    $('#endMove').addEventListener('click', () => { state.phase = 'effects'; renderGame(); });
+    $('#endMove').addEventListener('click', () => { 
+      soundSystem.click();
+      state.phase = 'effects'; 
+      renderGame(); 
+    });
     return;
   }
 
@@ -309,7 +361,11 @@ function renderActions() {
     box.innerHTML = `
       <p>Эффекты местности и погоды применены.</p>
       <button class="btn" id="toCoop">Кооп-действие →</button>`;
-    $('#toCoop').addEventListener('click', () => { state.phase = 'coop'; renderGame(); });
+    $('#toCoop').addEventListener('click', () => { 
+      soundSystem.click();
+      state.phase = 'coop'; 
+      renderGame(); 
+    });
     return;
   }
 
@@ -319,7 +375,11 @@ function renderActions() {
       <div class="coop-grid" id="coopGrid"></div>
       <button class="btn" id="endTurn">Передать ход →</button>`;
     renderCoop();
-    $('#endTurn').addEventListener('click', () => { endTurn(state); renderGame(); });
+    $('#endTurn').addEventListener('click', () => { 
+      soundSystem.turnChange();
+      endTurn(state); 
+      renderGame(); 
+    });
   }
 }
 
@@ -364,6 +424,7 @@ function roleButtons(player, role) {
 function bindRoleButtons(player, role) {
   document.querySelectorAll('[data-act]').forEach((btn) => {
     btn.addEventListener('click', () => {
+      soundSystem.ability();
       const act = btn.dataset.act;
       if (act === 'scout-passive') {
         scoutRevealAdjacent(state, player.id);
@@ -445,6 +506,7 @@ function renderCoop() {
       b.className = 'btn ghost sm';
       b.textContent = `${state.players[from].name} → ${state.players[to].name}: ${ARTIFACTS[art].emoji}`;
       b.addEventListener('click', () => {
+        soundSystem.click();
         exchangeArtifacts(state, from, to, art);
         renderGame();
       });
@@ -457,7 +519,10 @@ function renderCoop() {
     const b = document.createElement('button');
     b.className = 'btn sm';
     b.textContent = `${card.emoji} ${card.name}`;
-    b.addEventListener('click', () => useTeamCard(card));
+    b.addEventListener('click', () => {
+      soundSystem.ability();
+      useTeamCard(card);
+    });
     grid.appendChild(b);
   });
 }
@@ -481,6 +546,7 @@ function useTeamCard(card) {
 }
 
 function renderVictory() {
+  soundSystem.victory();
   const stars = '⭐'.repeat(state.stars) + '☆'.repeat(3 - state.stars);
   app().innerHTML = `
     <section class="screen victory">
@@ -495,7 +561,10 @@ function renderVictory() {
       </div>
       <button class="btn btn-lg" id="again">Новый поход</button>
     </section>`;
-  $('#again').addEventListener('click', () => renderLobby());
+  $('#again').addEventListener('click', () => {
+    soundSystem.click();
+    renderLobby();
+  });
 }
 
 function flash(msg) {
