@@ -147,23 +147,32 @@ function renderShop(container) {
     itemEl.className = `shop-item ${isPurchased ? 'purchased' : ''} ${isLocked ? 'locked' : ''}`;
     
     itemEl.innerHTML = `
-      <div class="item-tooltip">${item.description}</div>
-      <div class="item-icon">${item.icon}</div>
-      <div class="item-name">${item.name}</div>
-      ${isPurchased ? 
-        '<div class="item-status">✓ Куплено</div>' : 
-        `<div class="item-price"><span>💰</span>${item.price}</div>`
-      }
+      <div class="shop-item-inner">
+        <div class="shop-item-front">
+          <div class="item-icon">${item.icon}</div>
+          <div class="item-name">${item.name}</div>
+          ${isPurchased ? 
+            '<div class="item-status">✓ Куплено</div>' : 
+            `<div class="item-price"><span>💰</span>${item.price}</div>`
+          }
+        </div>
+        <div class="shop-item-back">
+          <div class="item-back-title">${item.icon} ${item.name}</div>
+          <div class="item-description">${item.description}</div>
+        </div>
+      </div>
     `;
     
     if (isNext && !isPurchased) {
-      itemEl.addEventListener('click', () => {
+      itemEl.addEventListener('click', (e) => {
+        // Предотвращаем переворот при клике на покупку
+        e.stopPropagation();
         const result = purchaseItem(item.id);
         if (result.success) {
           itemEl.classList.add('just-purchased');
           setTimeout(() => {
             renderShop(container);
-          }, 500);
+          }, 800);
         } else {
           alert(result.message);
         }
