@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <title>Test Debug</title>
+</head>
+<body>
+  <div id="debug"></div>
+  <script type="module">
+    const debug = document.getElementById('debug');
+    debug.innerHTML = 'Starting...<br>';
+    
+    try {
+      debug.innerHTML += 'Importing shop.js...<br>';
+      const shop = await import('./js/shop.js');
+      debug.innerHTML += 'shop.js OK<br>';
+      
+      debug.innerHTML += 'Importing main-menu.js...<br>';
+      const menu = await import('./js/games/main-menu.js');
+      debug.innerHTML += 'main-menu.js OK<br>';
+      
+      debug.innerHTML += 'Importing app.js...<br>';
+      const app = await import('./js/app.js');
+      debug.innerHTML += 'app.js OK<br>';
+      
+      debug.innerHTML += '<strong style="color: green;">ALL OK!</strong>';
+    } catch (e) {
+      debug.innerHTML += `<strong style="color: red;">ERROR: ${e.message}</strong><br>`;
+      debug.innerHTML += `<pre>${e.stack}</pre>`;
+    }
+  </script>
+</body>
+</html>
