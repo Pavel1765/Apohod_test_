@@ -1,0 +1,247 @@
+/** Стили для походной змейки */
+
+.snake-game {
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--brand-purple) 0%, var(--brand-purple-dark) 100%);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.snake-header {
+  width: 100%;
+  max-width: 800px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.snake-title {
+  flex: 1;
+  text-align: center;
+}
+
+.snake-title h1 {
+  color: white;
+  font-size: clamp(24px, 4vw, 36px);
+  margin: 0 0 8px;
+}
+
+.snake-title p {
+  color: var(--brand-green-light);
+  font-size: 16px;
+  margin: 0;
+}
+
+.snake-stats {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.snake-board {
+  display: grid;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: var(--brand-radius);
+  box-shadow: var(--brand-shadow-lg);
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.snake-cell {
+  border: 1px solid rgba(61, 56, 148, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  transition: all 0.2s ease;
+  background: linear-gradient(135deg, rgba(127, 176, 105, 0.05) 0%, transparent 100%);
+}
+
+.snake-cell.snake-segment {
+  background: linear-gradient(135deg, var(--brand-green) 0%, var(--brand-green-light) 100%);
+  animation: segmentPulse 0.3s ease-out;
+}
+
+.snake-cell.snake-segment.head {
+  background: linear-gradient(135deg, var(--brand-purple) 0%, var(--brand-purple-light) 100%);
+  font-size: 22px;
+  animation: headBounce 0.5s infinite;
+}
+
+@keyframes segmentPulse {
+  0% {
+    transform: scale(0.8);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes headBounce {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+.snake-cell.item {
+  animation: itemSparkle 1s infinite;
+}
+
+@keyframes itemSparkle {
+  0%, 100% {
+    transform: scale(1) rotate(0deg);
+    filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.5));
+  }
+  50% {
+    transform: scale(1.2) rotate(10deg);
+    filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.8));
+  }
+}
+
+.snake-cell.obstacle {
+  background: linear-gradient(135deg, rgba(226, 96, 46, 0.3) 0%, rgba(226, 96, 46, 0.1) 100%);
+  animation: obstacleFade 0.5s ease-out;
+}
+
+@keyframes obstacleFade {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.snake-victory {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(61, 56, 148, 0.95);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--brand-radius);
+  animation: victoryFadeIn 0.5s ease-out;
+}
+
+@keyframes victoryFadeIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.victory-content {
+  text-align: center;
+  color: white;
+  padding: 40px;
+}
+
+.victory-content h2 {
+  font-size: 36px;
+  margin: 0 0 20px;
+  animation: victoryBounce 1s infinite;
+}
+
+@keyframes victoryBounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.victory-content p {
+  font-size: 20px;
+  margin: 10px 0;
+}
+
+.victory-content .btn-primary {
+  margin-top: 20px;
+}
+
+.snake-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.control-hint {
+  color: white;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 12px 24px;
+  border-radius: var(--brand-radius-sm);
+  backdrop-filter: blur(10px);
+}
+
+.mobile-controls {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  justify-items: center;
+}
+
+.control-row {
+  display: flex;
+  gap: 8px;
+}
+
+.control-btn {
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, var(--brand-green) 0%, var(--brand-green-light) 100%);
+  border: none;
+  border-radius: var(--brand-radius-sm);
+  color: white;
+  font-size: 28px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(127, 176, 105, 0.3);
+  user-select: none;
+}
+
+.control-btn:active {
+  transform: scale(0.95);
+  box-shadow: 0 2px 8px rgba(127, 176, 105, 0.3);
+}
+
+.control-btn:hover {
+  background: linear-gradient(135deg, var(--brand-green-dark) 0%, var(--brand-green) 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(127, 176, 105, 0.4);
+}
+
+@media (max-width: 768px) {
+  .snake-cell {
+    font-size: 16px;
+  }
+  
+  .control-hint {
+    font-size: 14px;
+  }
+}
+
+@media (min-width: 769px) {
+  .mobile-controls {
+    display: none;
+  }
+}
