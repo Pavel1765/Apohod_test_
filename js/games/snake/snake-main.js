@@ -4,11 +4,15 @@ import { soundSystem } from '../hike-game/sounds.js';
 
 const GRID_SIZE = 20;
 const CELL_SIZE = 25;
-const INITIAL_SPEED = 200;
-const TARGET_LENGTH = 12; // Победа при 12 походниках
+const INITIAL_SPEED = 180;
+const TARGET_LENGTH = 12;
 
-const ITEMS = ['🏕️', '🧭', '🔥', '🎒', '⛰️', '🌲', '💧', '📍'];
-const OBSTACLES = ['🌲', '⛰️', '🌊'];
+const ITEMS = ['🏕️', '🧭', '🔥', '🎒']; // Только походные принадлежности
+const OBSTACLES = [
+  { icon: '🌲', name: 'tree' },
+  { icon: '⛰️', name: 'mountain' },
+  { icon: '🌊', name: 'river' }
+];
 
 let snake = [];
 let direction = { x: 1, y: 0 };
@@ -58,7 +62,7 @@ export function renderSnakeGame(container, onExit) {
       
       <div class="snake-controls">
         <div class="control-hint">
-          <strong>Управление:</strong> Стрелки ← ↑ → ↓ или WASD
+          <strong>Управление:</strong> Стрелки ← ↑ → ↓ или WASD | Пробел - пауза
         </div>
         <div class="mobile-controls" id="mobileControls">
           <button class="control-btn" data-dir="up">↑</button>
@@ -230,8 +234,8 @@ function gameStep() {
   // Управление препятствиями
   updateObstacles();
   
-  // Спавним новое препятствие каждые 8-12 ходов
-  if (moveCount % (8 + Math.floor(Math.random() * 5)) === 0) {
+  // Спавним новое препятствие каждые 6-9 ходов (чаще!)
+  if (moveCount % (6 + Math.floor(Math.random() * 4)) === 0) {
     spawnObstacle();
   }
   
@@ -284,31 +288,34 @@ function spawnItem() {
 
 function spawnObstacle() {
   const head = snake[0];
-  const size = Math.random() < 0.7 ? 1 : 2; // 70% - 1 клетка, 30% - 2 клетки
-  const lifetime = 2 + Math.floor(Math.random() * 4); // 2-5 ходов
+  const obstacleType = OBSTACLES[Math.floor(Math.random() * OBSTACLES.length)];
+  
+  // 30% - 1 клетка, 40% - 2-3 клетки, 30% - большое препятствие 4-6 клеток
+  const rand = Math.random();
+  let size;
+  if (rand < 0.3) size = 1;
+  else if (rand < 0.7) size = 2 + Math.floor(Math.random() * 2); // 2-3
+  else size = 4 + Math.floor(Math.random() * 3); // 4-6
+  
+  const lifetime = 5 + Math.floor(Math.random() * 8); // 5-12 ходов (дольше!)
   
   let attempts = 0;
-  while (attempts < 50) {
+  while (attempts < 100) {
     const x = Math.floor(Math.random() * GRID_SIZE);
     const y = Math.floor(Math.random() * GRID_SIZE);
     
-    // Проверка: не ближе 3 клеток от головы
+    // Проверка: не ближе 4 клеток от головы (увеличил с 3)
     const distToHead = Math.abs(x - head.x) + Math.abs(y - head.y);
-    if (distToHead < 3) {
+    if (distToHead < 4) {
       attempts++;
       continue;
     }
     
-    const cells = [{ x, y }];
+    const cells = generateObstacleShape(x, y, size, obstacleType.name);
     
-    if (size === 2) {
-      // Добавляем вторую клетку рядом
-      const directions = [
-        { x: 1, y: 0 }, { x: -1, y: 0 },
-        { x: 0, y: 1 }, { x: 0, y: -1 }
-      ];
-      const dir = directions[Math.floor(Math.random() * directions.length)];
-      cells.push({ x: x + dir.x, y: y + dir.y });
+    if (!cells || cells.length === 0) {
+      attempts++;
+      continue;
     }
     
     // Проверяем, что все клетки валидны
@@ -327,7 +334,8 @@ function spawnObstacle() {
     if (valid && !wouldBlockPath(cells)) {
       obstacles.push({
         cells,
-        icon: OBSTACLES[Math.floor(Math.random() * OBSTACLES.length)],
+        icon: obstacleType.icon,
+        type: obstacleType.name,
         lifetime,
         age: 0
       });
@@ -336,6 +344,59 @@ function spawnObstacle() {
     
     attempts++;
   }
+}
+
+function generateObstacleShape(startX, startY, size, type) {
+  const cells = [{ x: startX, y: startY }];
+  
+  if (size === 1) return cells;
+  
+  // Генерируем форму в зависимости от типа препятствия
+  if (type === 'tree') {
+    // Лес - случайный кластер
+    const directions = [
+      { x: 1, y: 0 }, { x: -1, y: 0 },
+      { x: 0, y: 1 }, { x: 0, y: -1 },
+      { x: 1, y: 1 }, { x: -1, y: -1 },
+      { x: 1, y: -1 }, { x: -1, y: 1 }
+    ];
+    
+    for (let i = 1; i < size; i++) {
+      const lastCell = cells[cells.length - 1];
+      const dir = directions[Math.floor(Math.random() * directions.length)];
+      const newCell = { x: lastCell.x + dir.x, y: lastCell.y + dir.y };
+      
+      // Проверяем, что клетка еще не добавлена
+      if (!cells.some(c => c.x === newCell.x && c.y === newCell.y)) {
+        cells.push(newCell);
+      }
+    }
+  } else if (type === 'mountain') {
+    // Гора - компактный квадрат/прямоугольник
+    const width = Math.ceil(Math.sqrt(size));
+    const height = Math.ceil(size / width);
+    
+    for (let dy = 0; dy < height; dy++) {
+      for (let dx = 0; dx < width && cells.length < size; dx++) {
+        if (dx === 0 && dy === 0) continue; // Уже добавлена стартовая клетка
+        cells.push({ x: startX + dx, y: startY + dy });
+      }
+    }
+  } else if (type === 'river') {
+    // Река - линия
+    const horizontal = Math.random() < 0.5;
+    if (horizontal) {
+      for (let i = 1; i < size; i++) {
+        cells.push({ x: startX + i, y: startY });
+      }
+    } else {
+      for (let i = 1; i < size; i++) {
+        cells.push({ x: startX, y: startY + i });
+      }
+    }
+  }
+  
+  return cells;
 }
 
 function wouldBlockPath(newObstacleCells) {
@@ -461,9 +522,9 @@ function renderBoard() {
       cell.classList.add('snake-segment');
       if (index === 0) {
         cell.classList.add('head');
-        cell.textContent = '🥾';
+        cell.innerHTML = '<div class="hiker-head">🧑‍🦰</div>';
       } else {
-        cell.textContent = '👤';
+        cell.innerHTML = `<div class="hiker-body">${index % 2 === 0 ? '👤' : '👥'}</div>`;
       }
     }
   });

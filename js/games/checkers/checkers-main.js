@@ -260,9 +260,10 @@ function onCellClick(row, col) {
         const continueMoves = getCaptureMoves(move.to.row, move.to.col);
         if (continueMoves.length > 0) {
           mustContinueCapture = { row: move.to.row, col: move.to.col };
-          selectedPiece = mustContinueCapture;
+          selectedPiece = { row: move.to.row, col: move.to.col };
           possibleMoves = continueMoves;
-          renderBoard(); // Обновляем только доску, не всю игру
+          renderBoard();
+          soundSystem.click();
           return;
         }
       }
