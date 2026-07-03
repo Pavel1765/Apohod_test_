@@ -193,7 +193,7 @@ export function renderMainMenu(container, onGameSelect) {
           <a href="https://morethantrip.ru" target="_blank" class="footer-link">«Больше, чем путежествие»</a>
         </p>
         <p style="margin-top: 8px; font-size: 12px; color: var(--brand-gray);">
-          v5.15 • 2026 • 🎨 Header 1400px, бонус кликера работает
+          v5.16 • 2026 • 🎯 Компактный дизайн Match3 и BlockBlast
         </p>
       </footer>
     </div>

@@ -3,44 +3,49 @@
 .block-blast-game {
   min-height: 100vh;
   background: linear-gradient(180deg, var(--brand-cream) 0%, var(--brand-white) 100%);
-  padding: 20px;
+  padding: 60px 20px 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  position: relative;
+}
+
+/* Кнопка В меню в левом верхнем углу */
+.block-blast-game .game-back-btn {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 1000;
 }
 
 .block-blast-header {
   width: 100%;
   max-width: 800px;
-  margin-bottom: 20px;
-  display: flex;
-  align-items: center;
-  gap: 20px;
+  margin-bottom: 12px;
+  text-align: center;
 }
 
 .block-blast-title {
   text-align: center;
-  flex: 1;
-  min-width: 0;
 }
 
 .block-blast-title h1 {
-  font-size: 32px;
+  font-size: 28px;
   color: var(--brand-purple);
-  margin: 0 0 8px;
+  margin: 0 0 4px;
 }
 
 .block-blast-title p {
   color: var(--brand-gray-dark);
-  font-size: 16px;
+  font-size: 14px;
   margin: 0;
 }
 
 .block-blast-stats {
   display: flex;
-  gap: 16px;
+  gap: 12px;
   align-items: center;
-  margin-bottom: 24px;
+  margin-bottom: 16px;
   flex-wrap: wrap;
   justify-content: center;
 }
@@ -52,18 +57,18 @@
   padding: 4px;
   border-radius: var(--brand-radius);
   box-shadow: var(--brand-shadow);
-  margin: 0 auto 24px;
+  margin: 0 auto 16px;
 }
 
 .bb-cell {
-  width: 50px;
-  height: 50px;
+  width: 42px;
+  height: 42px;
   background: white;
   border: 1px solid var(--brand-gray-light);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 28px;
+  font-size: 24px;
   transition: all 0.2s ease;
   user-select: none;
 }
@@ -99,16 +104,16 @@
 
 .block-blast-shapes {
   display: flex;
-  gap: 24px;
+  gap: 16px;
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
-  margin-bottom: 24px;
+  margin-bottom: 16px;
 }
 
 .bb-shape-container {
   cursor: grab;
-  padding: 12px;
+  padding: 8px;
   background: white;
   border-radius: var(--brand-radius-sm);
   box-shadow: var(--brand-shadow);
@@ -130,8 +135,8 @@
 }
 
 .bb-shape-cell {
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
   background: transparent;
 }
 
@@ -141,7 +146,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 24px;
+  font-size: 20px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
