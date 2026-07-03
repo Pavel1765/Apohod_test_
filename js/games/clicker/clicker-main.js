@@ -607,6 +607,9 @@ function showRouteSelection(container) {
     </div>
   `;
   
+  // Скролл наверх страницы при открытии
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  
   loadStyles();
   
   document.getElementById('backBtn').addEventListener('click', () => onExitCallback());
