@@ -55,8 +55,8 @@ const GAMES = [
   },
   {
     id: 'blockblast',
-    title: 'Block Blast',
-    icon: '🎲',
+    title: 'Кемпинги',
+    icon: '⛺',
     description: 'Размещайте походные палатки (фигуры) на карте маршрута! Заполняйте линии, чтобы освободить место для новых привалов.',
     badge: null
   }
@@ -193,7 +193,7 @@ export function renderMainMenu(container, onGameSelect) {
           <a href="https://morethantrip.ru" target="_blank" class="footer-link">«Больше, чем путежествие»</a>
         </p>
         <p style="margin-top: 8px; font-size: 12px; color: var(--brand-gray);">
-          v5.40 • 2026 • Пройденные походы
+          v5.41 • 2026 • Кемпинги, Match-3, 28 маршрутов
         </p>
       </footer>
     </div>

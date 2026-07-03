@@ -229,19 +229,39 @@
 }
 
 .match3-cell.falling {
-  animation: fallIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  animation: fallIn 0.35s ease-out;
+}
+
+.match3-cell.swapping {
+  transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 2;
+  position: relative;
+}
+
+.match3-cell.swap-x {
+  transform: translateX(var(--swap-x, 0));
+}
+
+.match3-cell.swap-y {
+  transform: translateY(var(--swap-y, 0));
+}
+
+.match3-cell.matching {
+  animation: matchPop 0.25s ease-out forwards;
+}
+
+@keyframes matchPop {
+  0% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(0.6); opacity: 0; }
 }
 
 @keyframes fallIn {
   0% {
-    transform: translateY(-100px) scale(0.5);
+    transform: translateY(-48px);
     opacity: 0;
   }
-  60% {
-    transform: translateY(10px) scale(1.1);
-  }
   100% {
-    transform: translateY(0) scale(1);
+    transform: translateY(0);
     opacity: 1;
   }
 }

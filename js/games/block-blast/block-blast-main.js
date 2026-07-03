@@ -39,8 +39,8 @@ export function renderBlockBlastGame(container, onExit) {
       <button class="btn-back game-back-btn" id="backBtn">← В меню</button>
       <div class="block-blast-header">
         <div class="block-blast-title">
-          <h1>🎲 Block Blast</h1>
-          <p>Эффективное распределение ресурсов - ключ к успеху в походе!</p>
+          <h1>⛺ Кемпинги</h1>
+          <p>Эффективное распределение ресурсов — ключ к успеху в походе!</p>
         </div>
       </div>
       <div class="block-blast-stats">

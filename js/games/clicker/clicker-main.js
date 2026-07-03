@@ -584,6 +584,177 @@ const ROUTES = [
       { type: 'sunrise', icon: '🌅', name: 'Рассвет на горе', clicks: 9 },
       { type: 'summit', icon: '⛰️', name: 'Панорама!', clicks: 15 }
     ]
+  },
+  {
+    id: 21,
+    name: 'Валдайские озёра',
+    location: 'Новгородская область',
+    elevation: 150,
+    season: '☀️ Лето',
+    difficulty: 'Легкий',
+    duration: 2,
+    reward: 45,
+    image: '',
+    fact: 'Валдайский национальный парк — край озёр, холмов и старинных монастырей',
+    obstacles: [
+      { type: 'train', icon: '🚂', name: 'Поезд до Валдая', clicks: 6 },
+      { type: 'boat', icon: '⛵', name: 'Прогулка по озеру', clicks: 7 },
+      { type: 'church', icon: '⛪', name: 'Свято-озерский монастырь', clicks: 5 },
+      { type: 'tree', icon: '🌲', name: 'Хвойный лес', clicks: 6 },
+      { type: 'camp', icon: '⛺', name: 'Лагерь у воды', clicks: 7 },
+      { type: 'summit', icon: '⛰️', name: 'Смотровая!', clicks: 10 }
+    ]
+  },
+  {
+    id: 22,
+    name: 'Куршская коса',
+    location: 'Калининградская область',
+    elevation: 50,
+    season: '☀️ Лето',
+    difficulty: 'Легкий',
+    duration: 3,
+    reward: 48,
+    image: '',
+    fact: 'Куршская коса — уникальная песчаная полоса между морем и заливом, объект ЮНЕСКО',
+    obstacles: [
+      { type: 'bus', icon: '🚌', name: 'Дорога на косу', clicks: 6 },
+      { type: 'tree', icon: '🌲', name: 'Танцующий лес', clicks: 8 },
+      { type: 'photo', icon: '📸', name: 'Дюны', clicks: 5 },
+      { type: 'lake', icon: '🏞️', name: 'Куршский залив', clicks: 7 },
+      { type: 'camp', icon: '⛺', name: 'Привал у моря', clicks: 6 },
+      { type: 'summit', icon: '⛰️', name: 'Мыс!', clicks: 9 }
+    ]
+  },
+  {
+    id: 23,
+    name: 'Мультинские озёра',
+    location: 'Горный Алтай',
+    elevation: 2300,
+    season: '🍂 Осень',
+    difficulty: 'Средний',
+    duration: 6,
+    reward: 88,
+    image: '',
+    fact: 'Мультинские озёра — жемчужина Алтая с бирюзовой водой у подножия белков',
+    obstacles: [
+      { type: 'bus', icon: '🚌', name: 'Дорога в Усть-Коксу', clicks: 9 },
+      { type: 'horse', icon: '🐎', name: 'Конная тропа', clicks: 11 },
+      { type: 'water', icon: '💧', name: 'Брод через реку', clicks: 10 },
+      { type: 'lake', icon: '🏞️', name: 'Озеро Мультинское', clicks: 12 },
+      { type: 'compass', icon: '🧭', name: 'Ориентирование', clicks: 10 },
+      { type: 'camp', icon: '⛺', name: 'Лагерь у озера', clicks: 9 },
+      { type: 'summit', icon: '⛰️', name: 'Обзорная!', clicks: 16 }
+    ]
+  },
+  {
+    id: 24,
+    name: 'Национальный парк «Уgra»',
+    location: 'Калужская область',
+    elevation: 280,
+    season: '🌸 Весна',
+    difficulty: 'Средний',
+    duration: 4,
+    reward: 65,
+    image: '',
+    fact: 'Парк «Уgra» — древние леса, реки и скалы на границе Средней России',
+    obstacles: [
+      { type: 'train', icon: '🚂', name: 'Электричка до Калуги', clicks: 7 },
+      { type: 'entrance', icon: '🚪', name: 'Въезд в парк', clicks: 5 },
+      { type: 'river', icon: '💧', name: 'Река Уgra', clicks: 9 },
+      { type: 'rock', icon: '🪨', name: 'Скальные выходы', clicks: 11 },
+      { type: 'deer', icon: '🦌', name: 'Лось на тропе', clicks: 8 },
+      { type: 'camp', icon: '⛺', name: 'Ночёвка', clicks: 8 },
+      { type: 'summit', icon: '⛰️', name: 'Вершина!', clicks: 14 }
+    ]
+  },
+  {
+    id: 25,
+    name: 'Дигория',
+    location: 'Северная Осетия',
+    elevation: 3500,
+    season: '☀️ Лето',
+    difficulty: 'Сложный',
+    duration: 8,
+    reward: 125,
+    image: '',
+    fact: 'Дигория — одно из самых живописных и сложных ущелий Кавказа',
+    obstacles: [
+      { type: 'bus', icon: '🚌', name: 'Дорога в ущелье', clicks: 10 },
+      { type: 'water', icon: '💧', name: 'Ледяная река', clicks: 14 },
+      { type: 'rock', icon: '🪨', name: 'Каменная осыпь', clicks: 15 },
+      { type: 'climb', icon: '🧗', name: 'Скальный участок', clicks: 16 },
+      { type: 'wind', icon: '💨', name: 'Горный ветер', clicks: 12 },
+      { type: 'camp', icon: '⛺', name: 'Высотный лагерь', clicks: 11 },
+      { type: 'glacier', icon: '🧊', name: 'Ледник', clicks: 14 },
+      { type: 'summit', icon: '🏔️', name: 'Перевал!', clicks: 22 }
+    ]
+  },
+  {
+    id: 26,
+    name: 'Ключевская группа',
+    location: 'Камчатка',
+    elevation: 4750,
+    season: '☀️ Лето',
+    difficulty: 'Сложный',
+    duration: 9,
+    reward: 140,
+    image: '',
+    fact: 'Ключевская группа вулканов — сердце вулканической Камчатки',
+    obstacles: [
+      { type: 'helicopter', icon: '🚁', name: 'Заброска', clicks: 12 },
+      { type: 'volcano', icon: '🌋', name: 'Вулкан Безымянный', clicks: 15 },
+      { type: 'gas', icon: '💨', name: 'Фumaroles', clicks: 13 },
+      { type: 'rock', icon: '🪨', name: 'Лавовые поля', clicks: 16 },
+      { type: 'compass', icon: '🧭', name: 'Навигация', clicks: 12 },
+      { type: 'camp', icon: '⛺', name: 'Лагерь у подножия', clicks: 11 },
+      { type: 'summit', icon: '🏔️', name: 'Кратер!', clicks: 24 }
+    ]
+  },
+  {
+    id: 27,
+    name: 'Пик Победы',
+    location: 'Тянь-Шань',
+    elevation: 7439,
+    season: '☀️ Лето',
+    difficulty: 'Очень сложный',
+    duration: 14,
+    reward: 250,
+    image: '',
+    fact: 'Пик Победы — одна из высочайших вершин, доступная с территории России и Центральной Азии',
+    obstacles: [
+      { type: 'plane', icon: '✈️', name: 'Перелёт', clicks: 12 },
+      { type: 'helicopter', icon: '🚁', name: 'Заброска на ледник', clicks: 14 },
+      { type: 'ice', icon: '🧊', name: 'Ледопад', clicks: 18 },
+      { type: 'crevasse', icon: '🕳️', name: 'Трещины', clicks: 16 },
+      { type: 'altitude', icon: '😵', name: 'Разреженный воздух', clicks: 22 },
+      { type: 'rope', icon: '🪢', name: 'Связка', clicks: 18 },
+      { type: 'camp', icon: '⛺', name: 'Высотный лагерь', clicks: 15 },
+      { type: 'wind', icon: '💨', name: 'Шторм', clicks: 17 },
+      { type: 'summit', icon: '🏔️', name: 'Вершина!', clicks: 35 }
+    ]
+  },
+  {
+    id: 28,
+    name: 'Охотское побережье',
+    location: 'Хабарovskий край',
+    elevation: 1200,
+    season: '🍂 Осень',
+    difficulty: 'Очень сложный',
+    duration: 11,
+    reward: 200,
+    image: '',
+    fact: 'Охотское побережье — дикая тайга, горные реки и один из самых суровых регионов Дальнего Востока',
+    obstacles: [
+      { type: 'plane', icon: '✈️', name: 'Перелёт на Охотск', clicks: 11 },
+      { type: 'boat', icon: '⛵', name: 'По реке', clicks: 14 },
+      { type: 'bear', icon: '🐻', name: 'След медведя', clicks: 13 },
+      { type: 'tree', icon: '🌲', name: 'Непроходимая тайга', clicks: 15 },
+      { type: 'river', icon: '💧', name: 'Брод', clicks: 16 },
+      { type: 'fish', icon: '🐟', name: 'Рыбалка', clicks: 10 },
+      { type: 'camp', icon: '⛺', name: 'Лагерь', clicks: 12 },
+      { type: 'wind', icon: '💨', name: 'Шторм с моря', clicks: 14 },
+      { type: 'summit', icon: '⛰️', name: 'Мыс!', clicks: 28 }
+    ]
   }
 ];
 
@@ -615,7 +786,15 @@ const ROUTE_MAP_COORDS = {
   17: { lat: 43.26, lon: 42.51 },     // Приэльбрусье
   18: { lat: 52.85, lon: 93.25 },     // Ергаки
   19: { lat: 55.97, lon: 92.74 },     // Красноярские Столбы
-  20: { lat: 52.65, lon: 59.57 }      // Аркаим
+  20: { lat: 52.65, lon: 59.57 },     // Аркаим
+  21: { lat: 57.97, lon: 33.25 },     // Валдай
+  22: { lat: 55.17, lon: 20.86 },     // Куршская коса
+  23: { lat: 51.08, lon: 85.72 },     // Мультинские озёра
+  24: { lat: 54.78, lon: 35.62 },     // Уgra
+  25: { lat: 43.05, lon: 43.38 },     // Дигория
+  26: { lat: 56.06, lon: 160.65 },    // Ключевская группа
+  27: { lat: 42.04, lon: 80.13 },     // Пик Победы
+  28: { lat: 59.36, lon: 143.06 }     // Охотское побережье
 };
 
 function geoToMapPercent(lat, lon) {
@@ -655,7 +834,7 @@ let onExitCallback = null;
 // Фильтры
 let filters = {
   duration: { min: 0, max: 15 },
-  reward: { min: 0, max: 250 },
+  reward: { min: 0, max: 280 },
   difficulty: 'all',
   season: 'all',
   search: ''
@@ -986,8 +1165,8 @@ function showRouteSelection(container) {
               <div class="dual-range-track">
                 <div class="dual-range-fill" id="reward-fill"></div>
               </div>
-              <input type="range" class="dual-range-min" id="reward-min" min="0" max="250" step="10" value="${filters.reward.min}">
-              <input type="range" class="dual-range-max" id="reward-max" min="0" max="250" step="10" value="${filters.reward.max}">
+              <input type="range" class="dual-range-min" id="reward-min" min="0" max="280" step="10" value="${filters.reward.min}">
+              <input type="range" class="dual-range-max" id="reward-max" min="0" max="280" step="10" value="${filters.reward.max}">
             </div>
           </div>
           
@@ -1084,7 +1263,7 @@ function showRouteSelection(container) {
   });
 
   setupDualRangeFilter(container, 'duration-min', 'duration-max', 'duration-fill', 'duration-value', 'duration', 0, 15);
-  setupDualRangeFilter(container, 'reward-min', 'reward-max', 'reward-fill', 'reward-value', 'reward', 0, 250);
+  setupDualRangeFilter(container, 'reward-min', 'reward-max', 'reward-fill', 'reward-value', 'reward', 0, 280);
   
   document.getElementById('difficulty-select').addEventListener('change', (e) => {
     filters.difficulty = e.target.value;
@@ -1101,7 +1280,7 @@ function showRouteSelection(container) {
     mapZoomState = { scale: 1, panX: 0, panY: 0 };
     filters = {
       duration: { min: 0, max: 15 },
-      reward: { min: 0, max: 250 },
+      reward: { min: 0, max: 280 },
       difficulty: 'all',
       season: 'all',
       search: ''

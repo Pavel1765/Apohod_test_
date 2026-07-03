@@ -223,33 +223,23 @@ function onCellClick(row, col) {
     }
     
     if (isAdjacent(selectedCell, { row, col })) {
-      // Пробуем обмен
-      swap(selectedCell.row, selectedCell.col, row, col);
-      const matches = findMatches();
-      
-      if (matches.length > 0) {
-        // Обмен валиден
-        soundSystem.ability();
-        moves++;
-        updateStats();
-        isAnimating = true;
+      animateSwap(selectedCell.row, selectedCell.col, row, col, (valid) => {
         document.querySelector('.selected')?.classList.remove('selected');
         selectedCell = null;
-        
-        setTimeout(() => {
-          checkForBonuses(matches);
-          processMatches();
-        }, 300);
-      } else {
-        // Обмен не создает матчей - возвращаем назад с анимацией
-        soundSystem.error();
-        setTimeout(() => {
-          swap(selectedCell.row, selectedCell.col, row, col);
-          renderGrid();
-          document.querySelector('.selected')?.classList.remove('selected');
-          selectedCell = null;
-        }, 200);
-      }
+
+        if (valid) {
+          soundSystem.ability();
+          moves++;
+          updateStats();
+          isAnimating = true;
+          setTimeout(() => {
+            checkForBonuses(findMatches());
+            processMatches();
+          }, 80);
+        } else {
+          soundSystem.error();
+        }
+      });
     } else {
       soundSystem.error();
       document.querySelector('.selected')?.classList.remove('selected');
@@ -318,10 +308,6 @@ function handleAbility(row, col) {
 function addExplosionAnimation(row, col) {
   const board = document.getElementById('board');
   
-  // Добавляем тряску поля
-  board.classList.add('shake');
-  setTimeout(() => board.classList.remove('shake'), 600);
-  
   const explosion = document.createElement('div');
   explosion.className = 'explosion-effect';
   explosion.style.gridRow = row + 1;
@@ -387,11 +373,6 @@ function activateBonus(row, col, bonusType) {
     }, 600);
     
   } else if (bonusType === '🌟') {
-    // Звезда - убирает все иконки одного типа
-    const board = document.getElementById('board');
-    board.classList.add('shake');
-    setTimeout(() => board.classList.remove('shake'), 600);
-    
     soundSystem.victory();
     const targetIcon = getRandomIcon();
     for (let r = 0; r < GRID_SIZE; r++) {
@@ -414,10 +395,6 @@ function activateBonus(row, col, bonusType) {
 
 function addRocketAnimation(index, direction) {
   const board = document.getElementById('board');
-  
-  // Добавляем тряску поля
-  board.classList.add('shake');
-  setTimeout(() => board.classList.remove('shake'), 600);
   
   const rocket = document.createElement('div');
   rocket.className = `rocket-effect ${direction}`;
@@ -547,10 +524,73 @@ function isAdjacent(cell1, cell2) {
   return (rowDiff === 1 && colDiff === 0) || (rowDiff === 0 && colDiff === 1);
 }
 
-function swap(row1, col1, row2, col2) {
+function swapCells(row1, col1, row2, col2) {
   const temp = grid[row1][col1];
   grid[row1][col1] = grid[row2][col2];
   grid[row2][col2] = temp;
+}
+
+function playSwapMotion(cell1, cell2, colDiff, rowDiff, done) {
+  if (!cell1 || !cell2) {
+    done?.();
+    return;
+  }
+
+  cell1.classList.add('swapping');
+  cell2.classList.add('swapping');
+  cell1.classList.remove('swap-x', 'swap-y');
+  cell2.classList.remove('swap-x', 'swap-y');
+  cell1.style.removeProperty('--swap-x');
+  cell1.style.removeProperty('--swap-y');
+  cell2.style.removeProperty('--swap-x');
+  cell2.style.removeProperty('--swap-y');
+
+  if (colDiff !== 0) {
+    cell1.style.setProperty('--swap-x', `${colDiff * 100}%`);
+    cell2.style.setProperty('--swap-x', `${-colDiff * 100}%`);
+    cell1.classList.add('swap-x');
+    cell2.classList.add('swap-x');
+  } else {
+    cell1.style.setProperty('--swap-y', `${rowDiff * 100}%`);
+    cell2.style.setProperty('--swap-y', `${-rowDiff * 100}%`);
+    cell1.classList.add('swap-y');
+    cell2.classList.add('swap-y');
+  }
+
+  setTimeout(done, 280);
+}
+
+function animateSwap(row1, col1, row2, col2, onComplete) {
+  const board = document.getElementById('board');
+  const colDiff = col2 - col1;
+  const rowDiff = row2 - row1;
+
+  const getCells = () => ({
+    cell1: board.querySelector(`[data-row="${row1}"][data-col="${col1}"]`),
+    cell2: board.querySelector(`[data-row="${row2}"][data-col="${col2}"]`)
+  });
+
+  const { cell1, cell2 } = getCells();
+  playSwapMotion(cell1, cell2, colDiff, rowDiff, () => {
+    swapCells(row1, col1, row2, col2);
+    renderGrid();
+
+    if (findMatches().length > 0) {
+      onComplete?.(true);
+      return;
+    }
+
+    const back = getCells();
+    playSwapMotion(back.cell1, back.cell2, colDiff, rowDiff, () => {
+      swapCells(row1, col1, row2, col2);
+      renderGrid();
+      onComplete?.(false);
+    });
+  });
+}
+
+function swap(row1, col1, row2, col2) {
+  swapCells(row1, col1, row2, col2);
   renderGrid();
 }
 
@@ -602,6 +642,10 @@ function processMatches() {
     isAnimating = false;
     return;
   }
+
+  matches.forEach(({ row, col }) => {
+    document.querySelector(`[data-row="${row}"][data-col="${col}"]`)?.classList.add('matching');
+  });
   
   let diamondCount = 0;
   matches.forEach(({ row, col }) => {
@@ -615,27 +659,29 @@ function processMatches() {
     soundSystem.artifact();
   }
   
-  removeMatches();
-  score += matches.length * 10;
-  
-  if (score % 100 === 0 && score > 0) {
-    diamonds++;
-  }
-  
-  updateStats();
-  
   setTimeout(() => {
-    fillEmptyCells();
-    renderGridWithAnimation();
+    removeMatches();
+    score += matches.length * 10;
+    
+    if (score % 100 === 0 && score > 0) {
+      diamonds++;
+    }
+    
+    updateStats();
     
     setTimeout(() => {
-      if (findMatches().length > 0) {
-        processMatches();
-      } else {
-        isAnimating = false;
-      }
-    }, 600);
-  }, 300);
+      fillEmptyCells();
+      renderGridWithAnimation();
+      
+      setTimeout(() => {
+        if (findMatches().length > 0) {
+          processMatches();
+        } else {
+          isAnimating = false;
+        }
+      }, 400);
+    }, 150);
+  }, 220);
 }
 
 function removeMatches() {

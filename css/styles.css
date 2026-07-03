@@ -16,6 +16,17 @@
   --radius: 16px;
 }
 
+html, body, #app {
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+input, textarea, select, [contenteditable="true"] {
+  user-select: text;
+  -webkit-user-select: text;
+}
+
 * { box-sizing: border-box; }
 
 html, body {
