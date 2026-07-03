@@ -193,7 +193,7 @@ export function renderMainMenu(container, onGameSelect) {
           <a href="https://morethantrip.ru" target="_blank" class="footer-link">«Больше, чем путежествие»</a>
         </p>
         <p style="margin-top: 8px; font-size: 12px; color: var(--brand-gray);">
-          v5.26 • 2026 • 🗺️ Маршрут 20 энергии, фильтры кликера
+          v5.27 • 2026 • 🗺️ Карта маршрутов с булавками
         </p>
       </footer>
     </div>

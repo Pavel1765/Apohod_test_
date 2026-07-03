@@ -448,7 +448,7 @@ const ROUTES = [
   },
   {
     id: 20,
-    name: 'Арка��м',
+    name: 'Аркаим',
     location: 'Челябинская область',
     elevation: 450,
     season: '☀️ Лето',
@@ -469,6 +469,47 @@ const ROUTES = [
   }
 ];
 
+const ROUTE_MAP_POSITIONS = {
+  1: { x: 72, y: 42 },
+  2: { x: 24, y: 18 },
+  3: { x: 58, y: 54 },
+  4: { x: 62, y: 30 },
+  5: { x: 54, y: 60 },
+  6: { x: 70, y: 50 },
+  7: { x: 66, y: 52 },
+  8: { x: 92, y: 38 },
+  9: { x: 28, y: 74 },
+  10: { x: 44, y: 26 },
+  11: { x: 30, y: 20 },
+  12: { x: 26, y: 70 },
+  13: { x: 23, y: 16 },
+  14: { x: 72, y: 52 },
+  15: { x: 46, y: 56 },
+  16: { x: 30, y: 72 },
+  17: { x: 32, y: 76 },
+  18: { x: 60, y: 46 },
+  19: { x: 58, y: 42 },
+  20: { x: 44, y: 54 }
+};
+
+const ROUTE_MAP_SVG = `
+  <svg class="route-map-svg" viewBox="0 0 1000 500" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+    <defs>
+      <linearGradient id="routeMapGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#E8F5E9"/>
+        <stop offset="100%" stop-color="#C8E6C9"/>
+      </linearGradient>
+    </defs>
+    <path fill="url(#routeMapGrad)" stroke="#7FB069" stroke-width="3"
+      d="M90,170 C120,110 190,70 280,55 C380,38 520,32 660,42 C780,52 860,68 920,95
+         C960,118 970,165 950,215 C930,275 880,320 790,345 C690,372 560,382 430,375
+         C300,368 210,340 150,295 C105,260 75,220 90,170 Z"/>
+    <path fill="none" stroke="rgba(127,176,105,0.35)" stroke-width="2" stroke-dasharray="6 8"
+      d="M280,55 C350,120 420,180 520,220 C620,260 760,280 860,290"/>
+  </svg>
+`;
+
+let selectedRouteId = null;
 let currentRoute = null;
 let currentObstacleIndex = 0;
 let clicksRemaining = 0;
@@ -509,6 +550,102 @@ function applyFilters(routes) {
   });
 }
 
+function getRouteCardHTML(route, compact = false) {
+  const imageUrl = route.image || PLACEHOLDER_IMAGE;
+  return `
+    ${imageUrl ? `<div class="route-image" style="background-image: url('${imageUrl}')"></div>` : ''}
+    <div class="route-header">
+      <h2>⛰️ ${route.name}</h2>
+      <div class="route-reward">💰 ${route.reward}</div>
+    </div>
+    <div class="route-info">
+      <div class="route-detail">📍 ${route.location}</div>
+      <div class="route-detail">📏 ${route.elevation} м</div>
+      <div class="route-detail">${route.season}</div>
+      <div class="route-detail">⏱️ ${route.duration} ${route.duration === 1 ? 'день' : route.duration < 5 ? 'дня' : 'дней'}</div>
+      <div class="route-detail difficulty-${route.difficulty.replace(/\s/g, '-').toLowerCase()}">🎯 ${route.difficulty}</div>
+    </div>
+    ${route.fact && !compact ? `<div class="route-fact">💡 ${route.fact}</div>` : ''}
+    <div class="route-obstacles-preview">
+      ${route.obstacles.map(o => o.icon).join(' ')}
+    </div>
+    <button class="btn-primary route-start-btn">Начать поход</button>
+  `;
+}
+
+function attachRouteCardHandlers(cardEl, container, route) {
+  cardEl.querySelector('.route-start-btn').addEventListener('click', (e) => {
+    e.stopPropagation();
+    startRoute(container, route);
+  });
+
+  cardEl.addEventListener('click', () => {
+    selectedRouteId = route.id;
+    updateRouteViews(container);
+  });
+}
+
+function renderRouteMap(container, routes) {
+  const pinsContainer = container.querySelector('#route-map-pins');
+  if (!pinsContainer) return;
+
+  pinsContainer.innerHTML = '';
+  routes.forEach(route => {
+    const pos = ROUTE_MAP_POSITIONS[route.id];
+    if (!pos) return;
+
+    const pin = document.createElement('button');
+    pin.type = 'button';
+    pin.className = `route-map-pin${selectedRouteId === route.id ? ' active' : ''}`;
+    pin.style.left = `${pos.x}%`;
+    pin.style.top = `${pos.y}%`;
+    pin.dataset.routeId = route.id;
+    pin.title = route.name;
+    pin.setAttribute('aria-label', route.name);
+    pin.innerHTML = '<span class="route-map-pin-icon">📍</span>';
+
+    pin.addEventListener('click', (e) => {
+      e.stopPropagation();
+      selectedRouteId = route.id;
+      updateRouteViews(container);
+    });
+
+    pinsContainer.appendChild(pin);
+  });
+}
+
+function renderRoutePreview(container, route) {
+  const preview = container.querySelector('#route-preview');
+  if (!preview) return;
+
+  if (!route) {
+    preview.innerHTML = `
+      <div class="route-preview-empty">
+        <div class="route-preview-empty-icon">🗺️</div>
+        <p>Нажмите на булавку на карте, чтобы увидеть маршрут и начать поход</p>
+      </div>
+    `;
+    preview.classList.remove('has-route');
+    return;
+  }
+
+  preview.classList.add('has-route');
+  preview.innerHTML = `<div class="route-card route-preview-card">${getRouteCardHTML(route, true)}</div>`;
+  attachRouteCardHandlers(preview.querySelector('.route-preview-card'), container, route);
+}
+
+function updateRouteViews(container) {
+  const routes = applyFilters(ROUTES);
+
+  if (selectedRouteId && !routes.some(route => route.id === selectedRouteId)) {
+    selectedRouteId = null;
+  }
+
+  renderRouteMap(container, routes);
+  renderRoutePreview(container, routes.find(route => route.id === selectedRouteId) || null);
+  renderRouteCards(container, routes);
+}
+
 function renderRouteCards(container, routes) {
   const routesContainer = container.querySelector('#routes');
   const routesInfo = container.querySelector('#routes-count');
@@ -521,31 +658,10 @@ function renderRouteCards(container, routes) {
   routesContainer.innerHTML = '';
   routes.forEach(route => {
     const routeCard = document.createElement('div');
-    routeCard.className = 'route-card';
-    routeCard.innerHTML = `
-      ${PLACEHOLDER_IMAGE ? `<div class="route-image" style="background-image: url('${PLACEHOLDER_IMAGE}')"></div>` : ''}
-      <div class="route-header">
-        <h2>⛰️ ${route.name}</h2>
-        <div class="route-reward">💰 ${route.reward}</div>
-      </div>
-      <div class="route-info">
-        <div class="route-detail">📍 ${route.location}</div>
-        <div class="route-detail">📏 ${route.elevation} м</div>
-        <div class="route-detail">${route.season}</div>
-        <div class="route-detail">⏱️ ${route.duration} ${route.duration === 1 ? 'день' : route.duration < 5 ? 'дня' : 'дней'}</div>
-        <div class="route-detail difficulty-${route.difficulty.replace(/\s/g, '-').toLowerCase()}">🎯 ${route.difficulty}</div>
-      </div>
-      ${route.fact ? `<div class="route-fact">💡 ${route.fact}</div>` : ''}
-      <div class="route-obstacles-preview">
-        ${route.obstacles.map(o => o.icon).join(' ')}
-      </div>
-      <button class="btn-primary route-start-btn">Начать поход</button>
-    `;
-
-    routeCard.querySelector('.route-start-btn').addEventListener('click', () => {
-      startRoute(container, route);
-    });
-
+    routeCard.className = `route-card${selectedRouteId === route.id ? ' selected' : ''}`;
+    routeCard.dataset.routeId = route.id;
+    routeCard.innerHTML = getRouteCardHTML(route);
+    attachRouteCardHandlers(routeCard, container, route);
     routesContainer.appendChild(routeCard);
   });
 }
@@ -585,7 +701,7 @@ function setupDualRangeFilter(container, minId, maxId, fillId, valueId, filterKe
     const { minVal, maxVal } = updateDualRange(minInput, maxInput, fillEl, valueEl, minLimit, maxLimit);
     filters[filterKey].min = minVal;
     filters[filterKey].max = maxVal;
-    renderRouteCards(container, applyFilters(ROUTES));
+    updateRouteViews(container);
   };
 
   updateDualRange(minInput, maxInput, fillEl, valueEl, minLimit, maxLimit);
@@ -689,6 +805,17 @@ function showRouteSelection(container) {
           </div>
           ` : ''}
           
+          <div class="route-map-section">
+            <div class="route-map-panel">
+              <h3>🗺️ Карта маршрутов</h3>
+              <div class="route-map" id="route-map">
+                ${ROUTE_MAP_SVG}
+                <div class="route-map-pins" id="route-map-pins"></div>
+              </div>
+            </div>
+            <div class="route-map-preview" id="route-preview"></div>
+          </div>
+          
           <div class="routes-info">
             <p>Найдено маршрутов: <strong id="routes-count">${filteredRoutes.length}</strong> из ${ROUTES.length}</p>
           </div>
@@ -709,7 +836,7 @@ function showRouteSelection(container) {
   // Обработчики фильтров
   document.getElementById('search-input').addEventListener('input', (e) => {
     filters.search = e.target.value;
-    renderRouteCards(container, applyFilters(ROUTES));
+    updateRouteViews(container);
   });
 
   setupDualRangeFilter(container, 'duration-min', 'duration-max', 'duration-fill', 'duration-value', 'duration', 0, 15);
@@ -717,15 +844,16 @@ function showRouteSelection(container) {
   
   document.getElementById('difficulty-select').addEventListener('change', (e) => {
     filters.difficulty = e.target.value;
-    renderRouteCards(container, applyFilters(ROUTES));
+    updateRouteViews(container);
   });
   
   document.getElementById('season-select').addEventListener('change', (e) => {
     filters.season = e.target.value;
-    renderRouteCards(container, applyFilters(ROUTES));
+    updateRouteViews(container);
   });
   
   document.getElementById('reset-filters').addEventListener('click', () => {
+    selectedRouteId = null;
     filters = {
       duration: { min: 0, max: 15 },
       reward: { min: 0, max: 250 },
@@ -736,7 +864,7 @@ function showRouteSelection(container) {
     showRouteSelection(container);
   });
   
-  renderRouteCards(container, filteredRoutes);
+  updateRouteViews(container);
 }
 
 // Остальные функции остаются прежними
