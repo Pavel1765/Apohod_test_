@@ -33,7 +33,7 @@ export function renderMatch3Game(container, onExit) {
         <button class="btn-back" id="backBtn">← В меню</button>
         <div class="match3-title">
           <h1>🧩 Три в Ряд</h1>
-          <p>Составляйте комбинации! Бонусы при 4+ совпадениях</p>
+          <p>Развитие внимательности и быстрой реакции для сбора ягод и грибов</p>
         </div>
       </div>
       <div class="match3-stats">

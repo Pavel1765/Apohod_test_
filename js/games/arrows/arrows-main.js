@@ -146,7 +146,7 @@ export function renderArrowsGame(container, onExit) {
         <button class="btn-back" id="backBtn">← В меню</button>
         <div class="arrows-title">
           <h1>➡️ Стрелки</h1>
-          <p>Нажимайте на стрелки в правильном порядке, чтобы все вышли</p>
+          <p>Тренировка логики и планирования маршрута - важные навыки в походе!</p>
         </div>
       </div>
       <div class="arrows-stats">

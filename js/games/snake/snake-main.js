@@ -37,7 +37,7 @@ export function renderSnakeGame(container, onExit) {
         <button class="btn-back" id="backBtn">← В меню</button>
         <div class="snake-title">
           <h1>🥾 Походная Змейка</h1>
-          <p>Собирайте походников и избегайте препятствий!</p>
+          <p>Ориентирование на местности и быстрые решения - залог безопасности!</p>
         </div>
       </div>
       

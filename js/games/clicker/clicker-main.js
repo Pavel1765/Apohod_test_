@@ -581,9 +581,16 @@ function showRouteSelection(container) {
         <div class="route-content">
           ${purchasedItems.length > 0 ? `
           <div class="equipment-display">
-            <h3>🎒 Ваше снаряжение (Сила клика: ×${clickBonus.toFixed(2)})</h3>
+            <h3>🎒 Ваше снаряжение</h3>
+            <p class="equipment-bonus">Сила клика увеличена в <strong>×${clickBonus.toFixed(2)}</strong> раз</p>
+            <p class="equipment-help">💡 Каждый предмет дает +5% к силе клика</p>
             <div class="equipment-icons">
-              ${purchasedItems.map(item => `<span class="equipment-icon" title="${item.name}">${item.icon}</span>`).join('')}
+              ${purchasedItems.map(item => `
+                <span class="equipment-icon" data-tooltip="${item.description}">
+                  ${item.icon}
+                  <span class="item-name">${item.name}</span>
+                </span>
+              `).join('')}
             </div>
           </div>
           ` : ''}

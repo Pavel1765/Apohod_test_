@@ -321,9 +321,55 @@
 }
 
 .shop-item-front {
+  position: relative;
   gap: 8px;
   background: linear-gradient(135deg, var(--brand-cream) 0%, var(--brand-white) 100%);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Tooltip для предметов магазина */
+.shop-item-front::before {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-8px);
+  background: rgba(0, 0, 0, 0.9);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  white-space: normal;
+  width: 180px;
+  text-align: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s, transform 0.3s;
+  z-index: 1000;
+  line-height: 1.4;
+}
+
+.shop-item-front::after {
+  content: '';
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: rgba(0, 0, 0, 0.9);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+  z-index: 1000;
+}
+
+.shop-item:hover .shop-item-front::before,
+.shop-item:hover .shop-item-front::after {
+  opacity: 1;
+}
+
+.shop-item:hover .shop-item-front::before {
+  transform: translateX(-50%) translateY(-12px);
 }
 
 .shop-item-back {

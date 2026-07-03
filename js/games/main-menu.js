@@ -236,7 +236,7 @@ function renderShop(container) {
     
     itemEl.innerHTML = `
       <div class="shop-item-inner">
-        <div class="shop-item-front">
+        <div class="shop-item-front" data-tooltip="${item.description}">
           <div class="item-icon">${item.icon}</div>
           <div class="item-name">${item.name}</div>
           ${isPurchased ? 

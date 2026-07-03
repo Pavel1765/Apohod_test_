@@ -117,28 +117,29 @@ h2 { font-size: 18px; color: var(--forest-dark); }
 
 /* Общие стили для кнопок навигации */
 .btn-back {
-  background: var(--brand-white);
-  border: 2px solid var(--brand-purple);
+  background: linear-gradient(135deg, #F8F9FA 0%, var(--brand-white) 100%);
+  border: 3px solid var(--brand-purple);
   color: var(--brand-purple);
   padding: 12px 24px;
-  border-radius: var(--brand-radius-sm);
+  border-radius: var(--brand-radius);
   font-size: 16px;
   font-weight: 700;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(61, 56, 148, 0.2);
+  box-shadow: 0 3px 12px rgba(61, 56, 148, 0.25);
   min-width: 120px;
 }
 
 .btn-back:hover {
   background: var(--brand-purple);
   color: white;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(61, 56, 148, 0.3);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(61, 56, 148, 0.4);
 }
 
 .btn-back:active {
   transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(61, 56, 148, 0.3);
 }
 
 /* Основные кнопки */

@@ -50,7 +50,7 @@ export function renderPuzzleGame(container, onExit) {
         <button class="btn-back" id="backBtn">← В меню</button>
         <div class="puzzle-title">
           <h1>🎯 Блоки</h1>
-          <p>Освободите путь для красного блока к выходу →</p>
+          <p>Пространственное мышление помогает правильно упаковать рюкзак!</p>
         </div>
       </div>
       <div class="puzzle-stats">
