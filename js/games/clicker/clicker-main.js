@@ -769,16 +769,15 @@ function renderRoutePath() {
 
 function handleClick() {
   const clickPower = getClickPowerBonus();
-  const actualClicks = Math.max(1, Math.round(clickPower));
   
   soundSystem.click();
   totalClicks++;
-  clicksRemaining -= actualClicks;
+  clicksRemaining -= clickPower;
   
   if (clicksRemaining < 0) clicksRemaining = 0;
   
   document.getElementById('total-clicks').textContent = totalClicks;
-  document.getElementById('clicks-remaining').textContent = clicksRemaining;
+  document.getElementById('clicks-remaining').textContent = Math.ceil(clicksRemaining);
   
   const obstacle = currentRoute.obstacles[currentObstacleIndex];
   const progress = ((obstacle.clicks - clicksRemaining) / obstacle.clicks) * 100;
@@ -789,7 +788,7 @@ function handleClick() {
   setTimeout(() => btn.classList.remove('clicked'), 150);
   
   if (clickPower > 1) {
-    showClickBonus(actualClicks);
+    showClickBonus(clickPower);
   }
   
   if (clicksRemaining <= 0) {
