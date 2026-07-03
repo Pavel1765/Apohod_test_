@@ -1,4 +1,4 @@
-/** Игра «Маршрут» — проложите путь стрелками с минимумом энергии */
+/** Игра «Составитель маршрутов» — проложите путь стрелками с минимумом энергии */
 
 import { soundSystem } from '../hike-game/sounds.js';
 import { addCoins } from '../../shop.js';
@@ -117,7 +117,7 @@ export function renderArrowsGame(container, onExit) {
       <button class="btn-back game-back-btn" id="backBtn">← В меню</button>
       <div class="arrows-header">
         <div class="arrows-title">
-          <h1>🗺️ Маршрут</h1>
+          <h1>🗺️ Составитель маршрутов</h1>
           <p>Проложите путь стрелками, расставьте палатки и доберитесь до финиша с минимумом энергии!</p>
         </div>
       </div>

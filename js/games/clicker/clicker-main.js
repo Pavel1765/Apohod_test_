@@ -525,6 +525,7 @@ const MAP_ZOOM_MIN = 1;
 const MAP_ZOOM_MAX = 3;
 const MAP_ZOOM_STEP = 0.25;
 
+let mapSectionCollapsed = true;
 let mapZoomState = { scale: 1, panX: 0, panY: 0 };
 
 let selectedRouteId = null;
@@ -601,6 +602,27 @@ function attachRouteCardHandlers(cardEl, container, route) {
     selectedRouteId = route.id;
     updateRouteViews(container);
   });
+}
+
+function setupMapSectionToggle(container) {
+  const section = container.querySelector('#route-map-section');
+  const toggle = container.querySelector('#route-map-toggle');
+  const label = container.querySelector('#route-map-toggle-label');
+  if (!section || !toggle) return;
+
+  const sync = () => {
+    section.classList.toggle('collapsed', mapSectionCollapsed);
+    toggle.setAttribute('aria-expanded', String(!mapSectionCollapsed));
+    if (label) {
+      label.textContent = mapSectionCollapsed ? 'Развернуть ▼' : 'Свернуть ▲';
+    }
+  };
+
+  sync();
+  toggle.onclick = () => {
+    mapSectionCollapsed = !mapSectionCollapsed;
+    sync();
+  };
 }
 
 function applyMapTransform(container) {
@@ -893,25 +915,30 @@ function showRouteSelection(container) {
           </div>
           ` : ''}
           
-          <div class="route-map-section">
-            <div class="route-map-panel">
-              <h3>🗺️ Карта маршрутов</h3>
-              <div class="route-map" id="route-map">
-                <div class="route-map-controls">
-                  <button type="button" class="route-map-zoom-btn" id="map-zoom-in" title="Приблизить">+</button>
-                  <button type="button" class="route-map-zoom-btn" id="map-zoom-out" title="Отдалить">−</button>
-                  <button type="button" class="route-map-zoom-btn" id="map-zoom-reset" title="Сбросить масштаб">⟲</button>
-                </div>
-                <div class="route-map-viewport" id="route-map-viewport">
-                  <div class="route-map-content" id="route-map-content">
-                    ${ROUTE_MAP_SVG}
-                    <div class="route-map-pins" id="route-map-pins"></div>
+          <div class="route-map-section collapsed" id="route-map-section">
+            <button type="button" class="route-map-toggle" id="route-map-toggle" aria-expanded="false">
+              <span>🗺️ Карта маршрутов</span>
+              <span class="route-map-toggle-label" id="route-map-toggle-label">Развернуть ▼</span>
+            </button>
+            <div class="route-map-body" id="route-map-body">
+              <div class="route-map-panel">
+                <div class="route-map" id="route-map">
+                  <div class="route-map-controls">
+                    <button type="button" class="route-map-zoom-btn" id="map-zoom-in" title="Приблизить">+</button>
+                    <button type="button" class="route-map-zoom-btn" id="map-zoom-out" title="Отдалить">−</button>
+                    <button type="button" class="route-map-zoom-btn" id="map-zoom-reset" title="Сбросить масштаб">⟲</button>
+                  </div>
+                  <div class="route-map-viewport" id="route-map-viewport">
+                    <div class="route-map-content" id="route-map-content">
+                      ${ROUTE_MAP_SVG}
+                      <div class="route-map-pins" id="route-map-pins"></div>
+                    </div>
                   </div>
                 </div>
+                <p class="route-map-hint">Колёсико мыши — масштаб · перетаскивание при приближении</p>
               </div>
-              <p class="route-map-hint">Колёсико мыши — масштаб · перетаскивание при приближении</p>
+              <div class="route-map-preview" id="route-preview"></div>
             </div>
-            <div class="route-map-preview" id="route-preview"></div>
           </div>
           
           <div class="routes-info">
@@ -963,6 +990,7 @@ function showRouteSelection(container) {
     showRouteSelection(container);
   });
   
+  setupMapSectionToggle(container);
   setupRouteMapZoom(container);
   updateRouteViews(container);
 }

@@ -26,10 +26,10 @@ const GAMES = [
     badge: null
   },
   {
-    id: 'blockblast',
-    title: 'Block Blast',
-    icon: '🎲',
-    description: 'Размещайте походные палатки (фигуры) на карте маршрута! Заполняйте линии, чтобы освободить место для новых привалов.',
+    id: 'arrows',
+    title: 'Составитель маршрутов',
+    icon: '🗺️',
+    description: 'Проложите походный маршрут стрелками! Учитывайте горы и реки, ставьте палатки для восстановления энергии.',
     badge: null
   },
   {
@@ -54,10 +54,10 @@ const GAMES = [
     badge: null
   },
   {
-    id: 'arrows',
-    title: 'Маршрут',
-    icon: '🗺️',
-    description: 'Проложите походный маршрут стрелками! Учитывайте горы и реки, ставьте палатки для восстановления энергии.',
+    id: 'blockblast',
+    title: 'Block Blast',
+    icon: '🎲',
+    description: 'Размещайте походные палатки (фигуры) на карте маршрута! Заполняйте линии, чтобы освободить место для новых привалов.',
     badge: null
   }
 ];
@@ -193,7 +193,7 @@ export function renderMainMenu(container, onGameSelect) {
           <a href="https://morethantrip.ru" target="_blank" class="footer-link">«Больше, чем путежествие»</a>
         </p>
         <p style="margin-top: 8px; font-size: 12px; color: var(--brand-gray);">
-          v5.30 • 2026 • 🗺️ Карта России с приближением
+          v5.31 • 2026 • 🗺️ Составитель маршрутов, карта сворачивается
         </p>
       </footer>
     </div>
