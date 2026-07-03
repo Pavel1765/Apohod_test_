@@ -1,0 +1,284 @@
+/** Стили игры «Походные ситуации» */
+
+.scenarios-game {
+  min-height: 100vh;
+  padding: 16px 16px 40px;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.scenarios-intro {
+  text-align: center;
+  padding: 40px 20px;
+  background: var(--brand-white);
+  border-radius: var(--brand-radius);
+  box-shadow: var(--brand-shadow);
+  margin-top: 48px;
+}
+
+.scenarios-intro-icon {
+  font-size: 4rem;
+  margin-bottom: 12px;
+}
+
+.scenarios-intro h1 {
+  color: var(--brand-purple);
+  margin-bottom: 12px;
+}
+
+.scenarios-intro-lead {
+  color: var(--brand-gray-dark);
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+.scenarios-rules {
+  text-align: left;
+  max-width: 420px;
+  margin: 0 auto 28px;
+  padding: 0;
+  list-style: none;
+}
+
+.scenarios-rules li {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--brand-gray-light);
+  color: var(--brand-text);
+  line-height: 1.5;
+}
+
+.scenarios-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin: 48px 0 16px;
+  flex-wrap: wrap;
+}
+
+.scenarios-hearts {
+  font-size: 1.5rem;
+  letter-spacing: 4px;
+}
+
+.scenarios-progress {
+  flex: 1;
+  min-width: 180px;
+}
+
+.scenarios-progress span {
+  display: block;
+  font-size: 0.9rem;
+  color: var(--brand-gray-dark);
+  margin-bottom: 6px;
+}
+
+.scenarios-progress-bar {
+  height: 8px;
+  background: var(--brand-gray-light);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.scenarios-progress-fill {
+  height: 100%;
+  background: var(--brand-gradient-green);
+  transition: width 0.4s ease;
+}
+
+.scenario-card {
+  background: var(--brand-white);
+  border-radius: var(--brand-radius);
+  box-shadow: var(--brand-shadow);
+  overflow: hidden;
+  position: relative;
+}
+
+.scenario-danger-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 2;
+  background: var(--brand-coral);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.scenario-image {
+  height: 220px;
+  background-size: cover;
+  background-position: center;
+  background-color: var(--brand-gray-light);
+}
+
+.scenario-body {
+  padding: 20px;
+}
+
+.scenario-body h2 {
+  color: var(--brand-purple);
+  margin-bottom: 10px;
+  font-size: 1.35rem;
+}
+
+.scenario-text {
+  color: var(--brand-text);
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.scenario-choices {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.scenario-choice {
+  padding: 16px 18px;
+  border: 2px solid var(--brand-purple-light);
+  border-radius: var(--brand-radius-sm);
+  background: var(--brand-cream);
+  color: var(--brand-text);
+  font-size: 1rem;
+  line-height: 1.45;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s ease;
+}
+
+.scenario-choice:hover:not(:disabled) {
+  border-color: var(--brand-purple);
+  background: white;
+  transform: translateY(-1px);
+}
+
+.scenario-choice:disabled {
+  cursor: default;
+}
+
+.scenario-choice.correct {
+  border-color: var(--brand-green);
+  background: #e8f5e3;
+}
+
+.scenario-choice.wrong {
+  border-color: var(--brand-coral);
+  background: #fdeee8;
+}
+
+.scenario-feedback {
+  margin-top: 20px;
+  padding: 20px;
+  border-radius: var(--brand-radius);
+  text-align: center;
+}
+
+.scenario-feedback.hidden {
+  display: none;
+}
+
+.scenario-feedback.feedback-success {
+  background: #e8f5e3;
+  border: 2px solid var(--brand-green);
+}
+
+.scenario-feedback.feedback-error {
+  background: #fdeee8;
+  border: 2px solid var(--brand-coral);
+}
+
+.feedback-icon {
+  font-size: 2.5rem;
+  margin-bottom: 8px;
+}
+
+.scenario-feedback h3 {
+  margin-bottom: 8px;
+  color: var(--brand-purple);
+}
+
+.scenario-feedback p {
+  color: var(--brand-text);
+  line-height: 1.5;
+  margin-bottom: 8px;
+}
+
+.feedback-hearts {
+  font-weight: 700;
+  color: var(--brand-coral);
+}
+
+.scenarios-result {
+  text-align: center;
+  padding: 48px 24px;
+  margin-top: 48px;
+  border-radius: var(--brand-radius);
+  box-shadow: var(--brand-shadow);
+}
+
+.scenarios-result.victory {
+  background: linear-gradient(180deg, #e8f5e3 0%, white 40%);
+}
+
+.scenarios-result.defeat {
+  background: linear-gradient(180deg, #fdeee8 0%, white 40%);
+}
+
+.result-icon {
+  font-size: 4rem;
+  margin-bottom: 12px;
+}
+
+.scenarios-result h1 {
+  color: var(--brand-purple);
+  margin-bottom: 12px;
+}
+
+.scenarios-result > p {
+  color: var(--brand-gray-dark);
+  line-height: 1.6;
+  max-width: 480px;
+  margin: 0 auto 24px;
+}
+
+.result-stats {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+}
+
+.result-stats div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.result-stats span {
+  font-size: 0.85rem;
+  color: var(--brand-gray);
+}
+
+.result-stats strong {
+  font-size: 1.25rem;
+  color: var(--brand-purple);
+}
+
+.scenarios-result .btn-lg {
+  margin: 6px;
+  min-width: 200px;
+}
+
+@media (max-width: 600px) {
+  .scenario-image {
+    height: 180px;
+  }
+
+  .scenarios-header {
+    margin-top: 56px;
+  }
+}

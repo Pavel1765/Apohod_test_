@@ -9,6 +9,7 @@ import { renderBlockBlastGame } from './games/block-blast/block-blast-main.js';
 import { renderCheckersGame } from './games/checkers/checkers-main.js';
 import { renderSnakeGame } from './games/snake/snake-main.js';
 import { renderHikeClickerGame } from './games/clicker/clicker-main.js';
+import { renderScenariosGame } from './games/scenarios/scenarios-main.js';
 
 class GameApp {
   constructor() {
@@ -61,6 +62,9 @@ class GameApp {
         break;
       case 'checkers':
         renderCheckersGame(this.app, () => this.showMainMenu());
+        break;
+      case 'scenarios':
+        renderScenariosGame(this.app, () => this.showMainMenu());
         break;
       default:
         this.showMainMenu();
