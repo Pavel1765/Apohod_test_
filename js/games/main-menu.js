@@ -193,7 +193,7 @@ export function renderMainMenu(container, onGameSelect) {
           <a href="https://morethantrip.ru" target="_blank" class="footer-link">«Больше, чем путежествие»</a>
         </p>
         <p style="margin-top: 8px; font-size: 12px; color: var(--brand-gray);">
-          v5.31 • 2026 • 🗺️ Составитель маршрутов, карта сворачивается
+          v5.32 • 2026 • 🗺️ Карта России, поход на одном экране
         </p>
       </footer>
     </div>

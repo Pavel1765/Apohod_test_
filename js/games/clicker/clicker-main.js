@@ -4,6 +4,7 @@ import { soundSystem } from '../hike-game/sounds.js';
 import { addCoins, getPurchasedItems, getClickPowerBonus } from '../../shop.js';
 
 const PLACEHOLDER_IMAGE = 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&h=600&fit=crop';
+const RUSSIA_MAP_IMAGE = 'https://upload.wikimedia.org/wikipedia/commons/9/96/Russia_location_map.svg';
 
 const ROUTES = [
   // Короткие маршруты (1-3 дня)
@@ -470,55 +471,30 @@ const ROUTES = [
 ];
 
 const ROUTE_MAP_POSITIONS = {
-  1: { x: 72, y: 42 },
-  2: { x: 24, y: 18 },
-  3: { x: 58, y: 54 },
-  4: { x: 62, y: 30 },
-  5: { x: 54, y: 60 },
-  6: { x: 70, y: 50 },
-  7: { x: 66, y: 52 },
-  8: { x: 92, y: 38 },
-  9: { x: 28, y: 74 },
-  10: { x: 44, y: 26 },
-  11: { x: 30, y: 20 },
-  12: { x: 26, y: 70 },
-  13: { x: 23, y: 16 },
-  14: { x: 72, y: 52 },
-  15: { x: 46, y: 56 },
-  16: { x: 30, y: 72 },
-  17: { x: 32, y: 76 },
-  18: { x: 60, y: 46 },
-  19: { x: 58, y: 42 },
-  20: { x: 44, y: 54 }
+  1: { x: 68, y: 42 },
+  2: { x: 18, y: 22 },
+  3: { x: 52, y: 50 },
+  4: { x: 54, y: 28 },
+  5: { x: 47, y: 58 },
+  6: { x: 63, y: 45 },
+  7: { x: 59, y: 47 },
+  8: { x: 84, y: 35 },
+  9: { x: 17, y: 58 },
+  10: { x: 32, y: 22 },
+  11: { x: 19, y: 26 },
+  12: { x: 16, y: 56 },
+  13: { x: 17, y: 20 },
+  14: { x: 64, y: 46 },
+  15: { x: 30, y: 48 },
+  16: { x: 18, y: 56 },
+  17: { x: 19, y: 58 },
+  18: { x: 53, y: 43 },
+  19: { x: 51, y: 40 },
+  20: { x: 29, y: 46 }
 };
 
-const ROUTE_MAP_SVG = `
-  <svg class="route-map-svg" viewBox="0 0 1000 500" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
-    <defs>
-      <linearGradient id="routeMapOcean" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stop-color="#E3F2FD"/>
-        <stop offset="100%" stop-color="#BBDEFB"/>
-      </linearGradient>
-      <linearGradient id="routeMapGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stop-color="#E8F5E9"/>
-        <stop offset="45%" stop-color="#D4EDDA"/>
-        <stop offset="100%" stop-color="#A5D6A7"/>
-      </linearGradient>
-      <filter id="routeMapShadow" x="-2%" y="-2%" width="104%" height="104%">
-        <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="rgba(46,125,50,0.25)"/>
-      </filter>
-    </defs>
-    <rect width="1000" height="500" fill="url(#routeMapOcean)"/>
-    <path class="route-map-land" fill="url(#routeMapGrad)" stroke="#4E8F5E" stroke-width="2.5" stroke-linejoin="round" filter="url(#routeMapShadow)"
-      d="M88,168 C95,118 145,72 230,52 C340,35 470,28 610,34 C730,40 845,58 915,88
-         C965,108 982,148 972,198 C958,258 918,312 845,348 C760,378 640,392 500,395
-         C360,392 240,375 165,338 C110,310 78,265 88,220 C82,200 84,182 88,168 Z"/>
-    <path fill="none" stroke="rgba(78,143,94,0.35)" stroke-width="1.5" stroke-dasharray="5 7"
-      d="M230,52 C300,120 380,175 500,210 C620,245 760,265 880,275"/>
-    <ellipse cx="700" cy="262" rx="22" ry="9" fill="#4FC3F7" opacity="0.75"/>
-    <ellipse cx="700" cy="262" rx="14" ry="5" fill="#B3E5FC" opacity="0.9"/>
-    <text x="500" y="468" text-anchor="middle" fill="rgba(61,56,148,0.22)" font-size="26" font-weight="700" font-family="system-ui,sans-serif">РОССИЯ</text>
-  </svg>
+const ROUTE_MAP_BG = `
+  <img class="route-map-bg" src="${RUSSIA_MAP_IMAGE}" alt="Карта России" draggable="false">
 `;
 
 const MAP_ZOOM_MIN = 1;
@@ -570,9 +546,8 @@ function applyFilters(routes) {
 }
 
 function getRouteCardHTML(route, compact = false) {
-  const imageUrl = route.image || PLACEHOLDER_IMAGE;
   return `
-    ${imageUrl ? `<div class="route-image" style="background-image: url('${imageUrl}')"></div>` : ''}
+    <div class="route-image" style="background-image: url('${PLACEHOLDER_IMAGE}')"></div>
     <div class="route-header">
       <h2>⛰️ ${route.name}</h2>
       <div class="route-reward">💰 ${route.reward}</div>
@@ -930,12 +905,12 @@ function showRouteSelection(container) {
                   </div>
                   <div class="route-map-viewport" id="route-map-viewport">
                     <div class="route-map-content" id="route-map-content">
-                      ${ROUTE_MAP_SVG}
+                      ${ROUTE_MAP_BG}
                       <div class="route-map-pins" id="route-map-pins"></div>
                     </div>
                   </div>
                 </div>
-                <p class="route-map-hint">Колёсико мыши — масштаб · перетаскивание при приближении</p>
+                <p class="route-map-hint">Карта России · колёсико — масштаб · перетаскивание при приближении</p>
               </div>
               <div class="route-map-preview" id="route-preview"></div>
             </div>
@@ -1003,42 +978,41 @@ function startRoute(container, route) {
   clicksRemaining = route.obstacles[0].clicks;
   
   container.innerHTML = `
-    <div class="clicker-game">
-      <div class="clicker-header">
-        <button class="btn-back" id="backBtn">← Выбор маршрута</button>
-        <div class="clicker-title">
+    <div class="clicker-game clicker-hike">
+      <button class="btn-back game-back-btn" id="backBtn">← Выбор маршрута</button>
+      <div class="hike-header">
+        <div class="hike-title">
           <h1>⛰️ ${route.name}</h1>
           <p>${route.location} · ${route.elevation} м · ${route.season} · ${route.duration} дн.</p>
         </div>
-      </div>
-      
-      ${PLACEHOLDER_IMAGE ? `<div class="route-hero-image" style="background-image: url('${PLACEHOLDER_IMAGE}')"></div>` : ''}
-      
-      <div class="route-progress">
-        <div class="progress-text">
-          <span>Препятствий пройдено: <strong><span id="progress-count">0</span>/${route.obstacles.length}</strong></span>
-          <span>Кликов: <strong id="total-clicks">0</strong></span>
+        <div class="route-progress hike-progress">
+          <div class="progress-text">
+            <span>Препятствий: <strong><span id="progress-count">0</span>/${route.obstacles.length}</strong></span>
+            <span>Кликов: <strong id="total-clicks">0</strong></span>
+          </div>
         </div>
       </div>
-      
-      <div class="route-path" id="route-path"></div>
-      
-      <div class="current-obstacle-section">
-        <div class="obstacle-card" id="obstacle-card">
-          <div class="obstacle-icon" id="obstacle-icon">${route.obstacles[0].icon}</div>
-          <div class="obstacle-name" id="obstacle-name">${route.obstacles[0].name}</div>
-          <div class="obstacle-progress">
-            <div class="progress-bar">
-              <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+
+      <div class="hike-layout">
+        <div class="route-path hike-path" id="route-path"></div>
+        <div class="current-obstacle-section hike-obstacle">
+          <div class="obstacle-card" id="obstacle-card">
+            <div class="obstacle-icon" id="obstacle-icon">${route.obstacles[0].icon}</div>
+            <div class="obstacle-name" id="obstacle-name">${route.obstacles[0].name}</div>
+            <div class="obstacle-progress">
+              <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+              </div>
+              <div class="clicks-remaining" id="clicks-remaining">${clicksRemaining} кликов</div>
             </div>
-            <div class="clicks-remaining" id="clicks-remaining">${clicksRemaining} кликов</div>
+            <button class="btn-primary btn-large" id="click-btn">👆 Кликать!</button>
           </div>
-          <button class="btn-primary btn-large" id="click-btn">👆 Кликать!</button>
         </div>
       </div>
     </div>
   `;
   
+  window.scrollTo({ top: 0, behavior: 'smooth' });
   loadStyles();
   
   document.getElementById('backBtn').addEventListener('click', () => {

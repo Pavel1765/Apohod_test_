@@ -472,10 +472,11 @@
 .route-map {
   position: relative;
   width: 100%;
-  aspect-ratio: 2 / 1;
+  aspect-ratio: 4391 / 1565;
+  max-height: 360px;
   border-radius: var(--brand-radius-sm);
   overflow: hidden;
-  background: #dceef0;
+  background: #dceaf4;
   border: 2px solid rgba(78, 143, 94, 0.2);
 }
 
@@ -541,6 +542,15 @@
   text-align: center;
   font-size: 12px;
   color: var(--brand-gray);
+}
+
+.route-map-bg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  pointer-events: none;
+  user-select: none;
 }
 
 .route-map-svg {
@@ -1112,5 +1122,139 @@
   
   .victory-buttons button {
     width: 100%;
+  }
+}
+
+/* Hike screen — компактно на одном экране */
+.clicker-hike {
+  min-height: 100vh;
+  max-height: 100vh;
+  overflow: hidden;
+  padding: 60px 16px 12px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.clicker-hike .game-back-btn {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 1000;
+}
+
+.hike-header {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto 10px;
+  text-align: center;
+}
+
+.hike-title h1 {
+  font-size: 24px;
+  color: var(--brand-purple);
+  margin: 0 0 4px;
+}
+
+.hike-title p {
+  font-size: 13px;
+  color: var(--brand-gray-dark);
+  margin: 0 0 8px;
+}
+
+.hike-progress {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 8px 16px;
+}
+
+.hike-progress .progress-text {
+  font-size: 14px;
+}
+
+.hike-layout {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 14px;
+  align-items: stretch;
+}
+
+.hike-path {
+  margin: 0;
+  max-width: none;
+  padding: 14px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  align-content: center;
+}
+
+.hike-path .path-obstacle {
+  width: 40px;
+  height: 40px;
+}
+
+.hike-path .path-icon {
+  font-size: 18px;
+}
+
+.hike-path .path-line {
+  width: 10px;
+}
+
+.hike-obstacle {
+  margin: 0;
+  max-width: none;
+}
+
+.hike-obstacle .obstacle-card {
+  max-width: none;
+  height: 100%;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.hike-obstacle .obstacle-icon {
+  font-size: 52px;
+  margin-bottom: 8px;
+}
+
+.hike-obstacle .obstacle-name {
+  font-size: 18px;
+  margin-bottom: 12px;
+}
+
+.hike-obstacle .obstacle-progress {
+  margin-bottom: 12px;
+}
+
+.hike-obstacle .progress-bar {
+  height: 18px;
+}
+
+.hike-obstacle .clicks-remaining {
+  margin-top: 8px;
+  font-size: 15px;
+}
+
+.hike-obstacle .btn-large {
+  padding: 12px 20px;
+  font-size: 16px;
+}
+
+@media (max-width: 768px) {
+  .hike-layout {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+  }
+
+  .hike-path {
+    max-height: 100px;
   }
 }
