@@ -5,18 +5,18 @@ import { soundSystem } from './hike-game/sounds.js';
 
 const GAMES = [
   {
-    id: 'scenarios',
-    title: 'Походные ситуации',
-    icon: '🧭',
-    description: 'Примите правильное решение в реальной походной ситуации! 10 случайных испытаний, 3 сердца — пройдите маршрут до конца.',
-    badge: '🆕 Новое'
-  },
-  {
     id: 'clicker',
     title: 'Походные маршруты',
     icon: '⛰️',
     description: 'Проходите маршруты, кликая на препятствия! Горы, реки, леса - преодолевайте все и получайте награды за походы.',
     badge: null
+  },
+  {
+    id: 'scenarios',
+    title: 'Походные ситуации',
+    icon: '🧭',
+    description: 'Примите правильное решение в реальной походной ситуации! 10 случайных испытаний, 3 сердца — пройдите маршрут до конца.',
+    badge: '🆕 Новое'
   },
   {
     id: 'hike',
@@ -200,7 +200,7 @@ export function renderMainMenu(container, onGameSelect) {
           <a href="https://morethantrip.ru" target="_blank" class="footer-link">«Больше, чем путежествие»</a>
         </p>
         <p style="margin-top: 8px; font-size: 12px; color: var(--brand-gray);">
-          v5.44 • 2026 • Походные ситуации
+          v5.45 • 2026 • Походные ситуации
         </p>
       </footer>
     </div>

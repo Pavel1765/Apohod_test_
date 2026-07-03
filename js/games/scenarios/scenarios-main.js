@@ -31,7 +31,7 @@ function showIntro(container) {
     <div class="scenarios-game">
       <button class="btn-back game-back-btn" id="backBtn">← В меню</button>
       <section class="scenarios-intro">
-        <div class="scenarios-intro-icon">🥾</div>
+        <div class="scenarios-intro-icon">🧭</div>
         <h1>Походные ситуации</h1>
         <p class="scenarios-intro-lead">
           Пройдите поход из <strong>10 случайных ситуаций</strong> — реальных моментов из туристической практики.
