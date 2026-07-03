@@ -3,6 +3,8 @@
 import { soundSystem } from '../hike-game/sounds.js';
 import { addCoins, getPurchasedItems, getClickPowerBonus } from '../../shop.js';
 
+const PLACEHOLDER_IMAGE = 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&h=600&fit=crop';
+
 const ROUTES = [
   // Короткие маршруты (1-3 дня)
   {
@@ -662,7 +664,7 @@ function showRouteSelection(container) {
     const routeCard = document.createElement('div');
     routeCard.className = 'route-card';
     routeCard.innerHTML = `
-      ${route.image ? `<div class="route-image" style="background-image: url('${route.image}')"></div>` : ''}
+      ${PLACEHOLDER_IMAGE ? `<div class="route-image" style="background-image: url('${PLACEHOLDER_IMAGE}')"></div>` : ''}
       <div class="route-header">
         <h2>⛰️ ${route.name}</h2>
         <div class="route-reward">💰 ${route.reward}</div>

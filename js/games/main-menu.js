@@ -76,15 +76,12 @@ export function renderMainMenu(container, onGameSelect) {
               <h1>Больше, чем путешествие</h1>
             </div>
           </div>
-          <div class="header-center">
-            <p class="header-tagline">Игровая платформа</p>
-          </div>
+          <nav class="main-nav">
+            <a href="#games" class="nav-link scroll-link">🎮 Игры</a>
+            <a href="#shop" class="nav-link scroll-link">🛒 Магазин</a>
+            <a href="#about" class="nav-link scroll-link">🌐 О программе</a>
+          </nav>
         </div>
-        <nav class="main-nav">
-          <a href="#games" class="nav-link scroll-link">🎮 Игры</a>
-          <a href="#shop" class="nav-link scroll-link">🛒 Магазин</a>
-          <a href="#about" class="nav-link scroll-link">🌐 О программе</a>
-        </nav>
       </header>
       
       <!-- Информационный блок о программе -->
@@ -196,7 +193,7 @@ export function renderMainMenu(container, onGameSelect) {
           <a href="https://morethantrip.ru" target="_blank" class="footer-link">«Больше, чем путежествие»</a>
         </p>
         <p style="margin-top: 8px; font-size: 12px; color: var(--brand-gray);">
-          v5.12 • 2026 • 🎨 Улучшен дизайн, кнопки видны везде
+          v5.13 • 2026 • 🎨 Новый header, заглушка для фото
         </p>
       </footer>
     </div>

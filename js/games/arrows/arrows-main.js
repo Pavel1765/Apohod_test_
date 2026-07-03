@@ -143,11 +143,11 @@ export function renderArrowsGame(container, onExit) {
   container.innerHTML = `
     <div class="arrows-game">
       <div class="arrows-header">
-        <button class="btn-back" id="backBtn">← В меню</button>
         <div class="arrows-title">
           <h1>➡️ Стрелки</h1>
           <p>Тренировка логики и планирования маршрута - важные навыки в походе!</p>
         </div>
+        <button class="btn-back" id="backBtn">← В меню</button>
       </div>
       <div class="arrows-stats">
         <div class="stat-card">

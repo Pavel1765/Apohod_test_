@@ -13,10 +13,15 @@
   width: 100%;
   max-width: 600px;
   margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
 }
 
 .block-blast-title {
   text-align: center;
+  flex: 1;
 }
 
 .block-blast-title h1 {
