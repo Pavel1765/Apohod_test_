@@ -521,28 +521,52 @@ const ROUTES = [
   }
 ];
 
-const ROUTE_MAP_POSITIONS = {
-  1: { x: 68, y: 42 },
-  2: { x: 18, y: 22 },
-  3: { x: 52, y: 50 },
-  4: { x: 54, y: 28 },
-  5: { x: 47, y: 58 },
-  6: { x: 63, y: 45 },
-  7: { x: 59, y: 47 },
-  8: { x: 84, y: 35 },
-  9: { x: 17, y: 58 },
-  10: { x: 32, y: 22 },
-  11: { x: 19, y: 26 },
-  12: { x: 16, y: 56 },
-  13: { x: 17, y: 20 },
-  14: { x: 64, y: 46 },
-  15: { x: 30, y: 48 },
-  16: { x: 18, y: 56 },
-  17: { x: 19, y: 58 },
-  18: { x: 53, y: 43 },
-  19: { x: 51, y: 40 },
-  20: { x: 29, y: 46 }
+// Границы карты Russia_location_map.svg (Wikimedia, equirectangular 150% N/S)
+const RUSSIA_MAP_BOUNDS = {
+  north: 81.8,
+  south: 41.19,
+  west: 19.6333,
+  east: 190.333
 };
+
+const ROUTE_MAP_COORDS = {
+  1: { lat: 61.128, lon: 127.218 },   // Ленские столбы
+  2: { lat: 68.97, lon: 33.08 },      // Кольский полуостров (Мурманск)
+  3: { lat: 52.92, lon: 87.96 },      // Поднебесные Зубья
+  4: { lat: 69.0, lon: 94.0 },        // Плато Путорана
+  5: { lat: 49.807, lon: 86.589 },    // Алтай, Белуха
+  6: { lat: 53.2, lon: 107.8 },       // Байкал
+  7: { lat: 51.72, lon: 91.25 },      // Западный Саян
+  8: { lat: 53.02, lon: 158.65 },     // Камчатка
+  9: { lat: 43.349, lon: 42.437 },    // Эльбрус
+  10: { lat: 65.03, lon: 60.11 },     // Приполярный Урал
+  11: { lat: 61.785, lon: 34.347 },   // Карелия
+  12: { lat: 43.98, lon: 39.72 },     // Кавказский заповедник (Сочи)
+  13: { lat: 67.615, lon: 33.672 },   // Хибины, Кировск
+  14: { lat: 51.91, lon: 102.47 },    // Тункинская долина
+  15: { lat: 55.17, lon: 59.58 },     // Таганай
+  16: { lat: 43.29, lon: 41.62 },      // Домбай
+  17: { lat: 43.26, lon: 42.51 },     // Приэльбрусье
+  18: { lat: 52.85, lon: 93.25 },     // Ергаки
+  19: { lat: 55.97, lon: 92.74 },     // Красноярские Столбы
+  20: { lat: 52.65, lon: 59.57 }      // Аркаим
+};
+
+function geoToMapPercent(lat, lon) {
+  const { north, south, west, east } = RUSSIA_MAP_BOUNDS;
+  const x = ((lon - west) / (east - west)) * 100;
+  const y = ((north - lat) / (north - south)) * 100;
+  return {
+    x: Math.max(1, Math.min(99, Math.round(x * 10) / 10)),
+    y: Math.max(1, Math.min(99, Math.round(y * 10) / 10))
+  };
+}
+
+function getRouteMapPosition(routeId) {
+  const coords = ROUTE_MAP_COORDS[routeId];
+  if (!coords) return null;
+  return geoToMapPercent(coords.lat, coords.lon);
+}
 
 const ROUTE_MAP_BG = `
   <img class="route-map-bg" src="${RUSSIA_MAP_IMAGE}" alt="Карта России" draggable="false">
@@ -728,7 +752,7 @@ function renderRouteMap(container, routes) {
 
   pinsContainer.innerHTML = '';
   routes.forEach(route => {
-    const pos = ROUTE_MAP_POSITIONS[route.id];
+    const pos = getRouteMapPosition(route.id);
     if (!pos) return;
 
     const pin = document.createElement('button');

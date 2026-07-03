@@ -472,8 +472,10 @@
 .route-map {
   position: relative;
   width: 100%;
-  aspect-ratio: 4391 / 1565;
+  max-width: min(100%, calc(360px * 4391.7861 / 1565.2882));
+  aspect-ratio: 4391.7861 / 1565.2882;
   max-height: 360px;
+  margin: 0 auto;
   border-radius: var(--brand-radius-sm);
   overflow: hidden;
   background: #dceaf4;
