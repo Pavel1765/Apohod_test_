@@ -5,6 +5,103 @@ import { addCoins, getPurchasedItems, getClickPowerBonus } from '../../shop.js';
 
 const PLACEHOLDER_IMAGE = 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&h=600&fit=crop';
 
+const OBSTACLE_STAGE_IMAGES = {
+  bus: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=800&h=600&fit=crop',
+  train: 'https://images.unsplash.com/photo-1474487548417-934cb8732a72?w=800&h=600&fit=crop',
+  plane: 'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=800&h=600&fit=crop',
+  helicopter: 'https://images.unsplash.com/photo-1458748605185-0e2b253692f2?w=800&h=600&fit=crop',
+  boat: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop',
+  kayak: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=800&h=600&fit=crop',
+  lake: 'https://images.unsplash.com/photo-1439066615861-d1af74d74000?w=800&h=600&fit=crop',
+  river: 'https://images.unsplash.com/photo-1433086966358-55059f9728b6?w=800&h=600&fit=crop',
+  water: 'https://images.unsplash.com/photo-1433086966358-55059f9728b6?w=800&h=600&fit=crop',
+  waterfall: 'https://images.unsplash.com/photo-1432405972613-c60b0225b4f9?w=800&h=600&fit=crop',
+  geyser: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop',
+  hot: 'https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=800&h=600&fit=crop',
+  ice: 'https://images.unsplash.com/photo-1483664852095-d0b0a5b2a6d9?w=800&h=600&fit=crop',
+  snow: 'https://images.unsplash.com/photo-1483664852095-d0b0a5b2a6d9?w=800&h=600&fit=crop',
+  snowflake: 'https://images.unsplash.com/photo-1483664852095-d0b0a5b2a6d9?w=800&h=600&fit=crop',
+  glacier: 'https://images.unsplash.com/photo-1454496522488-7a8e4885e9ca?w=800&h=600&fit=crop',
+  ski: 'https://images.unsplash.com/photo-1551524559-8af4e6624178?w=800&h=600&fit=crop',
+  camp: 'https://images.unsplash.com/photo-1478131143088-32a7894da4e5?w=800&h=600&fit=crop',
+  fire: 'https://images.unsplash.com/photo-1478131143088-32a7894da4e5?w=800&h=600&fit=crop',
+  moon: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop',
+  tree: 'https://images.unsplash.com/photo-1441974231530-c6687de0c35e?w=800&h=600&fit=crop',
+  flower: 'https://images.unsplash.com/photo-1499003299444-2de765142ef3?w=800&h=600&fit=crop',
+  bear: 'https://images.unsplash.com/photo-1441974231530-c6687de0c35e?w=800&h=600&fit=crop',
+  deer: 'https://images.unsplash.com/photo-1441974231530-c6687de0c35e?w=800&h=600&fit=crop',
+  fish: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop',
+  seal: 'https://images.unsplash.com/photo-1483664852095-d0b0a5b2a6d9?w=800&h=600&fit=crop',
+  rock: 'https://images.unsplash.com/photo-1454496522488-7a8e4885e9ca?w=800&h=600&fit=crop',
+  climb: 'https://images.unsplash.com/photo-1522163182402-834f871fd851?w=800&h=600&fit=crop',
+  summit: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&h=600&fit=crop',
+  mountain: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&h=600&fit=crop',
+  peak: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&h=600&fit=crop',
+  pass: 'https://images.unsplash.com/photo-1454496522488-7a8e4885e9ca?w=800&h=600&fit=crop',
+  volcano: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop',
+  photo: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&h=600&fit=crop',
+  compass: 'https://images.unsplash.com/photo-1441974231530-c6687de0c35e?w=800&h=600&fit=crop',
+  cable: 'https://images.unsplash.com/photo-1454496522488-7a8e4885e9ca?w=800&h=600&fit=crop',
+  church: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop',
+  island: 'https://images.unsplash.com/photo-1439066615861-d1af74d74000?w=800&h=600&fit=crop',
+  site: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&h=600&fit=crop',
+  museum: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&h=600&fit=crop',
+  sunrise: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop',
+  sunset: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop',
+  trail: 'https://images.unsplash.com/photo-1441974231530-c6687de0c35e?w=800&h=600&fit=crop',
+  entrance: 'https://images.unsplash.com/photo-1441974231530-c6687de0c35e?w=800&h=600&fit=crop',
+  checkpoint: 'https://images.unsplash.com/photo-1441974231530-c6687de0c35e?w=800&h=600&fit=crop',
+  shelter: 'https://images.unsplash.com/photo-1478131143088-32a7894da4e5?w=800&h=600&fit=crop',
+  cave: 'https://images.unsplash.com/photo-1454496522488-7a8e4885e9ca?w=800&h=600&fit=crop',
+  wind: 'https://images.unsplash.com/photo-1454496522488-7a8e4885e9ca?w=800&h=600&fit=crop',
+  gas: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop',
+  ash: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop',
+  altitude: 'https://images.unsplash.com/photo-1454496522488-7a8e4885e9ca?w=800&h=600&fit=crop',
+  crevasse: 'https://images.unsplash.com/photo-1454496522488-7a8e4885e9ca?w=800&h=600&fit=crop',
+  rope: 'https://images.unsplash.com/photo-1522163182402-834f871fd851?w=800&h=600&fit=crop',
+  oxygen: 'https://images.unsplash.com/photo-1454496522488-7a8e4885e9ca?w=800&h=600&fit=crop',
+  avalanche: 'https://images.unsplash.com/photo-1483664852095-d0b0a5b2a6d9?w=800&h=600&fit=crop',
+  knife: 'https://images.unsplash.com/photo-1478131143088-32a7894da4e5?w=800&h=600&fit=crop',
+  thumbs: 'https://images.unsplash.com/photo-1522163182402-834f871fd851?w=800&h=600&fit=crop',
+  horse: 'https://images.unsplash.com/photo-1441974231530-c6687de0c35e?w=800&h=600&fit=crop'
+};
+
+const STAGE_PALETTES = [
+  ['#87CEEB', '#7FB069'],
+  ['#FFB347', '#FFCC33'],
+  ['#B19CD9', '#8F59BB'],
+  ['#FF8A65', '#E65100'],
+  ['#80CBC4', '#00897B'],
+  ['#90CAF9', '#3D3894']
+];
+
+function getObstacleStageImage(obstacle) {
+  if (OBSTACLE_STAGE_IMAGES[obstacle.type]) {
+    return OBSTACLE_STAGE_IMAGES[obstacle.type];
+  }
+  let hash = 0;
+  for (let i = 0; i < obstacle.type.length; i++) {
+    hash = (hash * 31 + obstacle.type.charCodeAt(i)) >>> 0;
+  }
+  const [c1, c2] = STAGE_PALETTES[hash % STAGE_PALETTES.length];
+  return `data:image/svg+xml,${encodeURIComponent(
+    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450">` +
+    `<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">` +
+    `<stop offset="0%" stop-color="${c1}"/><stop offset="100%" stop-color="${c2}"/>` +
+    `</linearGradient></defs>` +
+    `<rect width="800" height="450" fill="url(#g)"/>` +
+    `<text x="400" y="250" text-anchor="middle" font-size="120">${obstacle.icon}</text>` +
+    `</svg>`
+  )}`;
+}
+
+function updateStageImage(obstacle) {
+  const el = document.getElementById('hike-stage-image');
+  if (!el || !obstacle) return;
+  el.style.backgroundImage = `url('${getObstacleStageImage(obstacle)}')`;
+  el.dataset.stageName = obstacle.name;
+}
+
 const RUSSIA_MAP_IMAGE = 'https://upload.wikimedia.org/wikipedia/commons/9/96/Russia_location_map.svg';
 
 const ROUTES = [
@@ -571,9 +668,8 @@ function applyFilters(routes) {
 }
 
 function getRouteCardHTML(route, compact = false) {
-  const imageUrl = route.image || PLACEHOLDER_IMAGE;
   return `
-    ${imageUrl ? `<div class="route-image" style="background-image: url('${imageUrl}')"></div>` : ''}
+    <div class="route-image" style="background-image: url('${PLACEHOLDER_IMAGE}')"></div>
     <div class="route-header">
       <h2>⛰️ ${route.name}</h2>
       <div class="route-reward">💰 ${route.reward}</div>
@@ -1002,7 +1098,7 @@ function startRoute(container, route) {
   currentObstacleIndex = 0;
   totalClicks = 0;
   clicksRemaining = route.obstacles[0].clicks;
-  const heroImage = route.image || PLACEHOLDER_IMAGE;
+  const firstObstacle = route.obstacles[0];
   
   container.innerHTML = `
     <div class="clicker-game">
@@ -1014,7 +1110,7 @@ function startRoute(container, route) {
         </div>
       </div>
       
-      ${heroImage ? `<div class="route-hero-image" style="background-image: url('${heroImage}')"></div>` : ''}
+      <div class="route-hero-image" style="background-image: url('${PLACEHOLDER_IMAGE}')"></div>
       
       <div class="route-progress">
         <div class="progress-text">
@@ -1025,23 +1121,27 @@ function startRoute(container, route) {
       
       <div class="route-path" id="route-path"></div>
       
-      <div class="current-obstacle-section">
-        <div class="obstacle-card" id="obstacle-card">
-          <div class="obstacle-icon" id="obstacle-icon">${route.obstacles[0].icon}</div>
-          <div class="obstacle-name" id="obstacle-name">${route.obstacles[0].name}</div>
-          <div class="obstacle-progress">
-            <div class="progress-bar">
-              <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+      <div class="hike-stage-layout">
+        <div class="hike-stage-image" id="hike-stage-image" role="img" aria-label="${firstObstacle.name}"></div>
+        <div class="current-obstacle-section hike-clicker-panel">
+          <div class="obstacle-card" id="obstacle-card">
+            <div class="obstacle-icon" id="obstacle-icon">${firstObstacle.icon}</div>
+            <div class="obstacle-name" id="obstacle-name">${firstObstacle.name}</div>
+            <div class="obstacle-progress">
+              <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+              </div>
+              <div class="clicks-remaining" id="clicks-remaining">${clicksRemaining} кликов</div>
             </div>
-            <div class="clicks-remaining" id="clicks-remaining">${clicksRemaining} кликов</div>
+            <button class="btn-primary btn-large" id="click-btn">👆 Кликать!</button>
           </div>
-          <button class="btn-primary btn-large" id="click-btn">👆 Кликать!</button>
         </div>
       </div>
     </div>
   `;
   
   loadStyles();
+  updateStageImage(firstObstacle);
   
   document.getElementById('backBtn').addEventListener('click', () => {
     showRouteSelection(container);
@@ -1140,6 +1240,7 @@ function completeObstacle() {
   document.getElementById('clicks-remaining').textContent = clicksRemaining;
   document.getElementById('progress-fill').style.width = '0%';
   
+  updateStageImage(nextObstacle);
   renderRoutePath();
 }
 
@@ -1154,7 +1255,7 @@ function completeRoute() {
       <div class="clicker-game">
         <div class="victory-screen">
           <h1>🎉 Маршрут пройден! 🎉</h1>
-          ${currentRoute.image ? `<div class="victory-image" style="background-image: url('${currentRoute.image}')"></div>` : ''}
+          <div class="victory-image" style="background-image: url('${PLACEHOLDER_IMAGE}')"></div>
           <div class="victory-stats">
             <p class="victory-route">⛰️ ${currentRoute.name}</p>
             <p>📍 ${currentRoute.location}</p>

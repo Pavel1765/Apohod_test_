@@ -711,7 +711,8 @@
   height: 180px;
   background-size: cover;
   background-position: center;
-  background-color: #e0e0e0;
+  background-color: #7FB069;
+  background-image: url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&h=600&fit=crop');
 }
 
 .route-header {
@@ -810,6 +811,8 @@
   height: 300px;
   background-size: cover;
   background-position: center;
+  background-color: #7FB069;
+  background-image: url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&h=600&fit=crop');
   border-radius: var(--brand-radius);
   margin: 0 auto 24px;
   box-shadow: var(--brand-shadow);
@@ -925,6 +928,53 @@
   margin: 0 auto;
   display: flex;
   justify-content: center;
+}
+
+.hike-stage-layout {
+  max-width: 1000px;
+  width: 100%;
+  margin: 0 auto 32px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  align-items: stretch;
+}
+
+.hike-stage-image {
+  min-height: 320px;
+  border-radius: var(--brand-radius);
+  box-shadow: var(--brand-shadow);
+  background-size: cover;
+  background-position: center;
+  background-color: #dceaf4;
+  transition: background-image 0.35s ease;
+}
+
+.hike-clicker-panel {
+  max-width: none;
+  margin: 0;
+}
+
+.hike-clicker-panel .obstacle-card {
+  height: 100%;
+  min-height: 320px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+@media (max-width: 768px) {
+  .hike-stage-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .hike-stage-image {
+    min-height: 200px;
+  }
+
+  .hike-clicker-panel .obstacle-card {
+    min-height: auto;
+  }
 }
 
 .obstacle-card {
