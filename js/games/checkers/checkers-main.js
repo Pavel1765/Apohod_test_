@@ -1,6 +1,7 @@
 /** Игра в шашки с правильными правилами */
 
 import { soundSystem } from '../hike-game/sounds.js';
+import { addCoins } from '../../shop.js';
 
 const BOARD_SIZE = 8;
 const PLAYER_WHITE = 'white';
@@ -16,6 +17,7 @@ let isAiThinking = false;
 let onExitCallback = null;
 let capturedWhite = 0;
 let capturedBlack = 0;
+let gameEnded = false;
 let mustContinueCapture = null; // Для множественного взятия
 
 export function renderCheckersGame(container, onExit) {
@@ -111,6 +113,7 @@ function initGame(container) {
   isAiThinking = false;
   capturedWhite = 0;
   capturedBlack = 0;
+  gameEnded = false;
   
   renderGame(container);
 }
@@ -492,6 +495,27 @@ function executeMove(move) {
   }
 }
 
+function getCheckersReward(winner) {
+  if (gameMode === 'ai') {
+    if (winner !== PLAYER_WHITE) return 0;
+    if (aiDifficulty === 'easy') return 30;
+    if (aiDifficulty === 'hard') return 75;
+    return 50;
+  }
+  return 25;
+}
+
+function finishCheckersGame(winner, message) {
+  if (gameEnded) return true;
+  gameEnded = true;
+  const reward = getCheckersReward(winner);
+  if (reward > 0) addCoins(reward);
+  soundSystem.victory();
+  const coinMsg = reward > 0 ? `\n💰 Заработано: ${reward} монет` : '';
+  setTimeout(() => alert(message + coinMsg), 300);
+  return true;
+}
+
 function checkWinCondition() {
   const whitePieces = [];
   const blackPieces = [];
@@ -506,16 +530,12 @@ function checkWinCondition() {
     }
   }
   
-  if (whitePieces.length === 0 || getAllCaptureMoves(PLAYER_WHITE).length === 0 && getSimpleMoves(PLAYER_WHITE).length === 0) {
-    soundSystem.victory();
-    setTimeout(() => alert('Черные победили!'), 300);
-    return true;
+  if (whitePieces.length === 0 || (getAllCaptureMoves(PLAYER_WHITE).length === 0 && getSimpleMoves(PLAYER_WHITE).length === 0)) {
+    return finishCheckersGame(PLAYER_BLACK, 'Черные победили!');
   }
   
-  if (blackPieces.length === 0 || getAllCaptureMoves(PLAYER_BLACK).length === 0 && getSimpleMoves(PLAYER_BLACK).length === 0) {
-    soundSystem.victory();
-    setTimeout(() => alert('Белые победили!'), 300);
-    return true;
+  if (blackPieces.length === 0 || (getAllCaptureMoves(PLAYER_BLACK).length === 0 && getSimpleMoves(PLAYER_BLACK).length === 0)) {
+    return finishCheckersGame(PLAYER_WHITE, 'Белые победили!');
   }
   
   return false;
@@ -555,8 +575,7 @@ function makeAiMove(container) {
     }
     
     if (allMoves.length === 0) {
-      soundSystem.error();
-      alert('Белые победили! У черных нет ходов.');
+      finishCheckersGame(PLAYER_WHITE, 'Белые победили! У черных нет ходов.');
       return;
     }
     

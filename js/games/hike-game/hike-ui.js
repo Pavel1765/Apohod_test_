@@ -8,6 +8,7 @@ import {
   checkVictory, nextPhase, endTurn, exchangeArtifacts, hasArtifact,
 } from './engine.js';
 import { soundSystem } from './sounds.js';
+import { addCoins } from '../../shop.js';
 
 let state = null;
 let selectedRoles = [];
@@ -567,6 +568,8 @@ function useTeamCard(card) {
 
 function renderVictory() {
   soundSystem.victory();
+  const earnedCoins = 20 + state.stars * 30;
+  addCoins(earnedCoins);
   const stars = '⭐'.repeat(state.stars) + '☆'.repeat(3 - state.stars);
   app().innerHTML = `
     <section class="screen victory">
@@ -578,6 +581,7 @@ function renderVictory() {
         <div><span>Туров</span><strong>${state.round}</strong></div>
         <div><span>Жетонов истории</span><strong>${state.storyTokens}</strong></div>
         <div><span>Игроков</span><strong>${state.playerCount}</strong></div>
+        <div><span>Награда</span><strong>💰 ${earnedCoins}</strong></div>
       </div>
       <button class="btn btn-lg" id="again">Новый поход</button>
       <button class="btn ghost btn-lg" id="exitVictoryBtn" style="margin-top: 12px;">В меню</button>

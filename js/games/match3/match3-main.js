@@ -1,6 +1,7 @@
 /** Улучшенная игра 3 в ряд с бонусами, ракетами и способностями */
 
 import { soundSystem } from '../hike-game/sounds.js';
+import { addCoins } from '../../shop.js';
 
 const ICONS = ['⛰️', '🌲', '🏕️', '💧', '🧭', '🔬', '🎶', '📸', '⛑️'];
 const DIAMOND_ICON = '💎';
@@ -68,7 +69,11 @@ export function renderMatch3Game(container, onExit) {
   
   loadStyles();
   
-  document.getElementById('backBtn').addEventListener('click', () => onExitCallback());
+  document.getElementById('backBtn').addEventListener('click', () => {
+    const earnedCoins = Math.floor(score / 10);
+    if (earnedCoins > 0) addCoins(earnedCoins);
+    onExitCallback();
+  });
   document.getElementById('newGameBtn').addEventListener('click', () => initGame());
   document.getElementById('hintBtn').addEventListener('click', () => useHint());
   

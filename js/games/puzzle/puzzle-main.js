@@ -1,6 +1,7 @@
 /** Игра Puzzle Breaks (блоки) */
 
 import { soundSystem } from '../hike-game/sounds.js';
+import { addCoins } from '../../shop.js';
 
 const GRID_SIZE = 6;
 const CELL_SIZE = 80;
@@ -248,7 +249,9 @@ function checkVictory() {
   if (target && target.row === 2 && target.col + target.length === GRID_SIZE) {
     soundSystem.victory();
     setTimeout(() => {
-      alert(`Уровень ${level} пройден за ${moves} ходов!`);
+      const reward = level * 25;
+      addCoins(reward);
+      alert(`Уровень ${level} пройден за ${moves} ходов!\n💰 Заработано: ${reward} монет`);
       if (level < LEVELS.length) {
         document.getElementById('nextBtn').style.display = 'block';
       } else {

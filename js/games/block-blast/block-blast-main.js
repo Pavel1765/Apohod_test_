@@ -29,6 +29,7 @@ let currentShapes = [];
 let draggedShape = null;
 let draggedShapeIndex = null;
 let onExitCallback = null;
+let lastBankedScore = 0;
 
 export function renderBlockBlastGame(container, onExit) {
   onExitCallback = onExit;
@@ -62,11 +63,7 @@ export function renderBlockBlastGame(container, onExit) {
   loadStyles();
   
   document.getElementById('backBtn').addEventListener('click', () => {
-    // Сохраняем монеты перед выходом (игра без уровней)
-    const earnedCoins = Math.floor(score / 10);
-    if (earnedCoins > 0) {
-      addCoins(earnedCoins);
-    }
+    bankSessionCoins();
     onExitCallback();
   });
   document.getElementById('newGameBtn').addEventListener('click', () => initGame());
@@ -83,8 +80,18 @@ function loadStyles() {
   }
 }
 
+function bankSessionCoins() {
+  const earnedCoins = Math.floor(score / 10) - Math.floor(lastBankedScore / 10);
+  if (earnedCoins > 0) {
+    addCoins(earnedCoins);
+    lastBankedScore = score;
+  }
+  return earnedCoins;
+}
+
 function initGame() {
   score = 0;
+  lastBankedScore = 0;
   grid = Array(GRID_SIZE).fill().map(() => Array(GRID_SIZE).fill(0));
   updateScore();
   generateNewShapes();
@@ -322,7 +329,9 @@ function tryPlaceShape(x, y, shape, index) {
       if (!hasValidMoves()) {
         setTimeout(() => {
           soundSystem.error();
-          alert(`Игра окончена! Ваш счет: ${score}`);
+          const earnedCoins = bankSessionCoins();
+          const coinMsg = earnedCoins > 0 ? `\n💰 Заработано: ${earnedCoins} монет` : '';
+          alert(`Игра окончена! Ваш счет: ${score}${coinMsg}`);
           initGame();
         }, 600);
       }
