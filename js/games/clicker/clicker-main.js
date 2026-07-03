@@ -495,19 +495,37 @@ const ROUTE_MAP_POSITIONS = {
 const ROUTE_MAP_SVG = `
   <svg class="route-map-svg" viewBox="0 0 1000 500" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
     <defs>
+      <linearGradient id="routeMapOcean" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#E3F2FD"/>
+        <stop offset="100%" stop-color="#BBDEFB"/>
+      </linearGradient>
       <linearGradient id="routeMapGrad" x1="0%" y1="0%" x2="100%" y2="100%">
         <stop offset="0%" stop-color="#E8F5E9"/>
-        <stop offset="100%" stop-color="#C8E6C9"/>
+        <stop offset="45%" stop-color="#D4EDDA"/>
+        <stop offset="100%" stop-color="#A5D6A7"/>
       </linearGradient>
+      <filter id="routeMapShadow" x="-2%" y="-2%" width="104%" height="104%">
+        <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="rgba(46,125,50,0.25)"/>
+      </filter>
     </defs>
-    <path fill="url(#routeMapGrad)" stroke="#7FB069" stroke-width="3"
-      d="M90,170 C120,110 190,70 280,55 C380,38 520,32 660,42 C780,52 860,68 920,95
-         C960,118 970,165 950,215 C930,275 880,320 790,345 C690,372 560,382 430,375
-         C300,368 210,340 150,295 C105,260 75,220 90,170 Z"/>
-    <path fill="none" stroke="rgba(127,176,105,0.35)" stroke-width="2" stroke-dasharray="6 8"
-      d="M280,55 C350,120 420,180 520,220 C620,260 760,280 860,290"/>
+    <rect width="1000" height="500" fill="url(#routeMapOcean)"/>
+    <path class="route-map-land" fill="url(#routeMapGrad)" stroke="#4E8F5E" stroke-width="2.5" stroke-linejoin="round" filter="url(#routeMapShadow)"
+      d="M88,168 C95,118 145,72 230,52 C340,35 470,28 610,34 C730,40 845,58 915,88
+         C965,108 982,148 972,198 C958,258 918,312 845,348 C760,378 640,392 500,395
+         C360,392 240,375 165,338 C110,310 78,265 88,220 C82,200 84,182 88,168 Z"/>
+    <path fill="none" stroke="rgba(78,143,94,0.35)" stroke-width="1.5" stroke-dasharray="5 7"
+      d="M230,52 C300,120 380,175 500,210 C620,245 760,265 880,275"/>
+    <ellipse cx="700" cy="262" rx="22" ry="9" fill="#4FC3F7" opacity="0.75"/>
+    <ellipse cx="700" cy="262" rx="14" ry="5" fill="#B3E5FC" opacity="0.9"/>
+    <text x="500" y="468" text-anchor="middle" fill="rgba(61,56,148,0.22)" font-size="26" font-weight="700" font-family="system-ui,sans-serif">РОССИЯ</text>
   </svg>
 `;
+
+const MAP_ZOOM_MIN = 1;
+const MAP_ZOOM_MAX = 3;
+const MAP_ZOOM_STEP = 0.25;
+
+let mapZoomState = { scale: 1, panX: 0, panY: 0 };
 
 let selectedRouteId = null;
 let currentRoute = null;
@@ -583,6 +601,75 @@ function attachRouteCardHandlers(cardEl, container, route) {
     selectedRouteId = route.id;
     updateRouteViews(container);
   });
+}
+
+function applyMapTransform(container) {
+  const content = container.querySelector('#route-map-content');
+  if (!content) return;
+  content.style.transform = `translate(${mapZoomState.panX}px, ${mapZoomState.panY}px) scale(${mapZoomState.scale})`;
+}
+
+function setupRouteMapZoom(container) {
+  const mapEl = container.querySelector('#route-map');
+  const viewport = container.querySelector('#route-map-viewport');
+  if (!mapEl || !viewport) return;
+
+  applyMapTransform(container);
+
+  const zoomInBtn = container.querySelector('#map-zoom-in');
+  const zoomOutBtn = container.querySelector('#map-zoom-out');
+  const zoomResetBtn = container.querySelector('#map-zoom-reset');
+
+  const setZoom = (scale) => {
+    mapZoomState.scale = Math.min(MAP_ZOOM_MAX, Math.max(MAP_ZOOM_MIN, scale));
+    if (mapZoomState.scale <= 1) {
+      mapZoomState.panX = 0;
+      mapZoomState.panY = 0;
+    }
+    applyMapTransform(container);
+  };
+
+  if (zoomInBtn) {
+    zoomInBtn.onclick = () => setZoom(mapZoomState.scale + MAP_ZOOM_STEP);
+  }
+  if (zoomOutBtn) {
+    zoomOutBtn.onclick = () => setZoom(mapZoomState.scale - MAP_ZOOM_STEP);
+  }
+  if (zoomResetBtn) {
+    zoomResetBtn.onclick = () => {
+      mapZoomState = { scale: 1, panX: 0, panY: 0 };
+      applyMapTransform(container);
+    };
+  }
+
+  viewport.onwheel = (e) => {
+    e.preventDefault();
+    setZoom(mapZoomState.scale + (e.deltaY < 0 ? MAP_ZOOM_STEP : -MAP_ZOOM_STEP));
+  };
+
+  viewport.onmousedown = (e) => {
+    if (mapZoomState.scale <= 1 || e.button !== 0) return;
+    if (e.target.closest('.route-map-pin') || e.target.closest('.route-map-controls')) return;
+
+    const dragStart = { x: e.clientX, y: e.clientY, panX: mapZoomState.panX, panY: mapZoomState.panY };
+    mapEl.classList.add('is-dragging');
+
+    const onMouseMove = (moveEvent) => {
+      mapZoomState.panX = dragStart.panX + (moveEvent.clientX - dragStart.x);
+      mapZoomState.panY = dragStart.panY + (moveEvent.clientY - dragStart.y);
+      applyMapTransform(container);
+    };
+
+    const onMouseUp = () => {
+      mapEl.classList.remove('is-dragging');
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+    };
+
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
+    e.preventDefault();
+  };
 }
 
 function renderRouteMap(container, routes) {
@@ -710,6 +797,7 @@ function setupDualRangeFilter(container, minId, maxId, fillId, valueId, filterKe
 }
 
 function showRouteSelection(container) {
+  mapZoomState = { scale: 1, panX: 0, panY: 0 };
   const purchasedItems = getPurchasedItems();
   const clickBonus = getClickPowerBonus();
   const filteredRoutes = applyFilters(ROUTES);
@@ -809,9 +897,19 @@ function showRouteSelection(container) {
             <div class="route-map-panel">
               <h3>🗺️ Карта маршрутов</h3>
               <div class="route-map" id="route-map">
-                ${ROUTE_MAP_SVG}
-                <div class="route-map-pins" id="route-map-pins"></div>
+                <div class="route-map-controls">
+                  <button type="button" class="route-map-zoom-btn" id="map-zoom-in" title="Приблизить">+</button>
+                  <button type="button" class="route-map-zoom-btn" id="map-zoom-out" title="Отдалить">−</button>
+                  <button type="button" class="route-map-zoom-btn" id="map-zoom-reset" title="Сбросить масштаб">⟲</button>
+                </div>
+                <div class="route-map-viewport" id="route-map-viewport">
+                  <div class="route-map-content" id="route-map-content">
+                    ${ROUTE_MAP_SVG}
+                    <div class="route-map-pins" id="route-map-pins"></div>
+                  </div>
+                </div>
               </div>
+              <p class="route-map-hint">Колёсико мыши — масштаб · перетаскивание при приближении</p>
             </div>
             <div class="route-map-preview" id="route-preview"></div>
           </div>
@@ -854,6 +952,7 @@ function showRouteSelection(container) {
   
   document.getElementById('reset-filters').addEventListener('click', () => {
     selectedRouteId = null;
+    mapZoomState = { scale: 1, panX: 0, panY: 0 };
     filters = {
       duration: { min: 0, max: 15 },
       reward: { min: 0, max: 250 },
@@ -864,6 +963,7 @@ function showRouteSelection(container) {
     showRouteSelection(container);
   });
   
+  setupRouteMapZoom(container);
   updateRouteViews(container);
 }
 
