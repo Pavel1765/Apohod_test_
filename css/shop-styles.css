@@ -504,9 +504,8 @@
 .next-item-hint {
   text-align: center;
   margin-top: 20px;
-  padding: 16px;
-  background: var(--brand-cream);
-  border-radius: var(--brand-radius-sm);
+  padding: 8px 16px;
+  background: transparent;
   color: var(--brand-gray-dark);
   font-size: 16px;
 }

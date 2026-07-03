@@ -20,23 +20,10 @@ html, body {
   position: relative;
 }
 
-/* Походные элементы фона */
+/* Походные элементы фона — отключено */
 .main-page::before {
-  content: '⛰️ 🌲 🏕️ 🌲 ⛰️';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 120px;
-  opacity: 0.03;
-  white-space: nowrap;
-  pointer-events: none;
-  animation: floatBackground 20s infinite ease-in-out;
-}
-
-@keyframes floatBackground {
-  0%, 100% { transform: translate(-50%, -50%) scale(1); }
-  50% { transform: translate(-50%, -45%) scale(1.1); }
+  content: none;
+  display: none;
 }
 
 /* Шапка с логотипом и навигацией */
@@ -529,9 +516,5 @@ html, body {
   .game-card-button {
     opacity: 1;
     transform: translateY(0);
-  }
-  
-  .main-page::before {
-    font-size: 60px;
   }
 }
