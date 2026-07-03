@@ -69,6 +69,11 @@ export function renderMainMenu(container, onGameSelect) {
   container.innerHTML = `
     <div class="main-page">
       <header class="header">
+        <nav class="main-nav">
+          <a href="#games" class="nav-link">🎮 Игры</a>
+          <a href="#shop" class="nav-link">🛒 Магазин</a>
+          <a href="https://morethantrip.ru" target="_blank" class="nav-link">🌐 О программе</a>
+        </nav>
         <div class="logo-container">
           <div class="logo-waves">≈</div>
           <div class="logo-text">
@@ -184,7 +189,7 @@ export function renderMainMenu(container, onGameSelect) {
           <a href="https://morethantrip.ru" target="_blank" class="footer-link">«Больше, чем путежествие»</a>
         </p>
         <p style="margin-top: 8px; font-size: 12px; color: var(--brand-gray);">
-          v5.8 • 2026 • ⛰️ UX улучшения и tooltips
+          v5.9 • 2026 • 🧭 Навигация и UX улучшения
         </p>
       </footer>
     </div>
@@ -236,7 +241,7 @@ function renderShop(container) {
     
     itemEl.innerHTML = `
       <div class="shop-item-inner">
-        <div class="shop-item-front" data-tooltip="${item.description}">
+        <div class="shop-item-front">
           <div class="item-icon">${item.icon}</div>
           <div class="item-name">${item.name}</div>
           ${isPurchased ? 
