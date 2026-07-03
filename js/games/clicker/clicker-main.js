@@ -493,28 +493,104 @@ export function renderHikeClickerGame(container, onExit) {
 
 function applyFilters(routes) {
   return routes.filter(route => {
-    // Фильтр по длительности
     if (route.duration < filters.duration.min || route.duration > filters.duration.max) return false;
-    
-    // Фильтр по награде
     if (route.reward < filters.reward.min || route.reward > filters.reward.max) return false;
-    
-    // Фильтр по сложности
     if (filters.difficulty !== 'all' && route.difficulty !== filters.difficulty) return false;
-    
-    // Фильтр по сезону
     if (filters.season !== 'all' && !route.season.includes(filters.season)) return false;
-    
-    // Поиск по названию или локации
+
     if (filters.search) {
       const searchLower = filters.search.toLowerCase();
       const matchName = route.name.toLowerCase().includes(searchLower);
       const matchLocation = route.location.toLowerCase().includes(searchLower);
       if (!matchName && !matchLocation) return false;
     }
-    
+
     return true;
   });
+}
+
+function renderRouteCards(container, routes) {
+  const routesContainer = container.querySelector('#routes');
+  const routesInfo = container.querySelector('#routes-count');
+  if (!routesContainer) return;
+
+  if (routesInfo) {
+    routesInfo.textContent = `${routes.length} из ${ROUTES.length}`;
+  }
+
+  routesContainer.innerHTML = '';
+  routes.forEach(route => {
+    const routeCard = document.createElement('div');
+    routeCard.className = 'route-card';
+    routeCard.innerHTML = `
+      ${PLACEHOLDER_IMAGE ? `<div class="route-image" style="background-image: url('${PLACEHOLDER_IMAGE}')"></div>` : ''}
+      <div class="route-header">
+        <h2>⛰️ ${route.name}</h2>
+        <div class="route-reward">💰 ${route.reward}</div>
+      </div>
+      <div class="route-info">
+        <div class="route-detail">📍 ${route.location}</div>
+        <div class="route-detail">📏 ${route.elevation} м</div>
+        <div class="route-detail">${route.season}</div>
+        <div class="route-detail">⏱️ ${route.duration} ${route.duration === 1 ? 'день' : route.duration < 5 ? 'дня' : 'дней'}</div>
+        <div class="route-detail difficulty-${route.difficulty.replace(/\s/g, '-').toLowerCase()}">🎯 ${route.difficulty}</div>
+      </div>
+      ${route.fact ? `<div class="route-fact">💡 ${route.fact}</div>` : ''}
+      <div class="route-obstacles-preview">
+        ${route.obstacles.map(o => o.icon).join(' ')}
+      </div>
+      <button class="btn-primary route-start-btn">Начать поход</button>
+    `;
+
+    routeCard.querySelector('.route-start-btn').addEventListener('click', () => {
+      startRoute(container, route);
+    });
+
+    routesContainer.appendChild(routeCard);
+  });
+}
+
+function updateDualRange(minInput, maxInput, fillEl, valueEl, minLimit, maxLimit) {
+  let minVal = parseInt(minInput.value, 10);
+  let maxVal = parseInt(maxInput.value, 10);
+
+  if (minVal > maxVal) {
+    if (document.activeElement === minInput) {
+      maxVal = minVal;
+      maxInput.value = minVal;
+    } else {
+      minVal = maxVal;
+      minInput.value = maxVal;
+    }
+  }
+
+  const span = maxLimit - minLimit || 1;
+  const left = ((minVal - minLimit) / span) * 100;
+  const width = ((maxVal - minVal) / span) * 100;
+  fillEl.style.left = `${left}%`;
+  fillEl.style.width = `${width}%`;
+  valueEl.textContent = `${minVal} – ${maxVal}`;
+
+  return { minVal, maxVal };
+}
+
+function setupDualRangeFilter(container, minId, maxId, fillId, valueId, filterKey, minLimit, maxLimit) {
+  const minInput = document.getElementById(minId);
+  const maxInput = document.getElementById(maxId);
+  const fillEl = document.getElementById(fillId);
+  const valueEl = document.getElementById(valueId);
+  if (!minInput || !maxInput || !fillEl || !valueEl) return;
+
+  const sync = () => {
+    const { minVal, maxVal } = updateDualRange(minInput, maxInput, fillEl, valueEl, minLimit, maxLimit);
+    filters[filterKey].min = minVal;
+    filters[filterKey].max = maxVal;
+    renderRouteCards(container, applyFilters(ROUTES));
+  };
+
+  updateDualRange(minInput, maxInput, fillEl, valueEl, minLimit, maxLimit);
+  minInput.addEventListener('input', sync);
+  maxInput.addEventListener('input', sync);
 }
 
 function showRouteSelection(container) {
@@ -543,15 +619,31 @@ function showRouteSelection(container) {
           </div>
           
           <div class="filter-group">
-            <label>Длительность (дней): ${filters.duration.min}-${filters.duration.max}</label>
-            <input type="range" id="duration-min" min="0" max="15" value="${filters.duration.min}">
-            <input type="range" id="duration-max" min="0" max="15" value="${filters.duration.max}">
+            <div class="filter-range-header">
+              <label>Длительность (дней)</label>
+              <span class="filter-range-value" id="duration-value">${filters.duration.min} – ${filters.duration.max}</span>
+            </div>
+            <div class="dual-range">
+              <div class="dual-range-track">
+                <div class="dual-range-fill" id="duration-fill"></div>
+              </div>
+              <input type="range" class="dual-range-min" id="duration-min" min="0" max="15" value="${filters.duration.min}">
+              <input type="range" class="dual-range-max" id="duration-max" min="0" max="15" value="${filters.duration.max}">
+            </div>
           </div>
           
           <div class="filter-group">
-            <label>Награда (монет): ${filters.reward.min}-${filters.reward.max}</label>
-            <input type="range" id="reward-min" min="0" max="250" step="10" value="${filters.reward.min}">
-            <input type="range" id="reward-max" min="0" max="250" step="10" value="${filters.reward.max}">
+            <div class="filter-range-header">
+              <label>Награда (монет)</label>
+              <span class="filter-range-value" id="reward-value">${filters.reward.min} – ${filters.reward.max}</span>
+            </div>
+            <div class="dual-range">
+              <div class="dual-range-track">
+                <div class="dual-range-fill" id="reward-fill"></div>
+              </div>
+              <input type="range" class="dual-range-min" id="reward-min" min="0" max="250" step="10" value="${filters.reward.min}">
+              <input type="range" class="dual-range-max" id="reward-max" min="0" max="250" step="10" value="${filters.reward.max}">
+            </div>
           </div>
           
           <div class="filter-group">
@@ -576,7 +668,7 @@ function showRouteSelection(container) {
             </select>
           </div>
           
-          <button class="btn-secondary" id="reset-filters">Сбросить фильтры</button>
+          <button type="button" class="filter-reset-btn" id="reset-filters">↺ Сбросить фильтры</button>
         </div>
         
         <!-- Маршруты справа -->
@@ -598,7 +690,7 @@ function showRouteSelection(container) {
           ` : ''}
           
           <div class="routes-info">
-            <p>Найдено маршрутов: <strong>${filteredRoutes.length}</strong> из ${ROUTES.length}</p>
+            <p>Найдено маршрутов: <strong id="routes-count">${filteredRoutes.length}</strong> из ${ROUTES.length}</p>
           </div>
           
           <div class="routes-container" id="routes"></div>
@@ -617,37 +709,20 @@ function showRouteSelection(container) {
   // Обработчики фильтров
   document.getElementById('search-input').addEventListener('input', (e) => {
     filters.search = e.target.value;
-    showRouteSelection(container);
+    renderRouteCards(container, applyFilters(ROUTES));
   });
-  
-  document.getElementById('duration-min').addEventListener('input', (e) => {
-    filters.duration.min = parseInt(e.target.value);
-    showRouteSelection(container);
-  });
-  
-  document.getElementById('duration-max').addEventListener('input', (e) => {
-    filters.duration.max = parseInt(e.target.value);
-    showRouteSelection(container);
-  });
-  
-  document.getElementById('reward-min').addEventListener('input', (e) => {
-    filters.reward.min = parseInt(e.target.value);
-    showRouteSelection(container);
-  });
-  
-  document.getElementById('reward-max').addEventListener('input', (e) => {
-    filters.reward.max = parseInt(e.target.value);
-    showRouteSelection(container);
-  });
+
+  setupDualRangeFilter(container, 'duration-min', 'duration-max', 'duration-fill', 'duration-value', 'duration', 0, 15);
+  setupDualRangeFilter(container, 'reward-min', 'reward-max', 'reward-fill', 'reward-value', 'reward', 0, 250);
   
   document.getElementById('difficulty-select').addEventListener('change', (e) => {
     filters.difficulty = e.target.value;
-    showRouteSelection(container);
+    renderRouteCards(container, applyFilters(ROUTES));
   });
   
   document.getElementById('season-select').addEventListener('change', (e) => {
     filters.season = e.target.value;
-    showRouteSelection(container);
+    renderRouteCards(container, applyFilters(ROUTES));
   });
   
   document.getElementById('reset-filters').addEventListener('click', () => {
@@ -661,37 +736,7 @@ function showRouteSelection(container) {
     showRouteSelection(container);
   });
   
-  // Отрисовка маршрутов
-  const routesContainer = container.querySelector('#routes');
-  filteredRoutes.forEach(route => {
-    const routeCard = document.createElement('div');
-    routeCard.className = 'route-card';
-    routeCard.innerHTML = `
-      ${PLACEHOLDER_IMAGE ? `<div class="route-image" style="background-image: url('${PLACEHOLDER_IMAGE}')"></div>` : ''}
-      <div class="route-header">
-        <h2>⛰️ ${route.name}</h2>
-        <div class="route-reward">💰 ${route.reward}</div>
-      </div>
-      <div class="route-info">
-        <div class="route-detail">📍 ${route.location}</div>
-        <div class="route-detail">📏 ${route.elevation} м</div>
-        <div class="route-detail">${route.season}</div>
-        <div class="route-detail">⏱️ ${route.duration} ${route.duration === 1 ? 'день' : route.duration < 5 ? 'дня' : 'дней'}</div>
-        <div class="route-detail difficulty-${route.difficulty.replace(/\s/g, '-').toLowerCase()}">🎯 ${route.difficulty}</div>
-      </div>
-      ${route.fact ? `<div class="route-fact">💡 ${route.fact}</div>` : ''}
-      <div class="route-obstacles-preview">
-        ${route.obstacles.map(o => o.icon).join(' ')}
-      </div>
-      <button class="btn-primary route-start-btn">Начать поход</button>
-    `;
-    
-    routeCard.querySelector('.route-start-btn').addEventListener('click', () => {
-      startRoute(container, route);
-    });
-    
-    routesContainer.appendChild(routeCard);
-  });
+  renderRouteCards(container, filteredRoutes);
 }
 
 // Остальные функции остаются прежними

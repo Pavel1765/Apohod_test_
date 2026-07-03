@@ -6,7 +6,7 @@ import { addCoins } from '../../shop.js';
 const DIRECTIONS = ['↑', '→', '↓', '←'];
 const DIR_VECTORS = [[-1, 0], [0, 1], [1, 0], [0, -1]];
 
-const MAX_ENERGY = 50;
+const MAX_ENERGY = 20;
 const TENT_RESTORE = 20;
 const MAX_TENTS = 3;
 const GRID_COLS = 10;
@@ -141,22 +141,23 @@ export function renderArrowsGame(container, onExit) {
         <button class="btn-secondary" id="resetBtn">🎲 Новая карта</button>
       </div>
 
-      <div class="arrows-board-wrap">
-        <div class="arrows-board" id="board"></div>
-      </div>
-
-      <div class="arrows-legend">
-        <span>🌿 Луг — 1</span>
-        <span>🌲 Лес — 1</span>
-        <span>⛰️ Горы — 2</span>
-        <span>🌊 Река — 2</span>
-        <span>⛺ Палатка — +${TENT_RESTORE} энергии</span>
-      </div>
-
-      <div class="arrows-hint" id="hint">
-        <p><strong>Как играть:</strong> Кликайте по клеткам, чтобы поставить стрелку направления (↑→↓←).</p>
-        <p>Нажмите «Поставить палатку», затем кликните на клетку — восстановит ${TENT_RESTORE} энергии при прохождении.</p>
-        <p>Сложные участки (горы, реки) тратят <strong>в 2 раза больше</strong> энергии. За каждую оставшуюся единицу энергии — <strong>1 монета</strong> в магазин!</p>
+      <div class="arrows-container">
+        <div class="arrows-board-wrap">
+          <div class="arrows-board" id="board"></div>
+        </div>
+        <div class="arrows-sidebar">
+          <h3>Легенда</h3>
+          <div class="arrows-legend">
+            <span>🌿 Луг — 1</span>
+            <span>🌲 Лес — 1</span>
+            <span>⛰️ Горы — 2</span>
+            <span>🌊 Река — 2</span>
+            <span>⛺ Палатка — +${TENT_RESTORE}</span>
+          </div>
+          <div class="arrows-hint" id="hint">
+            <p>Клик — стрелка ↑→↓←. Палатка восстанавливает энергию. Горы и реки ×2. 1 монета за остаток энергии.</p>
+          </div>
+        </div>
       </div>
 
       <div class="arrows-message" id="message" hidden></div>
