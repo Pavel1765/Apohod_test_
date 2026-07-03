@@ -55,7 +55,7 @@ const ROUTES = [
     difficulty: 'Средний',
     duration: 5,
     reward: 70,
-    image: 'images/routes/hike-group.jpg',
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Kuznetsk_Alatau.jpg/800px-Kuznetsk_Alatau.jpg',
     fact: 'Поднебесные Зубья - самая живописная часть Кузнецкого Алатау с острыми скальными вершинами',
     obstacles: [
       { type: 'moon', icon: '🌙', name: 'Ночевка', clicks: 5 },
