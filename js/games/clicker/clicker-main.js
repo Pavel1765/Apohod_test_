@@ -5,6 +5,25 @@ import { addCoins, getPurchasedItems, getClickPowerBonus } from '../../shop.js';
 
 const PLACEHOLDER_IMAGE = 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&h=600&fit=crop';
 
+const CLICKER_PROGRESS_KEY = 'clicker_completed_routes';
+
+function getCompletedRouteIds() {
+  try {
+    const saved = localStorage.getItem(CLICKER_PROGRESS_KEY);
+    return saved ? JSON.parse(saved) : [];
+  } catch {
+    return [];
+  }
+}
+
+function markRouteCompleted(routeId) {
+  const ids = getCompletedRouteIds();
+  if (!ids.includes(routeId)) {
+    ids.push(routeId);
+    localStorage.setItem(CLICKER_PROGRESS_KEY, JSON.stringify(ids));
+  }
+}
+
 const OBSTACLE_STAGE_IMAGES = {
   bus: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=800&h=600&fit=crop',
   train: 'https://images.unsplash.com/photo-1474487548417-934cb8732a72?w=800&h=600&fit=crop',
@@ -668,8 +687,10 @@ function applyFilters(routes) {
 }
 
 function getRouteCardHTML(route, compact = false) {
+  const isCompleted = getCompletedRouteIds().includes(route.id);
   return `
     <div class="route-image" style="background-image: url('${PLACEHOLDER_IMAGE}')"></div>
+    ${isCompleted ? '<div class="route-completed-badge">✓ Поход пройден</div>' : ''}
     <div class="route-header">
       <h2>⛰️ ${route.name}</h2>
       <div class="route-reward">💰 ${route.reward}</div>
@@ -685,7 +706,7 @@ function getRouteCardHTML(route, compact = false) {
     <div class="route-obstacles-preview">
       ${route.obstacles.map(o => o.icon).join(' ')}
     </div>
-    <button class="btn-primary route-start-btn">Начать поход</button>
+    <button class="btn-primary route-start-btn">${isCompleted ? 'Пройти снова' : 'Начать поход'}</button>
   `;
 }
 
@@ -863,8 +884,9 @@ function renderRouteCards(container, routes) {
 
   routesContainer.innerHTML = '';
   routes.forEach(route => {
+    const isCompleted = getCompletedRouteIds().includes(route.id);
     const routeCard = document.createElement('div');
-    routeCard.className = `route-card${selectedRouteId === route.id ? ' selected' : ''}`;
+    routeCard.className = `route-card${selectedRouteId === route.id ? ' selected' : ''}${isCompleted ? ' completed' : ''}`;
     routeCard.dataset.routeId = route.id;
     routeCard.innerHTML = getRouteCardHTML(route);
     attachRouteCardHandlers(routeCard, container, route);
@@ -1110,8 +1132,6 @@ function startRoute(container, route) {
         </div>
       </div>
       
-      <div class="route-hero-image" style="background-image: url('${PLACEHOLDER_IMAGE}')"></div>
-      
       <div class="route-progress">
         <div class="progress-text">
           <span>Препятствий пройдено: <strong><span id="progress-count">0</span>/${route.obstacles.length}</strong></span>
@@ -1246,7 +1266,7 @@ function completeObstacle() {
 
 function completeRoute() {
   soundSystem.victory();
-  
+  markRouteCompleted(currentRoute.id);
   addCoins(currentRoute.reward);
   
   setTimeout(() => {
