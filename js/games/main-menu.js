@@ -262,8 +262,10 @@ function renderShop(container) {
       <div class="shop-item-card">
         <div class="shop-item-body">
           <div class="item-name">${item.name}</div>
-          <div class="item-icon">${item.icon}</div>
-          <div class="item-description">${item.description}</div>
+          <div class="item-visual">
+            <div class="item-icon">${item.icon}</div>
+            <div class="item-description">${item.description}</div>
+          </div>
         </div>
         <div class="shop-item-footer">
           ${isPurchased ? 
