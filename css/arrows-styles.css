@@ -1,157 +1,233 @@
-/** Стили для игры со стрелками */
+/** Стили для игры «Маршрут» */
 
 .arrows-game {
   min-height: 100vh;
   background: linear-gradient(180deg, var(--brand-cream) 0%, var(--brand-white) 100%);
-  padding: 20px;
+  padding: 60px 20px 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  position: relative;
+}
+
+.arrows-game .game-back-btn {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 1000;
 }
 
 .arrows-header {
   width: 100%;
-  max-width: 800px;
-  margin-bottom: 20px;
-  display: flex;
-  align-items: center;
-  gap: 20px;
-}
-
-.arrows-title {
+  max-width: 900px;
+  margin-bottom: 16px;
   text-align: center;
-  flex: 1;
-  min-width: 0;
 }
 
 .arrows-title h1 {
-  font-size: 32px;
+  font-size: clamp(24px, 4vw, 32px);
   color: var(--brand-purple);
   margin: 0 0 8px;
 }
 
 .arrows-title p {
   color: var(--brand-gray-dark);
-  font-size: 16px;
+  font-size: clamp(14px, 2.5vw, 16px);
   margin: 0;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .arrows-stats {
   display: flex;
-  gap: 16px;
+  gap: 12px;
   align-items: center;
-  margin-bottom: 24px;
+  margin-bottom: 16px;
   flex-wrap: wrap;
   justify-content: center;
+  max-width: 900px;
+}
+
+.arrows-stats .stat-card {
+  background: white;
+  padding: 12px 18px;
+  border-radius: var(--brand-radius-sm);
+  box-shadow: var(--brand-shadow);
+  text-align: center;
+  min-width: 100px;
+}
+
+.arrows-stats .stat-label {
+  font-size: 13px;
+  color: var(--brand-gray);
+  margin-bottom: 4px;
+}
+
+.arrows-stats .stat-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--brand-purple);
+}
+
+.energy-bar {
+  width: 100%;
+  height: 8px;
+  background: var(--brand-gray-light);
+  border-radius: 4px;
+  margin-top: 8px;
+  overflow: hidden;
+}
+
+.energy-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--brand-green) 0%, var(--brand-green-light) 100%);
+  transition: width 0.3s ease;
+}
+
+#tentBtn.active {
+  background: var(--brand-green);
+  color: white;
+  border-color: var(--brand-green);
+}
+
+.arrows-board-wrap {
+  width: 100%;
+  max-width: 720px;
+  overflow-x: auto;
+  padding: 4px;
 }
 
 .arrows-board {
   display: grid;
-  gap: 12px;
+  gap: 4px;
   background: white;
-  padding: 20px;
+  padding: 12px;
   border-radius: var(--brand-radius);
   box-shadow: var(--brand-shadow);
-  max-width: 500px;
   margin: 0 auto;
 }
 
 .arrows-cell {
   aspect-ratio: 1;
-  background: linear-gradient(135deg, var(--brand-cream) 0%, white 100%);
+  min-width: 52px;
+  min-height: 52px;
   border: 2px solid var(--brand-gray-light);
-  border-radius: var(--brand-radius-sm);
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 80px;
+  position: relative;
+  transition: all 0.2s ease;
 }
 
-.arrow {
-  font-size: 48px;
+.arrows-cell.clickable {
   cursor: pointer;
-  transition: all 0.3s ease;
-  user-select: none;
-  padding: 10px;
-  border-radius: var(--brand-radius-sm);
 }
 
-.arrow:hover {
-  transform: scale(1.15);
+.arrows-cell.clickable:hover {
+  border-color: var(--brand-purple);
+  box-shadow: 0 2px 8px rgba(61, 56, 148, 0.2);
 }
 
-.arrow.can-exit {
-  color: var(--brand-green);
-  animation: pulse-green 1.5s infinite;
-}
+.arrows-cell.terrain-plain { background: linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 100%); }
+.arrows-cell.terrain-forest { background: linear-gradient(135deg, #c8e6c9 0%, #dce775 100%); }
+.arrows-cell.terrain-mountain { background: linear-gradient(135deg, #cfd8dc 0%, #b0bec5 100%); }
+.arrows-cell.terrain-river { background: linear-gradient(135deg, #b3e5fc 0%, #81d4fa 100%); }
+.arrows-cell.terrain-rock { background: linear-gradient(135deg, #9e9e9e 0%, #757575 100%); }
+.arrows-cell.terrain-start { background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%); border-color: var(--brand-orange); }
+.arrows-cell.terrain-finish { background: linear-gradient(135deg, #e1bee7 0%, #ce93d8 100%); border-color: var(--brand-purple); }
+.arrows-cell.blocked { cursor: not-allowed; }
 
-.arrow.can-exit:hover {
-  background: var(--brand-green-light);
-  box-shadow: 0 4px 16px rgba(127, 176, 105, 0.4);
-}
-
-.arrow.blocked {
-  color: var(--brand-gray);
-  cursor: not-allowed;
-}
-
-.arrow.blocked:hover {
+.arrows-cell.active-step {
+  box-shadow: 0 0 0 3px var(--brand-green);
   transform: scale(1.05);
-  color: var(--brand-coral);
+  z-index: 2;
 }
 
-@keyframes pulse-green {
-  0%, 100% {
-    text-shadow: 0 0 10px rgba(127, 176, 105, 0.5);
-  }
-  50% {
-    text-shadow: 0 0 20px rgba(127, 176, 105, 0.8);
-  }
+.cell-terrain {
+  font-size: 22px;
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  opacity: 0.85;
+  pointer-events: none;
 }
 
-.shake {
-  animation: shake 0.5s;
+.cell-arrow {
+  font-size: 28px;
+  font-weight: bold;
+  color: var(--brand-purple);
+  z-index: 1;
+  text-shadow: 0 1px 2px rgba(255,255,255,0.8);
 }
 
-@keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-  20%, 40%, 60%, 80% { transform: translateX(5px); }
+.cell-tent {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  font-size: 16px;
+}
+
+.arrows-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 20px;
+  justify-content: center;
+  margin-top: 16px;
+  font-size: 13px;
+  color: var(--brand-gray-dark);
+  max-width: 720px;
 }
 
 .arrows-hint {
-  margin-top: 24px;
+  margin-top: 16px;
   text-align: center;
   color: var(--brand-gray-dark);
-  font-size: 14px;
-  max-width: 500px;
+  font-size: 13px;
+  max-width: 720px;
   background: white;
-  padding: 16px;
+  padding: 14px;
   border-radius: var(--brand-radius-sm);
   box-shadow: var(--brand-shadow);
 }
 
 .arrows-hint p {
-  margin: 8px 0;
+  margin: 6px 0;
 }
 
 .arrows-hint strong {
   color: var(--brand-purple);
 }
 
-/* Responsive */
+.arrows-message {
+  margin-top: 16px;
+  padding: 16px 24px;
+  border-radius: var(--brand-radius-sm);
+  font-size: 16px;
+  font-weight: 600;
+  text-align: center;
+  max-width: 600px;
+}
+
+.arrows-message.success {
+  background: linear-gradient(135deg, var(--brand-green-light) 0%, var(--brand-white) 100%);
+  color: var(--brand-green-dark, #2e7d32);
+  border: 2px solid var(--brand-green);
+}
+
+.arrows-message.error {
+  background: linear-gradient(135deg, #ffebee 0%, white 100%);
+  color: #c62828;
+  border: 2px solid var(--brand-coral);
+}
+
 @media (max-width: 768px) {
-  .arrows-board {
-    gap: 8px;
-    padding: 16px;
-    max-width: 100%;
-  }
-  
   .arrows-cell {
-    min-height: 60px;
+    min-width: 36px;
+    min-height: 36px;
   }
-  
-  .arrow {
-    font-size: 36px;
-  }
+
+  .cell-terrain { font-size: 16px; }
+  .cell-arrow { font-size: 20px; }
 }

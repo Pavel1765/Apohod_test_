@@ -55,9 +55,9 @@ const GAMES = [
   },
   {
     id: 'arrows',
-    title: 'Стрелки',
-    icon: '➡️',
-    description: 'Логическая игра со стрелками направлений. Нажимайте на стрелки в правильной последовательности, чтобы они могли выйти.',
+    title: 'Маршрут',
+    icon: '🗺️',
+    description: 'Проложите походный маршрут стрелками! Учитывайте горы и реки, ставьте палатки для восстановления энергии.',
     badge: null
   }
 ];
@@ -96,7 +96,7 @@ export function renderMainMenu(container, onGameSelect) {
             <div class="info-card">
               <div class="info-icon">🧭</div>
               <h3>Логика и планирование</h3>
-              <p>Стрелки, пазлы и Match-3 развивают стратегическое мышление и умение принимать быстрые решения на маршруте</p>
+              <p>Маршрут, пазлы и Match-3 развивают стратегическое мышление и умение принимать быстрые решения на тропе</p>
             </div>
             
             <div class="info-card">
@@ -193,7 +193,7 @@ export function renderMainMenu(container, onGameSelect) {
           <a href="https://morethantrip.ru" target="_blank" class="footer-link">«Больше, чем путежествие»</a>
         </p>
         <p style="margin-top: 8px; font-size: 12px; color: var(--brand-gray);">
-          v5.17 • 2026 • 🐛 Исправлен белый экран (синтаксис)
+          v5.19 • 2026 • 🗺️ Новая игра Маршрут
         </p>
       </footer>
     </div>
