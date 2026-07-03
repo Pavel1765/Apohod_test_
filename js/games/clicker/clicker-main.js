@@ -922,10 +922,30 @@ function setupMapSectionToggle(container) {
   };
 }
 
+function applyMapPinScale(container) {
+  const pinsContainer = container.querySelector('#route-map-pins');
+  if (!pinsContainer) return;
+  const pinScale = 1 / mapZoomState.scale;
+  pinsContainer.querySelectorAll('.route-map-pin').forEach(pin => {
+    pin.style.setProperty('--pin-scale', String(pinScale));
+  });
+}
+
+function getMapPinMarkup(isCompleted) {
+  const fill = isCompleted ? '#7FB069' : '#E53935';
+  return `<span class="route-map-pin-icon" aria-hidden="true">
+    <svg viewBox="0 0 24 34" focusable="false">
+      <path fill="${fill}" d="M12 0C5.373 0 0 5.373 0 12c0 8.25 12 22 12 22s12-13.75 12-22C24 5.373 18.627 0 12 0z"/>
+      <circle cx="12" cy="11" r="4.5" fill="#fff"/>
+    </svg>
+  </span>`;
+}
+
 function applyMapTransform(container) {
   const content = container.querySelector('#route-map-content');
   if (!content) return;
   content.style.transform = `translate(${mapZoomState.panX}px, ${mapZoomState.panY}px) scale(${mapZoomState.scale})`;
+  applyMapPinScale(container);
 }
 
 function setupRouteMapZoom(container) {
@@ -1000,15 +1020,17 @@ function renderRouteMap(container, routes) {
     const pos = getRouteMapPosition(route.id);
     if (!pos) return;
 
+    const isCompleted = getCompletedRouteIds().includes(route.id);
     const pin = document.createElement('button');
     pin.type = 'button';
-    pin.className = `route-map-pin${selectedRouteId === route.id ? ' active' : ''}`;
+    pin.className = `route-map-pin${selectedRouteId === route.id ? ' active' : ''}${isCompleted ? ' completed' : ''}`;
     pin.style.left = `${pos.x}%`;
     pin.style.top = `${pos.y}%`;
+    pin.style.setProperty('--pin-scale', String(1 / mapZoomState.scale));
     pin.dataset.routeId = route.id;
-    pin.title = route.name;
-    pin.setAttribute('aria-label', route.name);
-    pin.innerHTML = '<span class="route-map-pin-icon">📍</span>';
+    pin.title = isCompleted ? `${route.name} — поход пройден` : route.name;
+    pin.setAttribute('aria-label', pin.title);
+    pin.innerHTML = getMapPinMarkup(isCompleted);
 
     pin.addEventListener('click', (e) => {
       e.stopPropagation();

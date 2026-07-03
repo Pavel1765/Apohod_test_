@@ -193,7 +193,7 @@ export function renderMainMenu(container, onGameSelect) {
           <a href="https://morethantrip.ru" target="_blank" class="footer-link">«Больше, чем путежествие»</a>
         </p>
         <p style="margin-top: 8px; font-size: 12px; color: var(--brand-gray);">
-          v5.41 • 2026 • Кемпинги, Match-3, 28 маршрутов
+          v5.42 • 2026 • Зелёные булавки на карте
         </p>
       </footer>
     </div>

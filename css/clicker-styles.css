@@ -569,36 +569,47 @@
 
 .route-map-pin {
   position: absolute;
-  transform: translate(-50%, -100%);
+  transform: translate(-50%, -100%) scale(var(--pin-scale, 1));
   background: none;
   border: none;
   padding: 0;
   cursor: pointer;
   z-index: 2;
-  transition: transform 0.2s ease, filter 0.2s ease;
+  transition: transform 0.18s ease, filter 0.2s ease;
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.25));
+  transform-origin: 50% 100%;
+}
+
+.route-map-pin.completed {
+  filter: drop-shadow(0 2px 6px rgba(127, 176, 105, 0.5));
 }
 
 .route-map-pin-icon {
-  font-size: 22px;
-  line-height: 1;
+  line-height: 0;
   display: block;
-  transition: transform 0.2s ease;
+  transition: transform 0.18s ease;
+}
+
+.route-map-pin-icon svg {
+  display: block;
+  width: 24px;
+  height: 34px;
 }
 
 .route-map-pin:hover,
 .route-map-pin.active {
   z-index: 3;
-  filter: drop-shadow(0 4px 8px rgba(61, 56, 148, 0.35));
+  filter: drop-shadow(0 4px 10px rgba(61, 56, 148, 0.35));
+}
+
+.route-map-pin.completed:hover,
+.route-map-pin.completed.active {
+  filter: drop-shadow(0 4px 10px rgba(127, 176, 105, 0.55));
 }
 
 .route-map-pin:hover .route-map-pin-icon,
 .route-map-pin.active .route-map-pin-icon {
-  transform: scale(1.2);
-}
-
-.route-map-pin.active .route-map-pin-icon {
-  filter: hue-rotate(-20deg) saturate(1.4);
+  transform: scale(1.12);
 }
 
 .route-map-preview {
