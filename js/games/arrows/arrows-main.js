@@ -136,9 +136,9 @@ export function renderArrowsGame(container, onExit) {
           <div class="stat-label">📍 Шагов</div>
           <div class="stat-value" id="steps-val">—</div>
         </div>
+        <button class="btn-secondary" id="resetBtn">🎲 Новая карта</button>
         <button class="btn-secondary" id="tentBtn">⛺ Поставить палатку</button>
         <button class="btn-primary" id="hikeBtn">🥾 Начать поход</button>
-        <button class="btn-secondary" id="resetBtn">🎲 Новая карта</button>
       </div>
 
       <div class="arrows-container">
@@ -350,7 +350,7 @@ async function startHike() {
 
   for (let i = 0; i < path.length; i++) {
     const { r, c } = path[i];
-    highlightCell(r, c);
+    highlightPathProgress(path, i);
 
     if (i > 0) {
       const t = terrain[r][c];
@@ -367,6 +367,7 @@ async function startHike() {
   }
 
   phase = 'won';
+  highlightPathProgress(path, path.length);
   soundSystem.victory();
   const reward = Math.max(0, energy);
   if (reward > 0) addCoins(reward);
@@ -380,11 +381,26 @@ async function startHike() {
   document.getElementById('tentBtn').disabled = false;
 }
 
+function highlightPathProgress(path, currentIndex) {
+  document.querySelectorAll('.arrows-cell').forEach(el => {
+    el.classList.remove('active-step', 'path-visited');
+  });
+
+  for (let i = 0; i < path.length; i++) {
+    const { r, c } = path[i];
+    const idx = r * GRID_COLS + c;
+    const cell = document.querySelectorAll('.arrows-cell')[idx];
+    if (!cell) continue;
+    if (i < currentIndex) {
+      cell.classList.add('path-visited');
+    } else if (i === currentIndex) {
+      cell.classList.add('active-step');
+    }
+  }
+}
+
 function highlightCell(r, c) {
-  document.querySelectorAll('.arrows-cell').forEach(el => el.classList.remove('active-step'));
-  const idx = r * GRID_COLS + c;
-  const cell = document.querySelectorAll('.arrows-cell')[idx];
-  if (cell) cell.classList.add('active-step');
+  highlightPathProgress([{ r, c }], 0);
 }
 
 function sleep(ms) {

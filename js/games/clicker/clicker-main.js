@@ -3,7 +3,58 @@
 import { soundSystem } from '../hike-game/sounds.js';
 import { addCoins, getPurchasedItems, getClickPowerBonus } from '../../shop.js';
 
-const PLACEHOLDER_IMAGE = 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&h=600&fit=crop';
+const PLACEHOLDER_IMAGE = `data:image/svg+xml,${encodeURIComponent(
+  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450">' +
+  '<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">' +
+  '<stop offset="0%" stop-color="#87CEEB"/><stop offset="45%" stop-color="#7FB069"/><stop offset="100%" stop-color="#5a7a4a"/></linearGradient></defs>' +
+  '<rect width="800" height="450" fill="url(#g)"/>' +
+  '<path d="M0,320 Q200,260 400,290 T800,270 L800,450 L0,450 Z" fill="rgba(255,255,255,0.15)"/>' +
+  '<text x="400" y="255" text-anchor="middle" font-size="96">⛰️</text>' +
+  '</svg>'
+)}`;
+
+const CLICKER_PROGRESS_KEY = 'clicker_completed_routes';
+
+function getCompletedRouteIds() {
+  try {
+    const saved = localStorage.getItem(CLICKER_PROGRESS_KEY);
+    return saved ? JSON.parse(saved) : [];
+  } catch {
+    return [];
+  }
+}
+
+function markRouteCompleted(routeId) {
+  const ids = getCompletedRouteIds();
+  if (!ids.includes(routeId)) {
+    ids.push(routeId);
+    localStorage.setItem(CLICKER_PROGRESS_KEY, JSON.stringify(ids));
+  }
+}
+
+function applyRouteImageBackground(el, imageUrl) {
+  if (!el) return;
+  const usePlaceholder = () => {
+    el.style.backgroundImage = `url("${PLACEHOLDER_IMAGE}")`;
+  };
+  if (!imageUrl) {
+    usePlaceholder();
+    return;
+  }
+  const probe = new Image();
+  probe.onload = () => {
+    el.style.backgroundImage = `url("${imageUrl}")`;
+  };
+  probe.onerror = usePlaceholder;
+  probe.src = imageUrl;
+}
+
+function applyRouteImagesInRoot(root) {
+  if (!root) return;
+  root.querySelectorAll('.route-image[data-src]').forEach(el => {
+    applyRouteImageBackground(el, el.dataset.src || '');
+  });
+}
 const RUSSIA_MAP_IMAGE = 'https://upload.wikimedia.org/wikipedia/commons/9/96/Russia_location_map.svg';
 
 const ROUTES = [
@@ -546,8 +597,10 @@ function applyFilters(routes) {
 }
 
 function getRouteCardHTML(route, compact = false) {
+  const isCompleted = getCompletedRouteIds().includes(route.id);
   return `
-    <div class="route-image" style="background-image: url('${PLACEHOLDER_IMAGE}')"></div>
+    <div class="route-image" data-src="${route.image || ''}"></div>
+    ${isCompleted ? '<div class="route-completed-badge">✓ Пройден</div>' : ''}
     <div class="route-header">
       <h2>⛰️ ${route.name}</h2>
       <div class="route-reward">💰 ${route.reward}</div>
@@ -563,7 +616,7 @@ function getRouteCardHTML(route, compact = false) {
     <div class="route-obstacles-preview">
       ${route.obstacles.map(o => o.icon).join(' ')}
     </div>
-    <button class="btn-primary route-start-btn">Начать поход</button>
+    <button class="btn-primary route-start-btn">${isCompleted ? 'Пройти снова' : 'Начать поход'}</button>
   `;
 }
 
@@ -716,6 +769,7 @@ function renderRoutePreview(container, route) {
   preview.classList.add('has-route');
   preview.innerHTML = `<div class="route-card route-preview-card">${getRouteCardHTML(route, true)}</div>`;
   attachRouteCardHandlers(preview.querySelector('.route-preview-card'), container, route);
+  applyRouteImagesInRoot(preview);
 }
 
 function updateRouteViews(container) {
@@ -736,18 +790,21 @@ function renderRouteCards(container, routes) {
   if (!routesContainer) return;
 
   if (routesInfo) {
-    routesInfo.textContent = `${routes.length} из ${ROUTES.length}`;
+    routesInfo.textContent = String(routes.length);
   }
 
   routesContainer.innerHTML = '';
   routes.forEach(route => {
+    const isCompleted = getCompletedRouteIds().includes(route.id);
     const routeCard = document.createElement('div');
-    routeCard.className = `route-card${selectedRouteId === route.id ? ' selected' : ''}`;
+    routeCard.className = `route-card${selectedRouteId === route.id ? ' selected' : ''}${isCompleted ? ' completed' : ''}`;
     routeCard.dataset.routeId = route.id;
     routeCard.innerHTML = getRouteCardHTML(route);
     attachRouteCardHandlers(routeCard, container, route);
     routesContainer.appendChild(routeCard);
   });
+
+  applyRouteImagesInRoot(routesContainer);
 }
 
 function updateDualRange(minInput, maxInput, fillEl, valueEl, minLimit, maxLimit) {
@@ -1117,7 +1174,7 @@ function completeObstacle() {
 
 function completeRoute() {
   soundSystem.victory();
-  
+  markRouteCompleted(currentRoute.id);
   addCoins(currentRoute.reward);
   
   setTimeout(() => {
