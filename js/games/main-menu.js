@@ -9,7 +9,7 @@ const GAMES = [
     title: 'Походные маршруты',
     icon: '⛰️',
     description: 'Проходите маршруты, кликая на препятствия! Горы, реки, леса - преодолевайте все и получайте награды за походы.',
-    badge: null
+    badge: 'ХИТ'
   },
   {
     id: 'scenarios',
@@ -23,7 +23,7 @@ const GAMES = [
     title: 'В Поход!',
     icon: '🏕️',
     description: 'Кооперативная настольная игра о путешествии по карте. Работайте в команде, используйте способности ролей и доберитесь до цели!',
-    badge: null
+    badge: 'кооп'
   },
   {
     id: 'snake',
@@ -51,7 +51,7 @@ const GAMES = [
     title: 'Шашки',
     icon: '♟️',
     description: 'Классическая игра в шашки! Играйте против умного ИИ на разной сложности или с другом на одном устройстве.',
-    badge: null
+    badge: 'кооп'
   },
   {
     id: 'puzzle',
@@ -200,7 +200,7 @@ export function renderMainMenu(container, onGameSelect) {
           <a href="https://morethantrip.ru" target="_blank" class="footer-link">«Больше, чем путежествие»</a>
         </p>
         <p style="margin-top: 8px; font-size: 12px; color: var(--brand-gray);">
-          v5.45 • 2026 • Походные ситуации
+          v5.46 • 2026 • Бейджи игр
         </p>
       </footer>
     </div>
@@ -399,12 +399,19 @@ function renderShop(container) {
 
 function renderGames(container, onGameSelect) {
   const gamesGrid = container.querySelector('#games-grid');
-  
+
   GAMES.forEach(game => {
     const card = document.createElement('div');
     card.className = 'game-card';
+    const badgeClass = game.badge === 'ХИТ'
+      ? 'game-card-badge badge-hit'
+      : game.badge === 'кооп'
+        ? 'game-card-badge badge-coop'
+        : game.badge
+          ? 'game-card-badge badge-new'
+          : '';
     card.innerHTML = `
-      ${game.badge ? `<div class="game-card-badge">${game.badge}</div>` : ''}
+      ${game.badge ? `<div class="${badgeClass}">${game.badge}</div>` : ''}
       <div class="game-card-icon">${game.icon}</div>
       <div class="game-card-content">
         <h2 class="game-card-title">${game.title}</h2>

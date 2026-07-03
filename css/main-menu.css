@@ -415,20 +415,34 @@ html, body {
   transform: scale(0.98);
 }
 
-/* Бейдж "Новое" */
+/* Бейджи на карточках игр */
 .game-card-badge {
   position: absolute;
   top: 16px;
   right: 16px;
-  background: var(--brand-coral);
   color: white;
   padding: 6px 12px;
   border-radius: 20px;
   font-size: 12px;
   font-weight: 700;
   text-transform: uppercase;
-  box-shadow: 0 2px 8px rgba(226, 96, 46, 0.4);
   animation: badgePulse 2s infinite;
+}
+
+.badge-new {
+  background: var(--brand-coral);
+  box-shadow: 0 2px 8px rgba(226, 96, 46, 0.4);
+}
+
+.badge-hit {
+  background: var(--brand-orange);
+  box-shadow: 0 2px 8px rgba(230, 169, 60, 0.5);
+}
+
+.badge-coop {
+  background: var(--brand-purple);
+  box-shadow: 0 2px 8px rgba(61, 56, 148, 0.4);
+  text-transform: none;
 }
 
 @keyframes badgePulse {
