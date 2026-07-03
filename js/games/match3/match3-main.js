@@ -30,11 +30,11 @@ export function renderMatch3Game(container, onExit) {
   container.innerHTML = `
     <div class="match3-game">
       <div class="match3-header">
+        <button class="btn-back" id="backBtn">← В меню</button>
         <div class="match3-title">
           <h1>🧩 Три в Ряд</h1>
           <p>Развитие внимательности и быстрой реакции для сбора ягод и грибов</p>
         </div>
-        <button class="btn-back" id="backBtn">← В меню</button>
       </div>
       <div class="match3-stats">
         <div class="stat-card">

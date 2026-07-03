@@ -193,7 +193,7 @@ export function renderMainMenu(container, onGameSelect) {
           <a href="https://morethantrip.ru" target="_blank" class="footer-link">«Больше, чем путежествие»</a>
         </p>
         <p style="margin-top: 8px; font-size: 12px; color: var(--brand-gray);">
-          v5.13 • 2026 • 🎨 Новый header, заглушка для фото
+          v5.14 • 2026 • 🎨 Единый дизайн header'ов, исправлен Puzzle
         </p>
       </footer>
     </div>

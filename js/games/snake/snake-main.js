@@ -34,11 +34,11 @@ export function renderSnakeGame(container, onExit) {
   container.innerHTML = `
     <div class="snake-game">
       <div class="snake-header">
+        <button class="btn-back" id="backBtn">← В меню</button>
         <div class="snake-title">
           <h1>🥾 Походная Змейка</h1>
           <p>Ориентирование на местности и быстрые решения - залог безопасности!</p>
         </div>
-        <button class="btn-back" id="backBtn">← В меню</button>
       </div>
       
       <div class="snake-stats">

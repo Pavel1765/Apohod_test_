@@ -47,12 +47,7 @@ export function renderPuzzleGame(container, onExit) {
   container.innerHTML = `
     <div class="puzzle-game">
       <div class="puzzle-header">
-        <div class="puzzle-title">
-          <h1>🎯 Блоки</h1>
-          <p>Пространственное мышление помогает правильно упаковать рюкзак!</p>
-        </div>
         <button class="btn-back" id="backBtn">← В меню</button>
-      </div>
         <div class="puzzle-title">
           <h1>🎯 Блоки</h1>
           <p>Пространственное мышление помогает правильно упаковать рюкзак!</p>

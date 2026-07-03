@@ -708,7 +708,7 @@ function startRoute(container, route) {
         </div>
       </div>
       
-      ${route.image ? `<div class="route-hero-image" style="background-image: url('${route.image}')"></div>` : ''}
+      ${PLACEHOLDER_IMAGE ? `<div class="route-hero-image" style="background-image: url('${PLACEHOLDER_IMAGE}')"></div>` : ''}
       
       <div class="route-progress">
         <div class="progress-text">

@@ -20,17 +20,17 @@
 
 .match3-header {
   width: 100%;
-  max-width: 600px;
+  max-width: 800px;
   margin-bottom: 20px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: 20px;
 }
 
 .match3-title {
   text-align: center;
   flex: 1;
+  min-width: 0;
 }
 
 .match3-title h1 {
