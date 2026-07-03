@@ -543,7 +543,7 @@
   }
 }
 
-.shop-item.just-purchased .shop-item-inner {
+.shop-item.just-purchased .shop-item-card {
   animation: purchaseSuccess 0.8s ease;
 }
 
