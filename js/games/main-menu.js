@@ -196,7 +196,7 @@ export function renderMainMenu(container, onGameSelect) {
           <a href="https://morethantrip.ru" target="_blank" class="footer-link">«Больше, чем путежествие»</a>
         </p>
         <p style="margin-top: 8px; font-size: 12px; color: var(--brand-gray);">
-          v5.11 • 2026 • 🎨 Исправлена видимость кнопок
+          v5.12 • 2026 • 🎨 Улучшен дизайн, кнопки видны везде
         </p>
       </footer>
     </div>

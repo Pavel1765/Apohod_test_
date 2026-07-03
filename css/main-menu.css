@@ -42,11 +42,15 @@ html, body {
 
 /* Шапка с логотипом и навигацией */
 .header {
-  max-width: 1200px;
-  margin: 0 auto 40px;
-  padding: 30px 20px;
+  max-width: 1400px;
+  margin: 0 auto 50px;
+  padding: 40px 30px;
   position: relative;
   z-index: 1;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(243, 240, 255, 0.8) 100%);
+  border-radius: var(--brand-radius);
+  box-shadow: 0 8px 32px rgba(61, 56, 148, 0.12);
+  backdrop-filter: blur(10px);
 }
 
 /* Верхняя часть header */
@@ -54,9 +58,9 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 24px;
+  margin-bottom: 32px;
   flex-wrap: wrap;
-  gap: 20px;
+  gap: 24px;
 }
 
 /* Навигация */
@@ -154,19 +158,14 @@ html, body {
   line-height: 1.2;
 }
 
-.header-subtitle {
-  font-size: clamp(14px, 3vw, 16px);
-  color: var(--brand-gray);
-  margin: 8px 0 0;
-  animation: fadeIn 1s ease 0.3s both;
-}
-
 .header-tagline {
-  font-size: clamp(16px, 3.5vw, 20px);
+  font-size: clamp(20px, 3vw, 28px);
+  font-weight: 700;
   color: var(--brand-purple);
-  font-weight: 600;
-  margin-top: 20px;
-  animation: fadeIn 1s ease 0.5s both;
+  margin: 0;
+  text-align: center;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  letter-spacing: 0.5px;
 }
 
 /* Информационный блок о программе */
@@ -276,6 +275,23 @@ html, body {
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
+}
+
+/* Секция с играми */
+.games-section {
+  max-width: 1400px;
+  margin: 48px auto;
+  padding: 0 20px;
+}
+
+.section-title {
+  text-align: center;
+  font-size: clamp(28px, 5vw, 40px);
+  color: var(--brand-purple);
+  margin: 0 0 40px;
+  font-weight: 700;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  animation: fadeIn 1s ease;
 }
 
 /* Сетка игр */

@@ -340,6 +340,7 @@
   transition: transform 0.3s, box-shadow 0.3s;
   display: flex;
   flex-direction: column;
+  height: 100%;
 }
 
 .route-card:hover {
@@ -428,6 +429,9 @@
   margin: 0 12px;
   border-radius: 8px;
   padding: 12px;
+  flex: 1;
+  display: flex;
+  align-items: center;
 }
 
 .route-obstacles-preview {
@@ -439,7 +443,7 @@
 }
 
 .route-start-btn {
-  margin: 16px 20px 20px;
+  margin: auto 20px 20px 20px;
 }
 
 /* Route progress during hike */
