@@ -184,7 +184,7 @@ export function renderMainMenu(container, onGameSelect) {
           <a href="https://morethantrip.ru" target="_blank" class="footer-link">«Больше, чем путежествие»</a>
         </p>
         <p style="margin-top: 8px; font-size: 12px; color: var(--brand-gray);">
-          v5.7 • 2026 • 🗺️ Новые маршруты и фильтры
+          v5.8 • 2026 • ⛰️ UX улучшения и tooltips
         </p>
       </footer>
     </div>
