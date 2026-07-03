@@ -6,8 +6,8 @@ import { addCoins } from '../../shop.js';
 const DIRECTIONS = ['↑', '→', '↓', '←'];
 const DIR_VECTORS = [[-1, 0], [0, 1], [1, 0], [0, -1]];
 
-const MAX_ENERGY = 80;
-const TENT_RESTORE = 30;
+const MAX_ENERGY = 50;
+const TENT_RESTORE = 20;
 const MAX_TENTS = 3;
 const GRID_COLS = 10;
 const GRID_ROWS = 8;
@@ -22,16 +22,13 @@ const TERRAIN = {
   finish: { icon: '🎌', name: 'Финиш', cost: 0 }
 };
 
-// Один большой маршрут с препятствиями
-const MAP_LAYOUT = [
-  ['start', 'plain', 'plain', 'forest', 'mountain', 'mountain', 'plain', 'forest', 'plain', 'finish'],
-  ['plain', 'forest', 'plain', 'plain', 'mountain', 'river', 'river', 'plain', 'forest', 'plain'],
-  ['plain', 'plain', 'plain', 'forest', 'plain', 'plain', 'mountain', 'mountain', 'plain', 'plain'],
-  ['forest', 'mountain', 'mountain', 'plain', 'plain', 'forest', 'plain', 'river', 'river', 'plain'],
-  ['plain', 'plain', 'river', 'river', 'plain', 'plain', 'plain', 'plain', 'forest', 'plain'],
-  ['plain', 'forest', 'plain', 'plain', 'mountain', 'mountain', 'forest', 'plain', 'plain', 'forest'],
-  ['plain', 'plain', 'forest', 'plain', 'plain', 'river', 'plain', 'forest', 'plain', 'plain'],
-  ['rock', 'rock', 'plain', 'plain', 'forest', 'plain', 'plain', 'plain', 'mountain', 'plain']
+const PATH_TERRAINS = ['plain', 'plain', 'forest', 'plain', 'mountain', 'river'];
+const FILL_TERRAINS = [
+  { type: 'plain', weight: 30 },
+  { type: 'forest', weight: 25 },
+  { type: 'mountain', weight: 15 },
+  { type: 'river', weight: 15 },
+  { type: 'rock', weight: 15 }
 ];
 
 let terrain = [];
@@ -43,7 +40,72 @@ let phase = 'planning';
 let onExitCallback = null;
 let tentMode = false;
 let startPos = { r: 0, c: 0 };
-let finishPos = { r: 0, c: 9 };
+let finishPos = { r: GRID_ROWS - 1, c: GRID_COLS - 1 };
+
+function pickWeightedTerrain(list) {
+  const total = list.reduce((s, t) => s + t.weight, 0);
+  let roll = Math.random() * total;
+  for (const entry of list) {
+    roll -= entry.weight;
+    if (roll <= 0) return entry.type;
+  }
+  return list[0].type;
+}
+
+function generateRandomMap() {
+  const map = Array(GRID_ROWS).fill(null).map(() => Array(GRID_COLS).fill('plain'));
+  const pathCells = new Set();
+
+  startPos = { r: 0, c: 0 };
+  finishPos = { r: GRID_ROWS - 1, c: GRID_COLS - 1 };
+
+  map[startPos.r][startPos.c] = 'start';
+  map[finishPos.r][finishPos.c] = 'finish';
+  pathCells.add(`${startPos.r},${startPos.c}`);
+  pathCells.add(`${finishPos.r},${finishPos.c}`);
+
+  // Случайный маршрут от старта к финишу (противоположный угол)
+  let r = startPos.r;
+  let c = startPos.c;
+  let safety = 0;
+
+  while ((r !== finishPos.r || c !== finishPos.c) && safety < 300) {
+    safety++;
+    const towardFinish = [];
+    if (r < finishPos.r) towardFinish.push([1, 0]);
+    if (r > finishPos.r) towardFinish.push([-1, 0]);
+    if (c < finishPos.c) towardFinish.push([0, 1]);
+    if (c > finishPos.c) towardFinish.push([0, -1]);
+
+    const allMoves = [[-1, 0], [1, 0], [0, -1], [0, 1]].filter(([dr, dc]) => {
+      const nr = r + dr;
+      const nc = c + dc;
+      return nr >= 0 && nr < GRID_ROWS && nc >= 0 && nc < GRID_COLS;
+    });
+
+    const pool = Math.random() < 0.72 && towardFinish.length ? towardFinish : allMoves;
+    const [dr, dc] = pool[Math.floor(Math.random() * pool.length)];
+    r += dr;
+    c += dc;
+    pathCells.add(`${r},${c}`);
+  }
+
+  pathCells.forEach(key => {
+    const [pr, pc] = key.split(',').map(Number);
+    if (map[pr][pc] === 'start' || map[pr][pc] === 'finish') return;
+    map[pr][pc] = PATH_TERRAINS[Math.floor(Math.random() * PATH_TERRAINS.length)];
+  });
+
+  for (let row = 0; row < GRID_ROWS; row++) {
+    for (let col = 0; col < GRID_COLS; col++) {
+      if (map[row][col] === 'start' || map[row][col] === 'finish') continue;
+      if (pathCells.has(`${row},${col}`)) continue;
+      map[row][col] = pickWeightedTerrain(FILL_TERRAINS);
+    }
+  }
+
+  return map;
+}
 
 export function renderArrowsGame(container, onExit) {
   onExitCallback = onExit;
@@ -76,7 +138,7 @@ export function renderArrowsGame(container, onExit) {
         </div>
         <button class="btn-secondary" id="tentBtn">⛺ Поставить палатку</button>
         <button class="btn-primary" id="hikeBtn">🥾 Начать поход</button>
-        <button class="btn-secondary" id="resetBtn">🔄 Сброс</button>
+        <button class="btn-secondary" id="resetBtn">🎲 Новая карта</button>
       </div>
 
       <div class="arrows-board-wrap">
@@ -94,7 +156,7 @@ export function renderArrowsGame(container, onExit) {
       <div class="arrows-hint" id="hint">
         <p><strong>Как играть:</strong> Кликайте по клеткам, чтобы поставить стрелку направления (↑→↓←).</p>
         <p>Нажмите «Поставить палатку», затем кликните на клетку — восстановит ${TENT_RESTORE} энергии при прохождении.</p>
-        <p>Сложные участки (горы, реки) тратят <strong>в 2 раза больше</strong> энергии. Дойдите до 🎌 с запасом сил!</p>
+        <p>Сложные участки (горы, реки) тратят <strong>в 2 раза больше</strong> энергии. За каждую оставшуюся единицу энергии — <strong>1 монета</strong> в магазин!</p>
       </div>
 
       <div class="arrows-message" id="message" hidden></div>
@@ -121,7 +183,7 @@ function loadStyles() {
 }
 
 function initGame() {
-  terrain = MAP_LAYOUT.map(row => [...row]);
+  terrain = generateRandomMap();
   arrows = Array(GRID_ROWS).fill(null).map(() => Array(GRID_COLS).fill(null));
   tents = new Set();
   tentsLeft = MAX_TENTS;
@@ -305,12 +367,12 @@ async function startHike() {
 
   phase = 'won';
   soundSystem.victory();
-  const reward = Math.max(10, Math.floor(energy / 2));
-  addCoins(reward);
+  const reward = Math.max(0, energy);
+  if (reward > 0) addCoins(reward);
 
   document.getElementById('steps-val').textContent = path.length - 1;
   showMessage(
-    `🎉 Маршрут пройден! Осталось ${energy} энергии из ${MAX_ENERGY}. Награда: ${reward} 💰`,
+    `🎉 Маршрут пройден! Осталось ${energy} ⚡ из ${MAX_ENERGY}. Награда: ${reward} 💰 (1 монета за каждую единицу энергии)`,
     'success'
   );
   document.getElementById('hikeBtn').disabled = false;

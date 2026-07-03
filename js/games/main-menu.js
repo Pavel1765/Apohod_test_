@@ -193,7 +193,7 @@ export function renderMainMenu(container, onGameSelect) {
           <a href="https://morethantrip.ru" target="_blank" class="footer-link">«Больше, чем путежествие»</a>
         </p>
         <p style="margin-top: 8px; font-size: 12px; color: var(--brand-gray);">
-          v5.19 • 2026 • 🗺️ Новая игра Маршрут
+          v5.20 • 2026 • 🗺️ Случайная карта, магазин обновлён
         </p>
       </footer>
     </div>
@@ -259,36 +259,31 @@ function renderShop(container) {
     itemEl.className = `shop-item ${isPurchased ? 'purchased' : ''} ${isLocked ? 'locked' : ''}`;
     
     itemEl.innerHTML = `
-      <div class="shop-item-inner">
-        <div class="shop-item-front">
-          <div class="item-icon">${item.icon}</div>
+      <div class="shop-item-card">
+        <div class="shop-item-body">
           <div class="item-name">${item.name}</div>
+          <div class="item-icon">${item.icon}</div>
+          <div class="item-description">${item.description}</div>
+        </div>
+        <div class="shop-item-footer">
           ${isPurchased ? 
             '<div class="item-status">✓ Куплено</div>' : 
-            `<div class="item-price"><span>💰</span>${item.price}</div>`
+            `<button type="button" class="item-price-btn" ${isLocked ? 'disabled' : ''}><span>💰</span> ${item.price}</button>`
           }
-        </div>
-        <div class="shop-item-back">
-          <div class="item-back-title">${item.icon} ${item.name}</div>
-          <div class="item-description">${item.description}</div>
         </div>
       </div>
     `;
     
-    // Покупка по клику на цену (только если не locked)
     if (!isPurchased && canAfford && !isLocked) {
-      const priceEl = itemEl.querySelector('.item-price');
-      if (priceEl) {
-        priceEl.style.cursor = 'pointer';
-        priceEl.addEventListener('click', (e) => {
+      const priceBtn = itemEl.querySelector('.item-price-btn');
+      if (priceBtn) {
+        priceBtn.addEventListener('click', (e) => {
           e.stopPropagation();
           const result = purchaseItem(item.id);
           if (result.success) {
             soundSystem.click();
             itemEl.classList.add('just-purchased');
-            setTimeout(() => {
-              renderShop(container);
-            }, 800);
+            setTimeout(() => renderShop(container), 800);
           } else {
             alert(result.message);
           }
