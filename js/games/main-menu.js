@@ -69,23 +69,26 @@ export function renderMainMenu(container, onGameSelect) {
   container.innerHTML = `
     <div class="main-page">
       <header class="header">
-        <nav class="main-nav">
-          <a href="#games" class="nav-link">🎮 Игры</a>
-          <a href="#shop" class="nav-link">🛒 Магазин</a>
-          <a href="https://morethantrip.ru" target="_blank" class="nav-link">🌐 О программе</a>
-        </nav>
-        <div class="logo-container">
-          <div class="logo-waves">≈</div>
-          <div class="logo-text">
-            <h1>Больше, чем путешествие</h1>
+        <div class="header-top">
+          <div class="logo-container">
+            <div class="logo-waves">≈</div>
+            <div class="logo-text">
+              <h1>Больше, чем путешествие</h1>
+            </div>
+          </div>
+          <div class="header-center">
+            <p class="header-tagline">Игровая платформа</p>
           </div>
         </div>
-        <p class="header-subtitle">программа от росмолодёжь</p>
-        <p class="header-tagline">Игровая платформа</p>
+        <nav class="main-nav">
+          <a href="#games" class="nav-link scroll-link">🎮 Игры</a>
+          <a href="#shop" class="nav-link scroll-link">🛒 Магазин</a>
+          <a href="#about" class="nav-link scroll-link">🌐 О программе</a>
+        </nav>
       </header>
       
       <!-- Информационный блок о программе -->
-      <div class="info-section">
+      <div class="info-section" id="about">
         <div class="info-container">
           <div class="info-header">
             <h2>⛰️ Подготовьтесь к настоящему походу через игры!</h2>
@@ -140,7 +143,7 @@ export function renderMainMenu(container, onGameSelect) {
       </div>
       
       <!-- Магазин предметов -->
-      <div class="shop-section">
+      <div class="shop-section" id="shop">
         <div class="shop-header">
           <div class="shop-title">
             <span style="font-size: 32px;">🎒</span>
@@ -181,7 +184,11 @@ export function renderMainMenu(container, onGameSelect) {
         <div class="next-item-hint" id="next-item-hint"></div>
       </div>
       
-      <div class="games-grid" id="games-grid"></div>
+      <!-- Секция с играми -->
+      <div class="games-section" id="games">
+        <h2 class="section-title">🎮 Выберите игру</h2>
+        <div class="games-grid" id="games-grid"></div>
+      </div>
       
       <footer class="footer">
         <p>
@@ -194,6 +201,21 @@ export function renderMainMenu(container, onGameSelect) {
       </footer>
     </div>
   `;
+
+  // Добавляем smooth scroll для навигации
+  setTimeout(() => {
+    const scrollLinks = container.querySelectorAll('.scroll-link');
+    scrollLinks.forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const targetId = link.getAttribute('href').substring(1);
+        const targetElement = container.querySelector(`#${targetId}`);
+        if (targetElement) {
+          targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+  }, 100);
 
   renderShop(container);
   renderGames(container, onGameSelect);
