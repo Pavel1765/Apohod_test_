@@ -687,31 +687,7 @@
   }
 }
 
-/* Route image */
-.route-image {
-  width: 100%;
-  height: 180px;
-  background-color: #7FB069;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 450'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%2387CEEB'/%3E%3Cstop offset='45%25' stop-color='%237FB069'/%3E%3Cstop offset='100%25' stop-color='%235a7a4a'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='800' height='450' fill='url(%23g)'/%3E%3Cpath d='M0,320 Q200,260 400,290 T800,270 L800,450 L0,450 Z' fill='rgba(255,255,255,0.15)'/%3E%3Ctext x='400' y='255' text-anchor='middle' font-size='96'%3E%E2%9B%B0%EF%B8%8F%3C/text%3E%3C/svg%3E");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-}
-
-.route-completed-badge {
-  position: absolute;
-  top: 12px;
-  left: 12px;
-  z-index: 2;
-  background: linear-gradient(135deg, var(--brand-green) 0%, var(--brand-green-light) 100%);
-  color: white;
-  font-size: 13px;
-  font-weight: 700;
-  padding: 6px 12px;
-  border-radius: 999px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-}
-
+/* Route card */
 .route-card {
   background: var(--brand-white);
   border-radius: var(--brand-radius);
@@ -722,20 +698,20 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  position: relative;
-}
-
-.route-card.completed {
-  border: 2px solid rgba(127, 176, 105, 0.45);
-}
-
-.route-card.completed .route-start-btn {
-  background: linear-gradient(135deg, var(--brand-green) 0%, var(--brand-green-light) 100%);
 }
 
 .route-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+}
+
+/* Route image */
+.route-image {
+  width: 100%;
+  height: 180px;
+  background-size: cover;
+  background-position: center;
+  background-color: #e0e0e0;
 }
 
 .route-header {
@@ -1148,139 +1124,5 @@
   
   .victory-buttons button {
     width: 100%;
-  }
-}
-
-/* Hike screen — компактно на одном экране */
-.clicker-hike {
-  min-height: 100vh;
-  max-height: 100vh;
-  overflow: hidden;
-  padding: 60px 16px 12px;
-  display: flex;
-  flex-direction: column;
-  position: relative;
-}
-
-.clicker-hike .game-back-btn {
-  position: fixed;
-  top: 20px;
-  left: 20px;
-  z-index: 1000;
-}
-
-.hike-header {
-  width: 100%;
-  max-width: 1100px;
-  margin: 0 auto 10px;
-  text-align: center;
-}
-
-.hike-title h1 {
-  font-size: 24px;
-  color: var(--brand-purple);
-  margin: 0 0 4px;
-}
-
-.hike-title p {
-  font-size: 13px;
-  color: var(--brand-gray-dark);
-  margin: 0 0 8px;
-}
-
-.hike-progress {
-  max-width: 100%;
-  margin: 0 auto;
-  padding: 8px 16px;
-}
-
-.hike-progress .progress-text {
-  font-size: 14px;
-}
-
-.hike-layout {
-  flex: 1;
-  min-height: 0;
-  width: 100%;
-  max-width: 1100px;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: 1fr 320px;
-  gap: 14px;
-  align-items: stretch;
-}
-
-.hike-path {
-  margin: 0;
-  max-width: none;
-  padding: 14px;
-  overflow-x: auto;
-  overflow-y: hidden;
-  align-content: center;
-}
-
-.hike-path .path-obstacle {
-  width: 40px;
-  height: 40px;
-}
-
-.hike-path .path-icon {
-  font-size: 18px;
-}
-
-.hike-path .path-line {
-  width: 10px;
-}
-
-.hike-obstacle {
-  margin: 0;
-  max-width: none;
-}
-
-.hike-obstacle .obstacle-card {
-  max-width: none;
-  height: 100%;
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.hike-obstacle .obstacle-icon {
-  font-size: 52px;
-  margin-bottom: 8px;
-}
-
-.hike-obstacle .obstacle-name {
-  font-size: 18px;
-  margin-bottom: 12px;
-}
-
-.hike-obstacle .obstacle-progress {
-  margin-bottom: 12px;
-}
-
-.hike-obstacle .progress-bar {
-  height: 18px;
-}
-
-.hike-obstacle .clicks-remaining {
-  margin-top: 8px;
-  font-size: 15px;
-}
-
-.hike-obstacle .btn-large {
-  padding: 12px 20px;
-  font-size: 16px;
-}
-
-@media (max-width: 768px) {
-  .hike-layout {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto 1fr;
-  }
-
-  .hike-path {
-    max-height: 100px;
   }
 }
