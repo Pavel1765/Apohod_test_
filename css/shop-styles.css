@@ -203,9 +203,10 @@
 .shelf-items-container {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(2, 200px);
-  gap: 16px;
-  min-height: 420px;
+  grid-template-rows: repeat(2, 210px);
+  gap: 14px;
+  min-height: 434px;
+  align-items: stretch;
 }
 
 .backpack {
@@ -372,6 +373,13 @@
 
 .shop-item:not(.locked):hover .item-description {
   opacity: 1;
+}
+
+.shop-item-footer {
+  flex-shrink: 0;
+  padding: 0 12px 12px;
+  display: flex;
+  justify-content: center;
 }
 
 .item-price-btn {
