@@ -804,7 +804,7 @@ function showClickBonus(clickPower) {
   bonus.style.position = 'absolute';
   bonus.style.left = `${Math.random() * 80 + 10}%`;
   bonus.style.top = '50%';
-  bonus.style.color = 'var(--brand-orange);
+  bonus.style.color = 'var(--brand-orange)';
   bonus.style.fontWeight = 'bold';
   bonus.style.fontSize = '24px';
   bonus.style.animation = 'floatUp 1s ease-out forwards';
