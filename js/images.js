@@ -1,31 +1,90 @@
-/** Надёжные изображения: проверенные URL + SVG-запасные варианты */
+/** Локальные изображения — лежат в assets/images/ (Unsplash / Wikimedia Commons) */
 
-const U = (id, w = 800, h = 600) =>
-  `https://images.unsplash.com/photo-${id}?w=${w}&h=${h}&fit=crop&auto=format`;
+const LOCAL = {
+  mountain: 'assets/images/mountain.jpg',
+  lake: 'assets/images/lake.jpg',
+  peaks: 'assets/images/peaks.jpg',
+  camp: 'assets/images/camp.jpg',
+  hike: 'assets/images/hike.jpg',
+  bear: 'assets/images/bear.jpg',
+  wolf: 'assets/images/wolf.jpg',
+  climb: 'assets/images/climb.jpg',
+  snow: 'assets/images/snow.jpg',
+  kayak: 'assets/images/kayak.jpg',
+  bus: 'assets/images/bus.jpg',
+  plane: 'assets/images/plane.jpg',
+  desert: 'assets/images/desert.jpg',
+  forest: 'assets/images/forest.jpg',
+  bottle: 'assets/images/bottle.jpg',
+  fire: 'assets/images/fire.jpg',
+  elbrus: 'assets/images/elbrus.jpg',
+  baikal: 'assets/images/baikal.jpg',
+};
 
-/** Проверенные рабочие фото (HTTP 200) */
+/** Базовый путь сайта (GitHub Pages: /Apohod_test_/) */
+export function getSiteBase() {
+  const script = document.querySelector('script[src*="app.js"]');
+  if (script) {
+    const src = script.getAttribute('src') || '';
+    const idx = src.indexOf('js/app.js');
+    if (idx >= 0) return src.substring(0, idx);
+  }
+  const path = window.location.pathname;
+  const m = path.match(/^(\/.+?\/)index\.html$/i) || path.match(/^(\/[^/]+\/)/);
+  if (m) return m[1];
+  return './';
+}
+
+export function assetPath(relativePath) {
+  const clean = relativePath.replace(/^\//, '');
+  const base = getSiteBase();
+  return `${base}${clean}`.replace(/([^:]\/)\/+/g, '$1');
+}
+
+function img(key) {
+  return assetPath(LOCAL[key] || LOCAL.mountain);
+}
+
 export const IMG = {
-  mountain: U('1464822759023-fed622ff2c3b'),
-  lake: U('1439066615861-d1af74d74000'),
-  peaks: U('1506905925346-21bda4d32df4'),
-  camp: U('1504280390367-361c6d9f38f4'),
-  hike: U('1551632811-561732d1e306'),
-  bear: U('1589652717521-10c0d092dea9', 800, 500),
-  wolf: U('1444464666168-49d633b86797', 800, 500),
-  climb: U('1522163182402-834f871fd851'),
-  snow: U('1551524559-8af4e6624178'),
-  kayak: U('1544551763-46a013bb70d5'),
-  bus: U('1544620347-c4fd4a3d5957'),
-  plane: U('1436491865332-7a61a109cc05'),
-  desert: U('1519904981063-b0cf448d479e'),
-  forest: U('1518495973542-4542c06a5843', 800, 500),
-  bottle: U('1542601906990-b4d3fb778b09', 800, 500),
+  mountain: img('mountain'),
+  lake: img('lake'),
+  peaks: img('peaks'),
+  camp: img('camp'),
+  hike: img('hike'),
+  bear: img('bear'),
+  wolf: img('wolf'),
+  climb: img('climb'),
+  snow: img('snow'),
+  kayak: img('kayak'),
+  bus: img('bus'),
+  plane: img('plane'),
+  desert: img('desert'),
+  forest: img('forest'),
+  bottle: img('bottle'),
+  fire: img('fire'),
+  elbrus: img('elbrus'),
+  baikal: img('baikal'),
 };
 
 export const PLACEHOLDER_IMAGE = IMG.mountain;
-export const RUSSIA_MAP_IMAGE = 'assets/maps/russia-map.svg';
+export const RUSSIA_MAP_IMAGE = assetPath('assets/maps/russia-map.svg');
 
-/** SVG-картинка с emoji — всегда работает офлайн */
+/** Картинка для карточки маршрута по id */
+const ROUTE_IMAGE_KEYS = {
+  1: 'peaks', 2: 'snow', 3: 'climb', 4: 'peaks', 5: 'mountain',
+  6: 'baikal', 7: 'forest', 8: 'peaks', 9: 'elbrus', 10: 'mountain',
+  11: 'lake', 12: 'forest', 13: 'snow', 14: 'mountain', 15: 'hike',
+  16: 'climb', 17: 'elbrus', 18: 'forest', 19: 'forest', 20: 'desert',
+  21: 'lake', 22: 'lake', 23: 'lake', 24: 'forest', 25: 'climb',
+  26: 'peaks', 27: 'snow', 28: 'lake',
+};
+
+export function getRouteImage(routeId) {
+  const key = ROUTE_IMAGE_KEYS[routeId] || 'mountain';
+  return IMG[key];
+}
+
+/** SVG-картинка с emoji — запасной вариант */
 export function sceneSvg(emoji, color1 = '#87CEEB', color2 = '#7FB069', label = '') {
   const svg =
     `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500">` +
@@ -39,9 +98,8 @@ export function sceneSvg(emoji, color1 = '#87CEEB', color2 = '#7FB069', label = 
   return `data:image/svg+xml,${encodeURIComponent(svg)}`;
 }
 
-/** Категории для походных ситуаций */
 export const SCENARIO_IMAGES = {
-  fire: { url: IMG.camp, emoji: '🔥', colors: ['#FF7043', '#BF360C'] },
+  fire: { url: IMG.fire, emoji: '🔥', colors: ['#FF7043', '#BF360C'] },
   bear: { url: IMG.bear, emoji: '🐻', colors: ['#8D6E63', '#4E342E'] },
   storm: { url: IMG.peaks, emoji: '⛈️', colors: ['#546E7A', '#263238'] },
   lost: { url: IMG.mountain, emoji: '🧭', colors: ['#78909C', '#37474F'] },
@@ -65,8 +123,7 @@ export const SCENARIO_IMAGES = {
 };
 
 export function getScenarioImage(key) {
-  const item = SCENARIO_IMAGES[key] || SCENARIO_IMAGES.forest;
-  return item.url;
+  return (SCENARIO_IMAGES[key] || SCENARIO_IMAGES.forest).url;
 }
 
 export function getScenarioFallback(key) {
@@ -74,7 +131,6 @@ export function getScenarioFallback(key) {
   return sceneSvg(item.emoji, item.colors[0], item.colors[1]);
 }
 
-/** Препятствия кликера — только рабочие URL */
 export const OBSTACLE_IMAGES = {
   bus: IMG.bus,
   train: IMG.mountain,
@@ -94,7 +150,7 @@ export const OBSTACLE_IMAGES = {
   glacier: IMG.snow,
   ski: IMG.snow,
   camp: IMG.camp,
-  fire: IMG.camp,
+  fire: IMG.fire,
   moon: IMG.peaks,
   tree: IMG.forest,
   flower: IMG.forest,
@@ -136,21 +192,18 @@ export const OBSTACLE_IMAGES = {
   horse: IMG.forest,
 };
 
-/** Установить фон с автозапасным SVG при ошибке загрузки */
 export function applyBackgroundImage(el, url, fallbackSvg) {
   if (!el) return;
-  el.style.backgroundImage = `url('${fallbackSvg}')`;
+  el.style.backgroundImage = `url('${url}')`;
+  el.style.backgroundSize = 'cover';
+  el.style.backgroundPosition = 'center';
   const probe = new Image();
-  probe.onload = () => {
-    el.style.backgroundImage = `url('${url}')`;
-  };
   probe.onerror = () => {
     el.style.backgroundImage = `url('${fallbackSvg}')`;
   };
   probe.src = url;
 }
 
-/** Запасной SVG для препятствия кликера */
 export function obstacleFallbackSvg(type, icon = '🏔️') {
   let hash = 0;
   for (let i = 0; i < type.length; i++) hash = (hash * 31 + type.charCodeAt(i)) >>> 0;

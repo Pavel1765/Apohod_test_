@@ -8,6 +8,7 @@ import {
   getObstacleImage,
   obstacleFallbackSvg,
   applyBackgroundImage,
+  getRouteImage,
 } from '../../images.js';
 
 const CLICKER_PROGRESS_KEY = 'clicker_completed_routes';
@@ -764,10 +765,18 @@ function applyFilters(routes) {
   });
 }
 
+function applyRouteCardImages(root) {
+  if (!root) return;
+  root.querySelectorAll('.route-image[data-route-id]').forEach((el) => {
+    const id = parseInt(el.dataset.routeId, 10);
+    applyBackgroundImage(el, getRouteImage(id), obstacleFallbackSvg('mountain', '⛰️'));
+  });
+}
+
 function getRouteCardHTML(route, compact = false) {
   const isCompleted = getCompletedRouteIds().includes(route.id);
   return `
-    <div class="route-image" style="background-image: url('${PLACEHOLDER_IMAGE}')"></div>
+    <div class="route-image" data-route-id="${route.id}"></div>
     ${isCompleted ? '<div class="route-completed-badge">✓ Поход пройден</div>' : ''}
     <div class="route-header">
       <h2>⛰️ ${route.name}</h2>
@@ -959,6 +968,7 @@ function renderRoutePreview(container, route) {
   preview.classList.add('has-route');
   preview.innerHTML = `<div class="route-card route-preview-card">${getRouteCardHTML(route, true)}</div>`;
   attachRouteCardHandlers(preview.querySelector('.route-preview-card'), container, route);
+  applyRouteCardImages(preview);
 }
 
 function updateRouteViews(container) {
@@ -992,6 +1002,7 @@ function renderRouteCards(container, routes) {
     attachRouteCardHandlers(routeCard, container, route);
     routesContainer.appendChild(routeCard);
   });
+  applyRouteCardImages(routesContainer);
 }
 
 function updateDualRange(minInput, maxInput, fillEl, valueEl, minLimit, maxLimit) {
@@ -1375,7 +1386,7 @@ function completeRoute() {
       <div class="clicker-game">
         <div class="victory-screen">
           <h1>🎉 Маршрут пройден! 🎉</h1>
-          <div class="victory-image" style="background-image: url('${PLACEHOLDER_IMAGE}')"></div>
+          <div class="victory-image" id="victoryImage"></div>
           <div class="victory-stats">
             <p class="victory-route">⛰️ ${currentRoute.name}</p>
             <p>📍 ${currentRoute.location}</p>
@@ -1392,6 +1403,11 @@ function completeRoute() {
         </div>
       </div>
     `;
+    
+    const victoryImage = document.getElementById('victoryImage');
+    if (victoryImage && currentRoute) {
+      applyBackgroundImage(victoryImage, getRouteImage(currentRoute.id), obstacleFallbackSvg('mountain', '⛰️'));
+    }
     
     document.getElementById('newRouteBtn').addEventListener('click', () => {
       showRouteSelection(container);

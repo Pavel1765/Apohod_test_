@@ -1,0 +1,17 @@
+# Изображения (открытые лицензии)
+
+Файлы скачаны из открытых источников для локального хостинга на GitHub Pages.
+
+## Unsplash License (бесплатное использование)
+- mountain.jpg, lake.jpg, peaks.jpg, camp.jpg, hike.jpg, bear.jpg, wolf.jpg
+- climb.jpg, snow.jpg, kayak.jpg, bus.jpg, plane.jpg, desert.jpg, forest.jpg, bottle.jpg, fire.jpg
+
+https://unsplash.com/license
+
+## Wikimedia Commons (CC BY-SA / свободные лицензии)
+- elbrus.jpg — гора Эльбрус
+- baikal.jpg — лёд озера Байкал
+
+https://commons.wikimedia.org/
+
+Карта России: assets/maps/russia-map.svg (Wikimedia Commons)
