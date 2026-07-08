@@ -2,6 +2,7 @@
 
 import { soundSystem } from '../hike-game/sounds.js';
 import { addCoins } from '../../shop.js';
+import { getScenarioImage, getScenarioFallback, applyBackgroundImage } from '../../images.js';
 import { pickRandomScenarios, HIKE_LENGTH, MAX_HEARTS } from './scenarios-data.js';
 
 let onExitCallback = null;
@@ -91,7 +92,7 @@ function renderRound(container) {
 
       <article class="scenario-card">
         ${scenario.dangerous ? '<div class="scenario-danger-badge">⚠️ Опасная ситуация</div>' : ''}
-        <div class="scenario-image" style="background-image: url('${scenario.image}')"></div>
+        <div class="scenario-image" id="scenarioImage"></div>
         <div class="scenario-body">
           <h2>${scenario.title}</h2>
           <p class="scenario-text">${scenario.text}</p>
@@ -110,6 +111,9 @@ function renderRound(container) {
   `;
 
   document.getElementById('backBtn').addEventListener('click', () => onExitCallback());
+  const imageEl = document.getElementById('scenarioImage');
+  const key = scenario.imageKey || 'forest';
+  applyBackgroundImage(imageEl, getScenarioImage(key), getScenarioFallback(key));
   document.querySelectorAll('.scenario-choice').forEach((btn) => {
     btn.addEventListener('click', () => handleChoice(container, btn.dataset.choice));
   });

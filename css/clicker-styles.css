@@ -746,7 +746,7 @@
   background-size: cover;
   background-position: center;
   background-color: #7FB069;
-  background-image: url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&h=600&fit=crop');
+  background-image: url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&h=600&fit=crop&auto=format');
 }
 
 .route-header {
@@ -846,7 +846,7 @@
   background-size: cover;
   background-position: center;
   background-color: #7FB069;
-  background-image: url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&h=600&fit=crop');
+  background-image: url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&h=600&fit=crop&auto=format');
   border-radius: var(--brand-radius);
   margin: 0 auto 24px;
   box-shadow: var(--brand-shadow);

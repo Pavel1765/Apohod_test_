@@ -2,8 +2,13 @@
 
 import { soundSystem } from '../hike-game/sounds.js';
 import { addCoins, getPurchasedItems, getClickPowerBonus } from '../../shop.js';
-
-const PLACEHOLDER_IMAGE = 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&h=600&fit=crop';
+import {
+  PLACEHOLDER_IMAGE,
+  RUSSIA_MAP_IMAGE,
+  getObstacleImage,
+  obstacleFallbackSvg,
+  applyBackgroundImage,
+} from '../../images.js';
 
 const CLICKER_PROGRESS_KEY = 'clicker_completed_routes';
 
@@ -24,104 +29,18 @@ function markRouteCompleted(routeId) {
   }
 }
 
-const OBSTACLE_STAGE_IMAGES = {
-  bus: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=800&h=600&fit=crop',
-  train: 'https://images.unsplash.com/photo-1474487548417-934cb8732a72?w=800&h=600&fit=crop',
-  plane: 'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=800&h=600&fit=crop',
-  helicopter: 'https://images.unsplash.com/photo-1458748605185-0e2b253692f2?w=800&h=600&fit=crop',
-  boat: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop',
-  kayak: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=800&h=600&fit=crop',
-  lake: 'https://images.unsplash.com/photo-1439066615861-d1af74d74000?w=800&h=600&fit=crop',
-  river: 'https://images.unsplash.com/photo-1433086966358-55059f9728b6?w=800&h=600&fit=crop',
-  water: 'https://images.unsplash.com/photo-1433086966358-55059f9728b6?w=800&h=600&fit=crop',
-  waterfall: 'https://images.unsplash.com/photo-1432405972613-c60b0225b4f9?w=800&h=600&fit=crop',
-  geyser: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop',
-  hot: 'https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=800&h=600&fit=crop',
-  ice: 'https://images.unsplash.com/photo-1483664852095-d0b0a5b2a6d9?w=800&h=600&fit=crop',
-  snow: 'https://images.unsplash.com/photo-1483664852095-d0b0a5b2a6d9?w=800&h=600&fit=crop',
-  snowflake: 'https://images.unsplash.com/photo-1483664852095-d0b0a5b2a6d9?w=800&h=600&fit=crop',
-  glacier: 'https://images.unsplash.com/photo-1454496522488-7a8e4885e9ca?w=800&h=600&fit=crop',
-  ski: 'https://images.unsplash.com/photo-1551524559-8af4e6624178?w=800&h=600&fit=crop',
-  camp: 'https://images.unsplash.com/photo-1478131143088-32a7894da4e5?w=800&h=600&fit=crop',
-  fire: 'https://images.unsplash.com/photo-1478131143088-32a7894da4e5?w=800&h=600&fit=crop',
-  moon: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop',
-  tree: 'https://images.unsplash.com/photo-1441974231530-c6687de0c35e?w=800&h=600&fit=crop',
-  flower: 'https://images.unsplash.com/photo-1499003299444-2de765142ef3?w=800&h=600&fit=crop',
-  bear: 'https://images.unsplash.com/photo-1441974231530-c6687de0c35e?w=800&h=600&fit=crop',
-  deer: 'https://images.unsplash.com/photo-1441974231530-c6687de0c35e?w=800&h=600&fit=crop',
-  fish: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop',
-  seal: 'https://images.unsplash.com/photo-1483664852095-d0b0a5b2a6d9?w=800&h=600&fit=crop',
-  rock: 'https://images.unsplash.com/photo-1454496522488-7a8e4885e9ca?w=800&h=600&fit=crop',
-  climb: 'https://images.unsplash.com/photo-1522163182402-834f871fd851?w=800&h=600&fit=crop',
-  summit: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&h=600&fit=crop',
-  mountain: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&h=600&fit=crop',
-  peak: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&h=600&fit=crop',
-  pass: 'https://images.unsplash.com/photo-1454496522488-7a8e4885e9ca?w=800&h=600&fit=crop',
-  volcano: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop',
-  photo: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&h=600&fit=crop',
-  compass: 'https://images.unsplash.com/photo-1441974231530-c6687de0c35e?w=800&h=600&fit=crop',
-  cable: 'https://images.unsplash.com/photo-1454496522488-7a8e4885e9ca?w=800&h=600&fit=crop',
-  church: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop',
-  island: 'https://images.unsplash.com/photo-1439066615861-d1af74d74000?w=800&h=600&fit=crop',
-  site: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&h=600&fit=crop',
-  museum: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&h=600&fit=crop',
-  sunrise: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop',
-  sunset: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop',
-  trail: 'https://images.unsplash.com/photo-1441974231530-c6687de0c35e?w=800&h=600&fit=crop',
-  entrance: 'https://images.unsplash.com/photo-1441974231530-c6687de0c35e?w=800&h=600&fit=crop',
-  checkpoint: 'https://images.unsplash.com/photo-1441974231530-c6687de0c35e?w=800&h=600&fit=crop',
-  shelter: 'https://images.unsplash.com/photo-1478131143088-32a7894da4e5?w=800&h=600&fit=crop',
-  cave: 'https://images.unsplash.com/photo-1454496522488-7a8e4885e9ca?w=800&h=600&fit=crop',
-  wind: 'https://images.unsplash.com/photo-1454496522488-7a8e4885e9ca?w=800&h=600&fit=crop',
-  gas: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop',
-  ash: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop',
-  altitude: 'https://images.unsplash.com/photo-1454496522488-7a8e4885e9ca?w=800&h=600&fit=crop',
-  crevasse: 'https://images.unsplash.com/photo-1454496522488-7a8e4885e9ca?w=800&h=600&fit=crop',
-  rope: 'https://images.unsplash.com/photo-1522163182402-834f871fd851?w=800&h=600&fit=crop',
-  oxygen: 'https://images.unsplash.com/photo-1454496522488-7a8e4885e9ca?w=800&h=600&fit=crop',
-  avalanche: 'https://images.unsplash.com/photo-1483664852095-d0b0a5b2a6d9?w=800&h=600&fit=crop',
-  knife: 'https://images.unsplash.com/photo-1478131143088-32a7894da4e5?w=800&h=600&fit=crop',
-  thumbs: 'https://images.unsplash.com/photo-1522163182402-834f871fd851?w=800&h=600&fit=crop',
-  horse: 'https://images.unsplash.com/photo-1441974231530-c6687de0c35e?w=800&h=600&fit=crop'
-};
-
-const STAGE_PALETTES = [
-  ['#87CEEB', '#7FB069'],
-  ['#FFB347', '#FFCC33'],
-  ['#B19CD9', '#8F59BB'],
-  ['#FF8A65', '#E65100'],
-  ['#80CBC4', '#00897B'],
-  ['#90CAF9', '#3D3894']
-];
-
 function getObstacleStageImage(obstacle) {
-  if (OBSTACLE_STAGE_IMAGES[obstacle.type]) {
-    return OBSTACLE_STAGE_IMAGES[obstacle.type];
-  }
-  let hash = 0;
-  for (let i = 0; i < obstacle.type.length; i++) {
-    hash = (hash * 31 + obstacle.type.charCodeAt(i)) >>> 0;
-  }
-  const [c1, c2] = STAGE_PALETTES[hash % STAGE_PALETTES.length];
-  return `data:image/svg+xml,${encodeURIComponent(
-    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450">` +
-    `<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">` +
-    `<stop offset="0%" stop-color="${c1}"/><stop offset="100%" stop-color="${c2}"/>` +
-    `</linearGradient></defs>` +
-    `<rect width="800" height="450" fill="url(#g)"/>` +
-    `<text x="400" y="250" text-anchor="middle" font-size="120">${obstacle.icon}</text>` +
-    `</svg>`
-  )}`;
+  return getObstacleImage(obstacle.type, obstacle.icon);
 }
 
 function updateStageImage(obstacle) {
   const el = document.getElementById('hike-stage-image');
   if (!el || !obstacle) return;
-  el.style.backgroundImage = `url('${getObstacleStageImage(obstacle)}')`;
+  const url = getObstacleStageImage(obstacle);
+  const fallback = obstacleFallbackSvg(obstacle.type, obstacle.icon);
+  applyBackgroundImage(el, url, fallback);
   el.dataset.stageName = obstacle.name;
 }
-
-const RUSSIA_MAP_IMAGE = 'https://upload.wikimedia.org/wikipedia/commons/9/96/Russia_location_map.svg';
 
 const ROUTES = [
   // Короткие маршруты (1-3 дня)
@@ -134,7 +53,6 @@ const ROUTES = [
     difficulty: 'Легкий',
     duration: 2,
     reward: 40,
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/Lena_Pillars.jpg/800px-Lena_Pillars.jpg',
     fact: 'Ленские столбы - это вертикальные скальные образования высотой до 100 метров, которым около 500 тысяч лет',
     obstacles: [
       { type: 'bus', icon: '🚌', name: 'Дорога', clicks: 5 },
@@ -154,7 +72,6 @@ const ROUTES = [
     difficulty: 'Легкий',
     duration: 3,
     reward: 50,
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Khibiny_Mountains.jpg/800px-Khibiny_Mountains.jpg',
     fact: 'На Кольском полуострове можно увидеть полярное сияние даже летом в период полярного дня',
     obstacles: [
       { type: 'train', icon: '🚂', name: 'Поезд до Кировска', clicks: 6 },
@@ -175,7 +92,6 @@ const ROUTES = [
     difficulty: 'Средний',
     duration: 5,
     reward: 70,
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Kuznetsk_Alatau.jpg/800px-Kuznetsk_Alatau.jpg',
     fact: 'Поднебесные Зубья - самая живописная часть Кузнецкого Алатау с острыми скальными вершинами',
     obstacles: [
       { type: 'moon', icon: '🌙', name: 'Ночевка', clicks: 5 },
@@ -198,7 +114,6 @@ const ROUTES = [
     difficulty: 'Сложный',
     duration: 7,
     reward: 120,
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Putorana_Plateau.jpg/800px-Putorana_Plateau.jpg',
     fact: 'Плато Путорана называют "краем десяти тысяч озер и тысячи водопадов"',
     obstacles: [
       { type: 'plane', icon: '✈️', name: 'Перелет в Норильск', clicks: 10 },
@@ -222,7 +137,6 @@ const ROUTES = [
     difficulty: 'Средний',
     duration: 6,
     reward: 90,
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Belukha_Mountain.jpg/800px-Belukha_Mountain.jpg',
     fact: 'Гора Белуха (4506 м) - высшая точка Алтая и считается священной у местных народов',
     obstacles: [
       { type: 'moon', icon: '🌙', name: 'Ночь', clicks: 6 },
@@ -247,7 +161,6 @@ const ROUTES = [
     difficulty: 'Сложный',
     duration: 6,
     reward: 110,
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c6/Lake_Baikal_ice.jpg/800px-Lake_Baikal_ice.jpg',
     fact: 'Байкал - самое глубокое озеро в мире (1642 м) и содержит 20% мировых запасов пресной воды',
     obstacles: [
       { type: 'moon', icon: '🌙', name: 'Морозная ночь', clicks: 8 },
@@ -273,7 +186,6 @@ const ROUTES = [
     difficulty: 'Средний',
     duration: 5,
     reward: 85,
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Sayan_Mountains.jpg/800px-Sayan_Mountains.jpg',
     fact: 'Саяны - дом для снежного барса, одного из самых редких животных России',
     obstacles: [
       { type: 'moon', icon: '🌙', name: 'Ночевка', clicks: 9 },
@@ -298,7 +210,6 @@ const ROUTES = [
     difficulty: 'Очень сложный',
     duration: 10,
     reward: 180,
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Klyuchevskaya_Sopka.jpg/800px-Klyuchevskaya_Sopka.jpg',
     fact: 'Ключевская Сопка - самый активный вулкан Евразии, извергается каждые 3-5 лет',
     obstacles: [
       { type: 'plane', icon: '✈️', name: 'Перелет', clicks: 10 },
@@ -324,7 +235,6 @@ const ROUTES = [
     difficulty: 'Очень сложный',
     duration: 9,
     reward: 220,
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Mount_Elbrus.jpg/800px-Mount_Elbrus.jpg',
     fact: 'Эльбрус (5642 м) - высочайшая вершина России и Европы, потухший вулкан',
     obstacles: [
       { type: 'moon', icon: '🌙', name: 'Ночной подъем', clicks: 12 },
@@ -350,7 +260,6 @@ const ROUTES = [
     difficulty: 'Средний',
     duration: 7,
     reward: 95,
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Ural_Mountains.jpg/800px-Ural_Mountains.jpg',
     fact: 'Уральские горы - естественная граница между Европой и Азией, возрастом около 350 млн лет',
     obstacles: [
       { type: 'train', icon: '🚂', name: 'Поезд', clicks: 9 },
@@ -373,7 +282,6 @@ const ROUTES = [
     difficulty: 'Легкий',
     duration: 4,
     reward: 60,
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Karelia_lake.jpg/800px-Karelia_lake.jpg',
     fact: 'В Карелии более 60 000 озер и 27 000 рек - настоящий водный край',
     obstacles: [
       { type: 'train', icon: '🚂', name: 'Поезд в Петрозаводск', clicks: 8 },
@@ -395,7 +303,6 @@ const ROUTES = [
     difficulty: 'Средний',
     duration: 6,
     reward: 100,
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Caucasus_Reserve.jpg/800px-Caucasus_Reserve.jpg',
     fact: 'Кавказский заповедник - объект Всемирного наследия ЮНЕСКО, дом для зубров и туров',
     obstacles: [
       { type: 'bus', icon: '🚌', name: 'Дорога в Сочи', clicks: 9 },
@@ -418,7 +325,6 @@ const ROUTES = [
     difficulty: 'Средний',
     duration: 5,
     reward: 75,
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Khibiny.jpg/800px-Khibiny.jpg',
     fact: 'Хибины - крупнейший горный массив на Кольском полуострове, богат редкими минералами',
     obstacles: [
       { type: 'train', icon: '🚂', name: 'Поезд до Апатитов', clicks: 10 },
@@ -440,7 +346,6 @@ const ROUTES = [
     difficulty: 'Средний',
     duration: 6,
     reward: 85,
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Tunka_Valley.jpg/800px-Tunka_Valley.jpg',
     fact: 'Тункинская долина - живописная межгорная котловина между Саянами и хребтом Хамар-Дабан',
     obstacles: [
       { type: 'bus', icon: '🚌', name: 'Переезд из Иркутска', clicks: 9 },
@@ -463,7 +368,6 @@ const ROUTES = [
     difficulty: 'Легкий',
     duration: 3,
     reward: 55,
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Taganay.jpg/800px-Taganay.jpg',
     fact: 'Таганай известен своими каменными реками - курумами из огромных валунов',
     obstacles: [
       { type: 'train', icon: '🚂', name: 'Поезд в Златоуст', clicks: 8 },
@@ -484,7 +388,6 @@ const ROUTES = [
     difficulty: 'Средний',
     duration: 5,
     reward: 90,
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Dombay.jpg/800px-Dombay.jpg',
     fact: 'Домбай - горнолыжный курорт и центр альпинизма с видом на Эльбрус',
     obstacles: [
       { type: 'bus', icon: '🚌', name: 'Дорога в горы', clicks: 9 },
@@ -506,7 +409,6 @@ const ROUTES = [
     difficulty: 'Сложный',
     duration: 7,
     reward: 130,
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Elbrus_region.jpg/800px-Elbrus_region.jpg',
     fact: 'Приэльбрусье - район вокруг Эльбруса с десятками вершин выше 4000 метров',
     obstacles: [
       { type: 'plane', icon: '✈️', name: 'Перелет в Нальчик', clicks: 10 },
@@ -530,7 +432,6 @@ const ROUTES = [
     difficulty: 'Средний',
     duration: 6,
     reward: 95,
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Ergaki.jpg/800px-Ergaki.jpg',
     fact: 'Ергаки - природный парк с причудливыми скальными вершинами и кристальными озерами',
     obstacles: [
       { type: 'bus', icon: '🚌', name: 'Дорога из Абакана', clicks: 10 },
@@ -553,7 +454,6 @@ const ROUTES = [
     difficulty: 'Легкий',
     duration: 2,
     reward: 45,
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Stolby_Reserve.jpg/800px-Stolby_Reserve.jpg',
     fact: 'Столбы - уникальные скалы из сиенита, место зарождения столбизма - особого вида скалолазания',
     obstacles: [
       { type: 'bus', icon: '🚌', name: 'От центра Красноярска', clicks: 6 },
@@ -573,7 +473,6 @@ const ROUTES = [
     difficulty: 'Легкий',
     duration: 3,
     reward: 50,
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Arkaim.jpg/800px-Arkaim.jpg',
     fact: 'Аркаим - древний город бронзового века (около 4000 лет), современник Египетских пирамид',
     obstacles: [
       { type: 'bus', icon: '🚌', name: 'Дорога из Челябинска', clicks: 9 },
