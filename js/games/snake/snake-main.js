@@ -2,9 +2,12 @@
 
 import { soundSystem } from '../hike-game/sounds.js';
 import { addCoins } from '../../shop.js';
+import { getResponsiveCellSize, onBoardResize } from '../../responsive-board.js';
 
 const GRID_SIZE = 20;
-const CELL_SIZE = 25;
+const MAX_CELL_SIZE = 25;
+let cellSize = MAX_CELL_SIZE;
+let unbindResize = null;
 const INITIAL_SPEED = 180;
 const TARGET_LENGTH = 12;
 
@@ -97,6 +100,9 @@ export function renderSnakeGame(container, onExit) {
   });
   
   initGame();
+  unbindResize = onBoardResize(() => {
+    if (!gameOver) renderBoard();
+  });
 }
 
 function loadStyles() {
@@ -355,13 +361,23 @@ function updateStats() {
   document.getElementById('score').textContent = score;
 }
 
+function updateCellSize() {
+  cellSize = getResponsiveCellSize({
+    gridSize: GRID_SIZE,
+    maxCell: MAX_CELL_SIZE,
+    minCell: 14,
+    horizontalPadding: 24,
+  });
+}
+
 function renderBoard() {
+  updateCellSize();
   const board = document.getElementById('board');
   board.innerHTML = '';
-  board.style.width = `${GRID_SIZE * CELL_SIZE}px`;
-  board.style.height = `${GRID_SIZE * CELL_SIZE}px`;
-  board.style.gridTemplateColumns = `repeat(${GRID_SIZE}, ${CELL_SIZE}px)`;
-  board.style.gridTemplateRows = `repeat(${GRID_SIZE}, ${CELL_SIZE}px)`;
+  board.style.width = `${GRID_SIZE * cellSize}px`;
+  board.style.height = `${GRID_SIZE * cellSize}px`;
+  board.style.gridTemplateColumns = `repeat(${GRID_SIZE}, ${cellSize}px)`;
+  board.style.gridTemplateRows = `repeat(${GRID_SIZE}, ${cellSize}px)`;
   
   // Создаем все клетки с местностью
   for (let y = 0; y < GRID_SIZE; y++) {

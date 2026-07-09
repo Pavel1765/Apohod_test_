@@ -280,12 +280,39 @@
 }
 
 @media (max-width: 768px) {
-  .snake-cell {
-    font-size: 16px;
+  .snake-game {
+    padding: 12px;
   }
-  
+
+  .snake-board {
+    max-width: calc(100vw - 24px);
+    margin: 0 auto;
+  }
+
+  .snake-cell {
+    font-size: clamp(12px, 3vw, 16px);
+  }
+
+  .hiker-head {
+    font-size: clamp(14px, 3.5vw, 22px);
+  }
+
+  .hiker-body {
+    font-size: clamp(12px, 3vw, 18px);
+  }
+
   .control-hint {
-    font-size: 14px;
+    display: none;
+  }
+
+  .mobile-controls {
+    display: grid !important;
+    margin-top: 8px;
+  }
+
+  .control-btn {
+    width: 56px;
+    height: 56px;
   }
 }
 

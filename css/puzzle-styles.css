@@ -58,9 +58,8 @@
   border-radius: var(--brand-radius);
   box-shadow: var(--brand-shadow);
   display: grid;
-  grid-template-columns: repeat(6, 80px);
-  grid-template-rows: repeat(6, 80px);
   gap: 0;
+  max-width: 100%;
 }
 
 .puzzle-cell {
@@ -135,7 +134,16 @@
 
 /* Responsive */
 @media (max-width: 768px) {
+  .puzzle-game {
+    padding: 12px;
+  }
+
   .puzzle-container {
     flex-direction: column;
+    width: 100%;
+  }
+
+  .puzzle-board {
+    margin: 0 auto;
   }
 }

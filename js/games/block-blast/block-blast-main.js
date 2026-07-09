@@ -2,9 +2,12 @@
 
 import { soundSystem } from '../hike-game/sounds.js';
 import { addCoins } from '../../shop.js';
+import { getResponsiveCellSize, onBoardResize } from '../../responsive-board.js';
 
 const GRID_SIZE = 8;
-const CELL_SIZE = 50;
+const MAX_CELL_SIZE = 50;
+let cellSize = MAX_CELL_SIZE;
+let unbindResize = null;
 
 // Фигуры (тетромино и другие)
 const SHAPES = [
@@ -69,6 +72,10 @@ export function renderBlockBlastGame(container, onExit) {
   document.getElementById('newGameBtn').addEventListener('click', () => initGame());
   
   initGame();
+  unbindResize = onBoardResize(() => {
+    renderBoard();
+    renderShapes();
+  });
 }
 
 function loadStyles() {
@@ -107,11 +114,22 @@ function generateNewShapes() {
   }
 }
 
+function updateCellSize() {
+  cellSize = getResponsiveCellSize({
+    gridSize: GRID_SIZE,
+    maxCell: MAX_CELL_SIZE,
+    minCell: 32,
+    horizontalPadding: 32,
+    container: '.block-blast-board',
+  });
+}
+
 function renderBoard() {
+  updateCellSize();
   const board = document.getElementById('board');
   board.innerHTML = '';
-  board.style.gridTemplateColumns = `repeat(${GRID_SIZE}, ${CELL_SIZE}px)`;
-  board.style.gridTemplateRows = `repeat(${GRID_SIZE}, ${CELL_SIZE}px)`;
+  board.style.gridTemplateColumns = `repeat(${GRID_SIZE}, ${cellSize}px)`;
+  board.style.gridTemplateRows = `repeat(${GRID_SIZE}, ${cellSize}px)`;
   
   for (let row = 0; row < GRID_SIZE; row++) {
     for (let col = 0; col < GRID_SIZE; col++) {
@@ -251,8 +269,8 @@ function highlightValidPlacement(x, y, shape) {
   const board = document.getElementById('board');
   const rect = board.getBoundingClientRect();
   
-  const col = Math.floor((x - rect.left) / CELL_SIZE);
-  const row = Math.floor((y - rect.top) / CELL_SIZE);
+  const col = Math.floor((x - rect.left) / cellSize);
+  const row = Math.floor((y - rect.top) / cellSize);
   
   if (canPlaceShape(row, col, shape)) {
     highlightCells(row, col, shape, 'valid');
@@ -304,8 +322,8 @@ function tryPlaceShape(x, y, shape, index) {
   const board = document.getElementById('board');
   const rect = board.getBoundingClientRect();
   
-  const col = Math.floor((x - rect.left) / CELL_SIZE);
-  const row = Math.floor((y - rect.top) / CELL_SIZE);
+  const col = Math.floor((x - rect.left) / cellSize);
+  const row = Math.floor((y - rect.top) / cellSize);
   
   if (canPlaceShape(row, col, shape)) {
     placeShape(row, col, shape);

@@ -513,6 +513,22 @@ html, body {
 
 /* Responsive */
 @media (max-width: 768px) {
+  .main-nav {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .header-top {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .info-container {
+    padding: 20px 12px !important;
+  }
+
   .games-grid {
     grid-template-columns: 1fr;
     gap: 20px;

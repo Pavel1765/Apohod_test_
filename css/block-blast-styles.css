@@ -193,10 +193,19 @@
 
 /* Responsive */
 @media (max-width: 768px) {
+  .block-blast-game {
+    padding: 56px 12px 16px;
+  }
+
+  .block-blast-board {
+    max-width: calc(100vw - 24px);
+  }
+
   .bb-cell {
-    width: 40px;
-    height: 40px;
-    font-size: 20px;
+    width: auto !important;
+    height: auto !important;
+    aspect-ratio: 1;
+    font-size: clamp(16px, 4vw, 22px);
   }
   
   .block-blast-board {
@@ -204,12 +213,12 @@
   }
   
   .bb-shape-cell {
-    width: 30px;
-    height: 30px;
-    font-size: 18px;
+    width: clamp(24px, 7vw, 30px);
+    height: clamp(24px, 7vw, 30px);
+    font-size: 16px;
   }
   
   .bb-shape-cell.active {
-    font-size: 18px;
+    font-size: 16px;
   }
 }

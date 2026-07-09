@@ -432,8 +432,22 @@
 
 /* Responsive */
 @media (max-width: 768px) {
+  .match3-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .match3-abilities {
+    width: 100%;
+    min-width: 0;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
   .match3-board {
-    max-width: 100%;
+    max-width: min(100vw - 24px, 480px);
+    width: 100%;
   }
   
   .match3-cell {

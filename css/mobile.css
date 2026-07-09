@@ -1,0 +1,281 @@
+/** Глобальная мобильная адаптация — не ломает десктоп */
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+html, body {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+#app {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+/* Safe area для iPhone с вырезом */
+@supports (padding: env(safe-area-inset-top)) {
+  body {
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+
+  .game-back-btn,
+  .block-blast-game .game-back-btn,
+  .match3-game .game-back-btn,
+  .arrows-game .game-back-btn {
+    top: calc(12px + env(safe-area-inset-top)) !important;
+    left: calc(12px + env(safe-area-inset-left)) !important;
+  }
+
+  .toast {
+    bottom: calc(16px + env(safe-area-inset-bottom)) !important;
+  }
+}
+
+/* Кнопки — удобный тап */
+@media (max-width: 768px) {
+  .btn-back,
+  .btn-primary,
+  .btn-secondary,
+  .game-card-button,
+  .route-start-btn,
+  .scenario-choice,
+  .btn-hint,
+  .btn-new-game {
+    min-height: 44px;
+  }
+
+  .btn-back,
+  .game-back-btn {
+    padding: 10px 16px !important;
+    font-size: 14px !important;
+    min-width: auto !important;
+  }
+
+  .shelf-nav-btn,
+  .backpack-nav-btn,
+  .route-map-zoom-btn {
+    min-width: 44px !important;
+    min-height: 44px !important;
+    width: 44px !important;
+    height: 44px !important;
+  }
+
+  /* Главное меню */
+  .header-top {
+    flex-direction: column;
+    align-items: stretch !important;
+    gap: 12px;
+  }
+
+  .main-nav {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .info-container,
+  .shop-section,
+  .games-section {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+
+  .info-header h2 {
+    font-size: 1.35rem !important;
+  }
+
+  .shop-container {
+    gap: 16px !important;
+  }
+
+  .shelf,
+  .backpack {
+    min-height: auto !important;
+  }
+
+  /* Карточки игр — всегда видны на тач-экранах */
+  .game-card-description,
+  .game-card-button {
+    opacity: 1 !important;
+    max-height: none !important;
+    transform: none !important;
+  }
+
+  /* Match-3: поле над способностями */
+  .match3-container {
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 16px !important;
+  }
+
+  .match3-abilities {
+    width: 100% !important;
+    min-width: 0 !important;
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+  }
+
+  .match3-board {
+    width: 100% !important;
+    max-width: min(100vw - 24px, 480px) !important;
+  }
+
+  .match3-stats,
+  .block-blast-stats,
+  .puzzle-stats,
+  .snake-stats,
+  .scenarios-header {
+    gap: 8px !important;
+  }
+
+  .stat-card {
+    min-width: 72px !important;
+    padding: 8px 12px !important;
+  }
+
+  /* Puzzle */
+  .puzzle-header,
+  .snake-header,
+  .puzzle-title h1,
+  .snake-title h1 {
+    font-size: 1.4rem !important;
+  }
+
+  .puzzle-header,
+  .snake-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .puzzle-container {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .puzzle-exit {
+    height: auto !important;
+    min-height: 44px;
+    width: 100% !important;
+    max-width: 120px;
+  }
+
+  /* Block blast */
+  .block-blast-shapes {
+    gap: 10px !important;
+    padding: 0 8px;
+  }
+
+  .bb-shape-container {
+    touch-action: none;
+  }
+
+  /* Scenarios */
+  .scenarios-game {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+
+  .scenario-image {
+    height: 180px !important;
+  }
+
+  .scenario-choice {
+    font-size: 0.95rem !important;
+    padding: 14px !important;
+  }
+
+  /* Hike / board game */
+  .game-layout .sidebar,
+  .game-layout .roster {
+    max-height: none;
+  }
+
+  .turn-banner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .victory-stats {
+    flex-direction: column;
+    gap: 12px !important;
+  }
+
+  /* Clicker */
+  .clicker-filters-layout {
+    gap: 12px !important;
+  }
+
+  .route-map-zoom-btn {
+    font-size: 20px !important;
+  }
+
+  /* Checkers */
+  .checkers-menu-card {
+    margin: 12px !important;
+    padding: 20px 16px !important;
+  }
+
+  .mode-buttons {
+    flex-direction: column !important;
+  }
+
+  /* Arrows */
+  .arrows-layout {
+    flex-direction: column !important;
+  }
+
+  .arrows-sidebar {
+    width: 100% !important;
+    max-width: none !important;
+  }
+}
+
+@media (max-width: 520px) {
+  .map {
+    grid-template-columns: repeat(var(--cols), minmax(48px, 1fr)) !important;
+    gap: 4px !important;
+  }
+
+  .tile {
+    min-height: 56px !important;
+    padding: 4px 2px 18px !important;
+  }
+
+  .tile .terr {
+    font-size: 18px !important;
+  }
+
+  .die {
+    width: 52px !important;
+    height: 52px !important;
+    font-size: 24px !important;
+  }
+
+  .role-pick {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  .logo-text h1 {
+    font-size: 1.1rem !important;
+  }
+
+  .section-title {
+    font-size: 1.35rem !important;
+  }
+}
+
+@media (max-width: 380px) {
+  .games-grid {
+    gap: 14px !important;
+  }
+
+  .game-card-icon {
+    font-size: 2.5rem !important;
+  }
+}

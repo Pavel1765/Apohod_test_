@@ -281,4 +281,20 @@
   .scenarios-header {
     margin-top: 56px;
   }
+
+  .scenarios-intro {
+    padding: 28px 16px;
+    margin-top: 40px;
+  }
+
+  .scenario-body h2 {
+    font-size: 1.15rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .scenario-choice {
+    font-size: 0.9rem;
+    padding: 12px;
+  }
 }

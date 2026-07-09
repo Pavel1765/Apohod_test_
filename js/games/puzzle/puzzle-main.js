@@ -2,9 +2,12 @@
 
 import { soundSystem } from '../hike-game/sounds.js';
 import { addCoins } from '../../shop.js';
+import { getResponsiveCellSize, onBoardResize } from '../../responsive-board.js';
 
 const GRID_SIZE = 6;
-const CELL_SIZE = 80;
+const MAX_CELL_SIZE = 80;
+let cellSize = MAX_CELL_SIZE;
+let unbindResize = null;
 
 let blocks = [];
 let selectedBlock = null;
@@ -83,6 +86,7 @@ export function renderPuzzleGame(container, onExit) {
   document.getElementById('nextBtn').addEventListener('click', () => nextLevel());
   
   initLevel();
+  unbindResize = onBoardResize(() => renderBoard());
 }
 
 function loadStyles() {
@@ -114,11 +118,24 @@ function nextLevel() {
   soundSystem.click();
 }
 
+function updateCellSize() {
+  cellSize = getResponsiveCellSize({
+    gridSize: GRID_SIZE,
+    maxCell: MAX_CELL_SIZE,
+    minCell: 40,
+    horizontalPadding: 48,
+    container: '.puzzle-container',
+  });
+}
+
 function renderBoard() {
+  updateCellSize();
   const board = document.getElementById('board');
   board.innerHTML = '';
-  board.style.width = `${GRID_SIZE * CELL_SIZE}px`;
-  board.style.height = `${GRID_SIZE * CELL_SIZE}px`;
+  board.style.width = `${GRID_SIZE * cellSize}px`;
+  board.style.height = `${GRID_SIZE * cellSize}px`;
+  board.style.gridTemplateColumns = `repeat(${GRID_SIZE}, ${cellSize}px)`;
+  board.style.gridTemplateRows = `repeat(${GRID_SIZE}, ${cellSize}px)`;
   
   // Рисуем сетку
   for (let i = 0; i < GRID_SIZE * GRID_SIZE; i++) {
@@ -133,15 +150,15 @@ function renderBoard() {
     blockEl.className = `puzzle-block ${block.isTarget ? 'target' : ''}`;
     blockEl.dataset.id = block.id;
     blockEl.style.backgroundColor = block.color;
-    blockEl.style.left = `${block.col * CELL_SIZE}px`;
-    blockEl.style.top = `${block.row * CELL_SIZE}px`;
+    blockEl.style.left = `${block.col * cellSize}px`;
+    blockEl.style.top = `${block.row * cellSize}px`;
     
     if (block.isHorizontal) {
-      blockEl.style.width = `${block.length * CELL_SIZE - 10}px`;
-      blockEl.style.height = `${CELL_SIZE - 10}px`;
+      blockEl.style.width = `${block.length * cellSize - 10}px`;
+      blockEl.style.height = `${cellSize - 10}px`;
     } else {
-      blockEl.style.width = `${CELL_SIZE - 10}px`;
-      blockEl.style.height = `${block.length * CELL_SIZE - 10}px`;
+      blockEl.style.width = `${cellSize - 10}px`;
+      blockEl.style.height = `${block.length * cellSize - 10}px`;
     }
     
     blockEl.addEventListener('mousedown', (e) => startDrag(e, block));
@@ -167,10 +184,10 @@ function startDrag(e, block) {
     const deltaY = currentY - startY;
     
     if (block.isHorizontal && Math.abs(deltaX) > 10) {
-      const newCol = Math.round(startCol + deltaX / CELL_SIZE);
+      const newCol = Math.round(startCol + deltaX / cellSize);
       moveBlock(block, startRow, newCol);
     } else if (!block.isHorizontal && Math.abs(deltaY) > 10) {
-      const newRow = Math.round(startRow + deltaY / CELL_SIZE);
+      const newRow = Math.round(startRow + deltaY / cellSize);
       moveBlock(block, newRow, startCol);
     }
   }
