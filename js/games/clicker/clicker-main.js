@@ -809,6 +809,48 @@ function attachRouteCardHandlers(cardEl, container, route) {
   });
 }
 
+function setupMobileFiltersCollapse(container) {
+  const filtersEl = container.querySelector('.route-filters');
+  const heading = filtersEl?.querySelector('h3');
+  if (!filtersEl || !heading) return;
+
+  const mq = window.matchMedia('(max-width: 768px)');
+  const sync = () => {
+    if (mq.matches) {
+      filtersEl.classList.add('filters-collapsed');
+      heading.setAttribute('role', 'button');
+      heading.setAttribute('tabindex', '0');
+      heading.setAttribute('aria-expanded', 'false');
+    } else {
+      filtersEl.classList.remove('filters-collapsed');
+      heading.removeAttribute('role');
+      heading.removeAttribute('tabindex');
+      heading.removeAttribute('aria-expanded');
+    }
+  };
+
+  const toggle = () => {
+    if (!mq.matches) return;
+    const collapsed = filtersEl.classList.toggle('filters-collapsed');
+    heading.setAttribute('aria-expanded', String(!collapsed));
+  };
+
+  heading.addEventListener('click', toggle);
+  heading.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      toggle();
+    }
+  });
+
+  if (!mq.__filtersBound) {
+    mq.addEventListener('change', sync);
+    mq.__filtersBound = true;
+  }
+
+  sync();
+}
+
 function setupMapSectionToggle(container) {
   const section = container.querySelector('#route-map-section');
   const toggle = container.querySelector('#route-map-toggle');
@@ -1220,6 +1262,7 @@ function showRouteSelection(container) {
     showRouteSelection(container);
   });
   
+  setupMobileFiltersCollapse(container);
   setupMapSectionToggle(container);
   setupRouteMapZoom(container);
   updateRouteViews(container);

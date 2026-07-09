@@ -539,22 +539,132 @@
 }
 
 @media (max-width: 768px) {
+  .shop-section {
+    padding: 0 12px;
+  }
+
   .shop-header {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    padding: 14px;
+  }
+
+  .shop-title h2 {
+    font-size: 1.2rem;
+  }
+
+  .shop-title span {
+    font-size: 24px !important;
+  }
+
+  .coins-display {
+    font-size: 1.1rem;
+    padding: 8px 14px;
+  }
+
+  .readiness-bar {
+    padding: 0 12px;
+  }
+
+  .readiness-container {
+    padding: 14px 16px;
+  }
+
+  .shelf,
+  .backpack {
+    min-height: auto;
+    padding: 12px;
+    display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 10px;
   }
-  
-  .shelf, .backpack {
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    gap: 12px;
-    padding: 16px;
+
+  .shelf-nav,
+  .backpack-nav {
+    position: static;
+    transform: none;
+    flex-direction: row;
+    justify-content: center;
+    gap: 10px;
+    order: 2;
+    margin-top: 4px;
   }
-  
-  .item-icon {
-    font-size: 36px;
+
+  .shelf-items-container,
+  .backpack-items-container {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: auto;
+    gap: 10px;
+    min-height: auto;
+    order: 1;
+    width: 100%;
   }
-  
+
+  .shop-item {
+    min-height: 0;
+    height: auto;
+  }
+
+  .shop-item-card {
+    min-height: 148px;
+  }
+
+  .shop-item-body {
+    grid-template-rows: 28px 1fr;
+    padding: 8px 8px 2px;
+  }
+
   .item-name {
-    font-size: 13px;
+    font-size: 12px;
+    height: 28px;
+  }
+
+  .item-icon {
+    font-size: 2.25rem;
+  }
+
+  .item-description {
+    font-size: 11px;
+    padding: 6px 8px;
+  }
+
+  .shop-item-footer {
+    padding: 6px 8px 8px;
+  }
+
+  .item-price-btn,
+  .item-status {
+    padding: 8px 10px;
+    font-size: 14px;
+  }
+
+  /* На тач-экранах описание по тапу (через :active) */
+  .shop-item:not(.locked):active .item-icon {
+    opacity: 0;
+  }
+
+  .shop-item:not(.locked):not(.purchased):active .item-description {
+    opacity: 1;
+    background: rgba(243, 240, 255, 0.95);
+    border-radius: 8px;
+  }
+}
+
+@media (max-width: 380px) {
+  .shelf-items-container,
+  .backpack-items-container {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .shop-item-card {
+    min-height: 132px;
+  }
+
+  .item-icon {
+    font-size: 2rem;
   }
 }
