@@ -26,6 +26,16 @@
   margin-bottom: 12px;
 }
 
+.scenarios-demo-note {
+  margin: 0 0 16px;
+  padding: 10px 14px;
+  border-radius: var(--brand-radius-sm);
+  background: rgba(226, 96, 46, 0.12);
+  color: var(--brand-coral);
+  font-size: 14px;
+  font-weight: 600;
+}
+
 .scenarios-intro-lead {
   color: var(--brand-gray-dark);
   line-height: 1.6;

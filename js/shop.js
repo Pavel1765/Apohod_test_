@@ -1,5 +1,7 @@
 /** Система магазина походных предметов */
 
+import { isDemoMode, getDemoProgress } from './demo-mode.js';
+
 // Предметы для похода
 export const SHOP_ITEMS = [
   { id: 1, name: 'Спички', icon: '🔥', price: 50, description: 'Без них никуда! Разведете костер и согреетесь холодным вечером.' },
@@ -28,6 +30,9 @@ export const SHOP_ITEMS = [
 const STORAGE_KEY = 'hiking_game_progress';
 
 export function getGameProgress() {
+  if (isDemoMode()) {
+    return { ...getDemoProgress() };
+  }
   const saved = localStorage.getItem(STORAGE_KEY);
   if (saved) {
     return JSON.parse(saved);
@@ -39,18 +44,34 @@ export function getGameProgress() {
 }
 
 export function saveGameProgress(progress) {
+  if (isDemoMode()) return;
   localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
 }
 
 export function addCoins(amount) {
-  const progress = getGameProgress();
+  if (isDemoMode()) {
+    return getDemoProgress().coins;
+  }
+  const progress = getRealProgress();
   progress.coins += amount;
   saveGameProgress(progress);
   return progress.coins;
 }
 
+function getRealProgress() {
+  const saved = localStorage.getItem(STORAGE_KEY);
+  if (saved) return JSON.parse(saved);
+  return { coins: 0, purchasedItems: [] };
+}
+
 export function purchaseItem(itemId) {
-  const progress = getGameProgress();
+  if (isDemoMode()) {
+    return {
+      success: false,
+      message: 'В демо-режиме всё снаряжение уже выдано автоматически',
+    };
+  }
+  const progress = getRealProgress();
   const item = SHOP_ITEMS.find(i => i.id === itemId);
   
   if (!item) return { success: false, message: 'Предмет не найден' };
@@ -64,7 +85,7 @@ export function purchaseItem(itemId) {
   progress.coins -= item.price;
   progress.purchasedItems.push(itemId);
   saveGameProgress(progress);
-  
+
   return { success: true, coins: progress.coins };
 }
 

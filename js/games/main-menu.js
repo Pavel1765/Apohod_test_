@@ -2,6 +2,13 @@
 
 import { SHOP_ITEMS, getGameProgress, purchaseItem, getReadinessPercent } from '../shop.js';
 import { BRAND_LOGO } from '../brand.js';
+import {
+  isDemoMode,
+  enableDemoMode,
+  disableDemoMode,
+  setDemoHikeLength,
+} from '../demo-mode.js';
+import { mountDemoWidget } from './demo-widget.js';
 import { soundSystem } from './hike-game/sounds.js';
 
 const GAMES = [
@@ -76,6 +83,7 @@ export function renderMainMenu(container, onGameSelect) {
   
   container.innerHTML = `
     <div class="main-page" id="top">
+      ${isDemoMode() ? renderDemoBannerHTML() : ''}
       <header class="header" id="site-header">
         <div class="header-top">
           <div class="logo-container">
@@ -92,7 +100,11 @@ export function renderMainMenu(container, onGameSelect) {
               <span aria-hidden="true">💰</span>
               <span id="header-coins">${progress.coins}</span>
             </a>
+            <button type="button" class="btn-demo-toggle ${isDemoMode() ? 'is-active' : ''}" id="demoToggleBtn" aria-pressed="${isDemoMode()}">
+              🎬 ${isDemoMode() ? 'Демо вкл' : 'Демо'}
+            </button>
             <nav class="main-nav" aria-label="Разделы главной страницы">
+              <a href="#demo" class="nav-link scroll-link" data-section="demo">🎬 Демо</a>
               <a href="#games" class="nav-link scroll-link" data-section="games">🎮 Игры</a>
               <a href="#shop" class="nav-link scroll-link" data-section="shop">🛒 Магазин</a>
               <a href="#about" class="nav-link scroll-link" data-section="about">🌐 О программе</a>
@@ -155,6 +167,20 @@ export function renderMainMenu(container, onGameSelect) {
           </div>
         </div>
       </div>
+
+      <section class="demo-section" id="demo">
+        <div class="demo-panel">
+          <div class="demo-panel-header">
+            <h2>🎬 Демо-режим</h2>
+            <p>Попробуйте ситуацию здесь — с картинкой, выбором и ответом. Затем включите полный демо или короткий поход.</p>
+          </div>
+          <div id="demo-widget-root"></div>
+          <div class="demo-actions">
+            <button type="button" class="btn-primary" id="demoFullBtn">${isDemoMode() ? 'Демо уже включено — к играм' : 'Включить демо (5000 ₡ и всё снаряжение)'}</button>
+            <button type="button" class="btn-secondary" id="demoHikeBtn">Демо-поход: 3 ситуации</button>
+          </div>
+        </div>
+      </section>
       
       <!-- Секция с играми -->
       <div class="games-section" id="games">
@@ -210,16 +236,58 @@ export function renderMainMenu(container, onGameSelect) {
           <a href="https://morethantrip.ru" target="_blank" rel="noopener noreferrer" class="footer-link">«Больше, чем путешествие»</a>
         </p>
         <p style="margin-top: 8px; font-size: 12px; color: var(--brand-gray);">
-          v5.51 • 2026 • Логотип и улучшения интерфейса
+          v5.52 • 2026 • Работающий демо-режим
         </p>
       </footer>
     </div>
   `;
 
   setupMainPageChrome(container);
+  setupDemoUI(container, onGameSelect);
 
   renderShop(container);
   renderGames(container, onGameSelect);
+}
+
+function renderDemoBannerHTML() {
+  return `
+    <div class="demo-banner" role="status">
+      <span>🎬 <strong>Демо-режим активен</strong> — 5000 монет и полный рюкзак. Прогресс игры не сохраняется.</span>
+      <button type="button" class="demo-banner-exit" id="demoBannerExit">Выйти из демо</button>
+    </div>
+  `;
+}
+
+function setupDemoUI(container, onGameSelect) {
+  mountDemoWidget(container.querySelector('#demo-widget-root'));
+
+  const toggleBtn = container.querySelector('#demoToggleBtn');
+  toggleBtn?.addEventListener('click', () => {
+    soundSystem.click();
+    if (isDemoMode()) disableDemoMode();
+    else enableDemoMode();
+    renderMainMenu(container, onGameSelect);
+  });
+
+  container.querySelector('#demoBannerExit')?.addEventListener('click', () => {
+    soundSystem.click();
+    disableDemoMode();
+    renderMainMenu(container, onGameSelect);
+  });
+
+  container.querySelector('#demoFullBtn')?.addEventListener('click', () => {
+    soundSystem.click();
+    if (!isDemoMode()) enableDemoMode();
+    container.querySelector('#games')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    renderMainMenu(container, onGameSelect);
+  });
+
+  container.querySelector('#demoHikeBtn')?.addEventListener('click', () => {
+    soundSystem.click();
+    enableDemoMode();
+    setDemoHikeLength(3);
+    onGameSelect('scenarios');
+  });
 }
 
 function setupMainPageChrome(container) {
@@ -243,7 +311,7 @@ function setupMainPageChrome(container) {
 
   const header = container.querySelector('#site-header');
   const navLinks = container.querySelectorAll('.main-nav .nav-link[data-section]');
-  const sections = ['about', 'games', 'shop']
+  const sections = ['about', 'demo', 'games', 'shop']
     .map((id) => container.querySelector(`#${id}`))
     .filter(Boolean);
 

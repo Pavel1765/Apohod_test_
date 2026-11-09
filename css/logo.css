@@ -79,6 +79,7 @@
 }
 
 #about,
+#demo,
 #shop,
 #games {
   scroll-margin-top: calc(88px + env(safe-area-inset-top, 0px));

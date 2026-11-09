@@ -4,6 +4,7 @@ import { soundSystem } from '../hike-game/sounds.js';
 import { addCoins } from '../../shop.js';
 import { getScenarioImage, getScenarioFallback, applyBackgroundImage } from '../../images.js';
 import { pickRandomScenarios, HIKE_LENGTH, MAX_HEARTS } from './scenarios-data.js';
+import { getDemoHikeLength, clearDemoHikeLength, isDemoMode } from '../../demo-mode.js';
 
 let onExitCallback = null;
 let hearts = MAX_HEARTS;
@@ -35,8 +36,9 @@ function showIntro(container) {
         <div class="scenarios-intro-icon">🧭</div>
         <h1>Походные ситуации</h1>
         <p class="scenarios-intro-lead">
-          Пройдите поход из <strong>10 случайных ситуаций</strong> — реальных моментов из туристической практики.
+          ${getDemoHikeLength() ? `Демо-поход: <strong>${getDemoHikeLength()} ситуации</strong> для быстрого знакомства.` : `Пройдите поход из <strong>10 случайных ситуаций</strong> — реальных моментов из туристической практики.`}
         </p>
+        ${isDemoMode() ? '<p class="scenarios-demo-note">🎬 Демо-режим: награды не меняют ваш основной прогресс.</p>' : ''}
         <ul class="scenarios-rules">
           <li>❤️ У вас <strong>3 сердца</strong> — ошибки их отнимают</li>
           <li>⚠️ В опасных ситуациях (медведь, гроза…) ошибка забирает <strong>2 сердца</strong></li>
@@ -48,7 +50,10 @@ function showIntro(container) {
     </div>
   `;
 
-  document.getElementById('backBtn').addEventListener('click', () => onExitCallback());
+  document.getElementById('backBtn').addEventListener('click', () => {
+    clearDemoHikeLength();
+    onExitCallback();
+  });
   document.getElementById('startBtn').addEventListener('click', () => {
     soundSystem.click();
     startHike(container);
@@ -59,7 +64,8 @@ function startHike(container) {
   hearts = MAX_HEARTS;
   currentIndex = 0;
   answered = false;
-  hikeScenarios = pickRandomScenarios(HIKE_LENGTH);
+  const hikeLen = getDemoHikeLength() ?? HIKE_LENGTH;
+  hikeScenarios = pickRandomScenarios(hikeLen);
   renderRound(container);
 }
 
@@ -110,7 +116,10 @@ function renderRound(container) {
     </div>
   `;
 
-  document.getElementById('backBtn').addEventListener('click', () => onExitCallback());
+  document.getElementById('backBtn').addEventListener('click', () => {
+    clearDemoHikeLength();
+    onExitCallback();
+  });
   const imageEl = document.getElementById('scenarioImage');
   const key = scenario.imageKey || 'forest';
   applyBackgroundImage(imageEl, getScenarioImage(key), getScenarioFallback(key));
@@ -188,7 +197,7 @@ function renderVictory(container) {
       <section class="scenarios-result victory">
         <div class="result-icon">🏕️</div>
         <h1>Поход пройден!</h1>
-        <p>Вы справились со всеми 10 ситуациями и дошли до финиша.</p>
+        <p>Вы справились со всеми ${hikeScenarios.length} ситуациями и дошли до финиша.</p>
         <div class="result-stats">
           <div><span>Осталось сердец</span><strong>${renderHearts()}</strong></div>
           <div><span>Награда</span><strong>💰 ${reward}</strong></div>
@@ -203,7 +212,10 @@ function renderVictory(container) {
     soundSystem.click();
     startHike(container);
   });
-  document.getElementById('menuBtn').addEventListener('click', () => onExitCallback());
+  document.getElementById('menuBtn').addEventListener('click', () => {
+    clearDemoHikeLength();
+    onExitCallback();
+  });
 }
 
 function renderDefeat(container) {
@@ -228,5 +240,8 @@ function renderDefeat(container) {
     soundSystem.click();
     startHike(container);
   });
-  document.getElementById('menuBtn').addEventListener('click', () => onExitCallback());
+  document.getElementById('menuBtn').addEventListener('click', () => {
+    clearDemoHikeLength();
+    onExitCallback();
+  });
 }
