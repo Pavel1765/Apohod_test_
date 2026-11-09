@@ -24,6 +24,11 @@
   gap: 12px;
 }
 
+.shop-title-icon {
+  font-size: 32px;
+  line-height: 1;
+}
+
 .shop-title h2 {
   font-size: 28px;
   color: var(--brand-purple);

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label=">;LH5, G5< ?CB5H5AB285">
+  <defs>
+    <linearGradient id="mtt-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3D3894"/>
+      <stop offset="100%" stop-color="#4E9FC4"/>
+    </linearGradient>
+    <linearGradient id="mtt-peak" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#5E8F4B"/>
+      <stop offset="100%" stop-color="#A4C89A"/>
+    </linearGradient>
+    <linearGradient id="mtt-trail" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#FBF8F0"/>
+      <stop offset="100%" stop-color="#E6A93C"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="15" fill="url(#mtt-bg)"/>
+  <path fill="url(#mtt-peak)" d="M6 46 L20 26 L30 40 L40 20 L58 46 Z"/>
+  <path fill="#FFFFFF" opacity="0.92" d="M36 26 L40 20 L44 28 Z"/>
+  <path fill="#FFFFFF" opacity="0.88" d="M16 32 L20 26 L24 33 Z"/>
+  <path fill="none" stroke="url(#mtt-trail)" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" d="M12 42 C22 36 34 28 48 18"/>
+  <circle cx="48" cy="16" r="3.5" fill="#E6A93C"/>
+  <path fill="none" stroke="#FBF8F0" stroke-width="1.5" stroke-linecap="round" d="M48 13.5 V18.5 M45.5 16 H50.5"/>
+</svg>

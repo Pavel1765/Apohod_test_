@@ -1,6 +1,7 @@
 /** Главное меню выбора игр */
 
 import { SHOP_ITEMS, getGameProgress, purchaseItem, getReadinessPercent } from '../shop.js';
+import { BRAND_LOGO } from '../brand.js';
 import { soundSystem } from './hike-game/sounds.js';
 
 const GAMES = [
@@ -74,20 +75,29 @@ export function renderMainMenu(container, onGameSelect) {
   const progress = getGameProgress();
   
   container.innerHTML = `
-    <div class="main-page">
-      <header class="header">
+    <div class="main-page" id="top">
+      <header class="header" id="site-header">
         <div class="header-top">
           <div class="logo-container">
-            <div class="logo-waves">≈</div>
-            <div class="logo-text">
-              <h1>Больше, чем путешествие</h1>
-            </div>
+            <a href="#top" class="logo-link scroll-link" id="brand-home" aria-label="На главную — Больше, чем путешествие">
+              <img class="brand-logo-img" src="${BRAND_LOGO}" width="56" height="56" alt="" decoding="async" fetchpriority="high">
+              <div class="logo-text">
+                <h1>Больше, чем путешествие</h1>
+                <p class="logo-tagline">Игровая платформа</p>
+              </div>
+            </a>
           </div>
-          <nav class="main-nav">
-            <a href="#games" class="nav-link scroll-link">🎮 Игры</a>
-            <a href="#shop" class="nav-link scroll-link">🛒 Магазин</a>
-            <a href="#about" class="nav-link scroll-link">🌐 О программе</a>
-          </nav>
+          <div class="header-tools">
+            <a href="#shop" class="header-coins scroll-link" title="Перейти в магазин" aria-label="Монеты">
+              <span aria-hidden="true">💰</span>
+              <span id="header-coins">${progress.coins}</span>
+            </a>
+            <nav class="main-nav" aria-label="Разделы главной страницы">
+              <a href="#games" class="nav-link scroll-link" data-section="games">🎮 Игры</a>
+              <a href="#shop" class="nav-link scroll-link" data-section="shop">🛒 Магазин</a>
+              <a href="#about" class="nav-link scroll-link" data-section="about">🌐 О программе</a>
+            </nav>
+          </div>
         </div>
       </header>
       
@@ -146,15 +156,21 @@ export function renderMainMenu(container, onGameSelect) {
         </div>
       </div>
       
+      <!-- Секция с играми -->
+      <div class="games-section" id="games">
+        <h2 class="section-title">🎮 Выберите игру</h2>
+        <div class="games-grid" id="games-grid"></div>
+      </div>
+      
       <!-- Магазин предметов -->
       <div class="shop-section" id="shop">
         <div class="shop-header">
           <div class="shop-title">
-            <span style="font-size: 32px;">🎒</span>
+            <span class="shop-title-icon" aria-hidden="true">🎒</span>
             <h2>Походное снаряжение</h2>
           </div>
           <div class="coins-display">
-            <span>💰</span>
+            <span aria-hidden="true">💰</span>
             <span id="coins-value">${progress.coins}</span>
           </div>
         </div>
@@ -165,8 +181,8 @@ export function renderMainMenu(container, onGameSelect) {
             <div class="shop-column-title">🏪 Магазин</div>
             <div class="shelf" id="shop-shelf">
               <div class="shelf-nav">
-                <button class="shelf-nav-btn" id="shelf-up">▲</button>
-                <button class="shelf-nav-btn" id="shelf-down">▼</button>
+                <button type="button" class="shelf-nav-btn" id="shelf-up" aria-label="Предыдущая полка">▲</button>
+                <button type="button" class="shelf-nav-btn" id="shelf-down" aria-label="Следующая полка">▼</button>
               </div>
               <div class="shelf-items-container" id="shelf-items"></div>
             </div>
@@ -177,8 +193,8 @@ export function renderMainMenu(container, onGameSelect) {
             <div class="shop-column-title">🎒 Мой рюкзак</div>
             <div class="backpack" id="backpack">
               <div class="backpack-nav">
-                <button class="backpack-nav-btn" id="backpack-up">▲</button>
-                <button class="backpack-nav-btn" id="backpack-down">▼</button>
+                <button type="button" class="backpack-nav-btn" id="backpack-up" aria-label="Предыдущая страница рюкзака">▲</button>
+                <button type="button" class="backpack-nav-btn" id="backpack-down" aria-label="Следующая страница рюкзака">▼</button>
               </div>
               <div class="backpack-items-container" id="backpack-items"></div>
             </div>
@@ -188,41 +204,88 @@ export function renderMainMenu(container, onGameSelect) {
         <div class="next-item-hint" id="next-item-hint"></div>
       </div>
       
-      <!-- Секция с играми -->
-      <div class="games-section" id="games">
-        <h2 class="section-title">🎮 Выберите игру</h2>
-        <div class="games-grid" id="games-grid"></div>
-      </div>
-      
       <footer class="footer">
         <p>
           Программа Росмолодёжи 
-          <a href="https://morethantrip.ru" target="_blank" class="footer-link">«Больше, чем путежествие»</a>
+          <a href="https://morethantrip.ru" target="_blank" rel="noopener noreferrer" class="footer-link">«Больше, чем путешествие»</a>
         </p>
         <p style="margin-top: 8px; font-size: 12px; color: var(--brand-gray);">
-          v5.49 • 2026 • Мобильная версия
+          v5.51 • 2026 • Логотип и улучшения интерфейса
         </p>
       </footer>
     </div>
   `;
 
-  // Добавляем smooth scroll для навигации
-  setTimeout(() => {
-    const scrollLinks = container.querySelectorAll('.scroll-link');
-    scrollLinks.forEach(link => {
-      link.addEventListener('click', (e) => {
-        e.preventDefault();
-        const targetId = link.getAttribute('href').substring(1);
-        const targetElement = container.querySelector(`#${targetId}`);
-        if (targetElement) {
-          targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-      });
-    });
-  }, 100);
+  setupMainPageChrome(container);
 
   renderShop(container);
   renderGames(container, onGameSelect);
+}
+
+function setupMainPageChrome(container) {
+  const scrollLinks = container.querySelectorAll('.scroll-link');
+  scrollLinks.forEach((link) => {
+    link.addEventListener('click', (e) => {
+      const href = link.getAttribute('href');
+      if (!href || !href.startsWith('#')) return;
+      const targetId = href.slice(1);
+      if (!targetId) {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        return;
+      }
+      e.preventDefault();
+      const targetElement = container.querySelector(`#${targetId}`);
+      if (targetElement) {
+        targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+
+  const header = container.querySelector('#site-header');
+  const navLinks = container.querySelectorAll('.main-nav .nav-link[data-section]');
+  const sections = ['about', 'games', 'shop']
+    .map((id) => container.querySelector(`#${id}`))
+    .filter(Boolean);
+
+  const onScroll = () => {
+    if (header) {
+      header.classList.toggle('scrolled', window.scrollY > 12);
+    }
+
+    if (!sections.length) return;
+    const offset = 120;
+    let current = sections[0].id;
+    for (const section of sections) {
+      const top = section.getBoundingClientRect().top;
+      if (top - offset <= 0) current = section.id;
+    }
+    navLinks.forEach((link) => {
+      link.classList.toggle('is-active', link.dataset.section === current);
+    });
+  };
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+}
+
+function bindShopItemTouch(itemEl) {
+  if (!window.matchMedia('(hover: none)').matches) return;
+  itemEl.addEventListener('click', (e) => {
+    if (e.target.closest('.item-price-btn')) return;
+    if (itemEl.classList.contains('locked')) return;
+    const parent = itemEl.parentElement;
+    parent?.querySelectorAll('.shop-item.show-details').forEach((el) => {
+      if (el !== itemEl) el.classList.remove('show-details');
+    });
+    itemEl.classList.toggle('show-details');
+  });
+}
+
+function syncCoinsDisplay(container, coins) {
+  const coinsValue = container.querySelector('#coins-value');
+  const headerCoins = container.querySelector('#header-coins');
+  if (coinsValue) coinsValue.textContent = String(coins);
+  if (headerCoins) headerCoins.textContent = String(coins);
 }
 
 function renderShop(container) {
@@ -248,6 +311,7 @@ function renderShop(container) {
   if (readinessPercentEl) readinessPercentEl.textContent = `${readinessPercent}%`;
   if (readinessFillEl) readinessFillEl.style.width = `${readinessPercent}%`;
   if (itemsCountEl) itemsCountEl.textContent = `${progress.purchasedItems.length}/${SHOP_ITEMS.length}`;
+  syncCoinsDisplay(container, progress.coins);
   
   let shelfPage = 0;
   let backpackPage = 0;
@@ -299,6 +363,8 @@ function renderShop(container) {
         });
       }
     }
+
+    bindShopItemTouch(itemEl);
     
     // Распределяем по колонкам
     if (isPurchased) {

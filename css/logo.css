@@ -1,0 +1,130 @@
+/** Логотип и шапка программы */
+
+.logo-link {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  text-decoration: none;
+  color: inherit;
+  border-radius: var(--brand-radius-sm);
+  padding: 4px 6px;
+  margin: -4px -6px;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.logo-link:hover {
+  background: rgba(61, 56, 148, 0.06);
+}
+
+.logo-link:focus-visible {
+  outline: 2px solid var(--brand-purple);
+  outline-offset: 2px;
+}
+
+.brand-logo-img {
+  width: 56px;
+  height: 56px;
+  flex-shrink: 0;
+  border-radius: 14px;
+  box-shadow: var(--brand-shadow);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.logo-link:hover .brand-logo-img {
+  transform: translateY(-2px);
+  box-shadow: var(--brand-shadow-hover);
+}
+
+.logo-tagline {
+  margin: 2px 0 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--brand-gray);
+  letter-spacing: 0.02em;
+}
+
+.header-tools {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.header-coins {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: linear-gradient(135deg, #FFF8E1 0%, #FFE082 40%, var(--brand-white) 100%);
+  border: 2px solid var(--brand-orange);
+  border-radius: 999px;
+  color: var(--brand-purple);
+  font-weight: 700;
+  font-size: 15px;
+  text-decoration: none;
+  box-shadow: 0 2px 8px rgba(230, 169, 60, 0.25);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  white-space: nowrap;
+}
+
+.header-coins:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(230, 169, 60, 0.35);
+}
+
+.nav-link.is-active {
+  background: var(--brand-purple);
+  color: var(--brand-white);
+  box-shadow: 0 4px 12px rgba(61, 56, 148, 0.35);
+}
+
+#about,
+#shop,
+#games {
+  scroll-margin-top: calc(88px + env(safe-area-inset-top, 0px));
+}
+
+.shop-item.show-details:not(.locked) .item-icon {
+  opacity: 0;
+  transform: scale(0.95);
+}
+
+.shop-item.show-details:not(.locked):not(.purchased) .item-description {
+  opacity: 1;
+  background: rgba(243, 240, 255, 0.92);
+  border-radius: 8px;
+}
+
+.shop-item.show-details.purchased .item-description {
+  opacity: 1;
+  background: rgba(241, 248, 233, 0.88);
+  border-radius: 8px;
+}
+
+@media (max-width: 768px) {
+  .brand-logo-img {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+  }
+
+  .logo-tagline {
+    font-size: 12px;
+  }
+
+  .header-tools {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .header-coins {
+    font-size: 14px;
+    padding: 8px 12px;
+  }
+}
+
+@media (max-width: 380px) {
+  .logo-tagline {
+    display: none;
+  }
+}

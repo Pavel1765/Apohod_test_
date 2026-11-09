@@ -60,15 +60,23 @@ html, body {
 
   .logo-container {
     justify-content: flex-start !important;
-    gap: 10px !important;
+    width: 100%;
   }
 
-  .logo-waves {
-    width: 44px !important;
-    height: 44px !important;
-    font-size: 24px !important;
-    border-radius: 12px !important;
-    flex-shrink: 0;
+  .logo-link {
+    width: 100%;
+  }
+
+  .header-tools {
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: stretch !important;
+    gap: 8px !important;
+    width: 100% !important;
+  }
+
+  .header-coins {
+    align-self: center;
   }
 
   .logo-text h1 {

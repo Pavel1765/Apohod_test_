@@ -88,19 +88,19 @@ html, body {
   animation: slideDown 0.8s ease;
 }
 
-@media (max-width: 768px) {
+@media (min-width: 769px) {
   .header-top {
-    flex-direction: column;
-    text-align: center;
+    align-items: center;
   }
-  
+
   .logo-container {
-    justify-content: center;
+    flex: 1;
+    min-width: 0;
   }
-  
-  .main-nav {
-    width: 100%;
-    justify-content: center;
+
+  .header-tools {
+    flex-shrink: 0;
+    justify-content: flex-end;
   }
 }
 
@@ -113,25 +113,6 @@ html, body {
     opacity: 1;
     transform: translateY(0);
   }
-}
-
-.logo-waves {
-  width: 64px;
-  height: 64px;
-  background: var(--brand-green);
-  border-radius: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 36px;
-  box-shadow: var(--brand-shadow);
-  animation: waveAnimation 3s infinite ease-in-out;
-}
-
-@keyframes waveAnimation {
-  0%, 100% { transform: translateY(0) rotate(0deg); }
-  25% { transform: translateY(-5px) rotate(-2deg); }
-  75% { transform: translateY(-5px) rotate(2deg); }
 }
 
 .logo-text h1 {
