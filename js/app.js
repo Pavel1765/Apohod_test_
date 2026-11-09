@@ -10,6 +10,7 @@ import { renderCheckersGame } from './games/checkers/checkers-main.js';
 import { renderSnakeGame } from './games/snake/snake-main.js';
 import { renderHikeClickerGame } from './games/clicker/clicker-main.js';
 import { renderScenariosGame } from './games/scenarios/scenarios-main.js';
+import { renderGuides } from './guides/guides-main.js';
 
 class GameApp {
   constructor() {
@@ -18,12 +19,28 @@ class GameApp {
   }
 
   init() {
-    this.showMainMenu();
-    
-    // Обработка навигации браузера
-    window.addEventListener('popstate', () => {
+    const hash = window.location.hash.replace(/^#/, '');
+    if (hash && this.isKnownScreen(hash)) {
+      this.startGame(hash);
+    } else {
       this.showMainMenu();
+    }
+
+    window.addEventListener('popstate', () => {
+      const h = window.location.hash.replace(/^#/, '');
+      if (h && this.isKnownScreen(h)) {
+        this.startGame(h);
+      } else {
+        this.showMainMenu();
+      }
     });
+  }
+
+  isKnownScreen(id) {
+    return [
+      'hike', 'snake', 'clicker', 'match3', 'puzzle', 'arrows',
+      'blockblast', 'checkers', 'scenarios', 'guides',
+    ].includes(id);
   }
 
   showMainMenu() {
@@ -65,6 +82,9 @@ class GameApp {
         break;
       case 'scenarios':
         renderScenariosGame(this.app, () => this.showMainMenu());
+        break;
+      case 'guides':
+        renderGuides(this.app, () => this.showMainMenu());
         break;
       default:
         this.showMainMenu();

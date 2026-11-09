@@ -1,0 +1,174 @@
+/** Памятки для путешествий */
+
+.guides-app {
+  min-height: 100dvh;
+  background: linear-gradient(180deg, var(--brand-cream) 0%, var(--brand-white) 100%);
+  padding: 16px 16px 40px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.guides-header {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.guides-title h1 {
+  margin: 0 0 6px;
+  font-size: clamp(1.35rem, 4vw, 1.75rem);
+  color: var(--brand-purple);
+}
+
+.guides-title p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--brand-gray-dark);
+  line-height: 1.5;
+}
+
+.guides-search-panel {
+  background: var(--brand-white);
+  border-radius: var(--brand-radius);
+  padding: 16px;
+  box-shadow: var(--brand-shadow);
+  border: 2px solid rgba(61, 56, 148, 0.1);
+  margin-bottom: 12px;
+  position: sticky;
+  top: calc(8px + env(safe-area-inset-top, 0px));
+  z-index: 50;
+}
+
+.guides-search-label {
+  display: block;
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--brand-purple);
+  margin-bottom: 8px;
+}
+
+.guides-search-input {
+  width: 100%;
+  padding: 14px 16px;
+  font-size: 16px;
+  border: 2px solid rgba(61, 56, 148, 0.2);
+  border-radius: var(--brand-radius-sm);
+  box-sizing: border-box;
+  margin-bottom: 12px;
+}
+
+.guides-search-input:focus {
+  outline: none;
+  border-color: var(--brand-purple);
+  box-shadow: 0 0 0 3px rgba(61, 56, 148, 0.12);
+}
+
+.guides-categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.guides-cat-btn {
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 2px solid rgba(61, 56, 148, 0.2);
+  background: var(--brand-cream);
+  color: var(--brand-purple);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  min-height: 40px;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.guides-cat-btn.active {
+  background: var(--brand-purple);
+  color: var(--brand-white);
+  border-color: var(--brand-purple);
+}
+
+.guides-search-hint {
+  margin: 0;
+  font-size: 13px;
+  color: var(--brand-gray);
+}
+
+.guides-disclaimer {
+  font-size: 12px;
+  color: var(--brand-gray-dark);
+  background: rgba(230, 169, 60, 0.15);
+  border-left: 4px solid var(--brand-orange);
+  padding: 10px 12px;
+  border-radius: var(--brand-radius-sm);
+  margin-bottom: 16px;
+  line-height: 1.45;
+}
+
+.guides-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.guides-card {
+  background: var(--brand-white);
+  border-radius: var(--brand-radius);
+  padding: 16px 18px;
+  box-shadow: 0 2px 12px rgba(61, 56, 148, 0.08);
+  border: 1px solid rgba(61, 56, 148, 0.08);
+}
+
+.guides-card-title {
+  margin: 0 0 10px;
+  font-size: 1.1rem;
+  color: var(--brand-purple);
+}
+
+.guides-card-body {
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--brand-text);
+}
+
+.guides-card-body strong {
+  color: var(--brand-purple-dark);
+}
+
+.guides-card-body a {
+  color: var(--brand-blue);
+  font-weight: 600;
+}
+
+.guides-card-badge {
+  font-size: 18px;
+}
+
+.guides-empty {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--brand-gray-dark);
+}
+
+.guides-empty-icon {
+  font-size: 48px;
+  display: block;
+  margin-bottom: 12px;
+}
+
+@media (max-width: 768px) {
+  .guides-app {
+    padding: 12px 12px 32px;
+  }
+
+  .guides-search-panel {
+    padding: 14px;
+  }
+
+  .guides-cat-btn {
+    font-size: 11px;
+    padding: 8px 10px;
+  }
+}

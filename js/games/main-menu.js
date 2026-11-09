@@ -27,6 +27,13 @@ const GAMES = [
     badge: '🆕 Новое'
   },
   {
+    id: 'guides',
+    title: 'Памятки для путешествий',
+    icon: '📋',
+    description: 'Справочник с поиском: экстренные телефоны, багаж авиакомпаний, что нельзя в разных странах и советы в походе.',
+    badge: null
+  },
+  {
     id: 'hike',
     title: 'В Поход!',
     icon: '🏕️',
@@ -104,6 +111,7 @@ export function renderMainMenu(container, onGameSelect) {
               🎬 ${isDemoMode() ? 'Демо вкл' : 'Демо'}
             </button>
             <nav class="main-nav" aria-label="Разделы главной страницы">
+              <a href="#guides" class="nav-link" id="navGuides">📋 Памятки</a>
               <a href="#demo" class="nav-link scroll-link" data-section="demo">🎬 Демо</a>
               <a href="#games" class="nav-link scroll-link" data-section="games">🎮 Игры</a>
               <a href="#shop" class="nav-link scroll-link" data-section="shop">🛒 Магазин</a>
@@ -236,7 +244,7 @@ export function renderMainMenu(container, onGameSelect) {
           <a href="https://morethantrip.ru" target="_blank" rel="noopener noreferrer" class="footer-link">«Больше, чем путешествие»</a>
         </p>
         <p style="margin-top: 8px; font-size: 12px; color: var(--brand-gray);">
-          v5.52 • 2026 • Работающий демо-режим
+          v5.53 • 2026 • Памятки для путешествий
         </p>
       </footer>
     </div>
@@ -244,6 +252,7 @@ export function renderMainMenu(container, onGameSelect) {
 
   setupMainPageChrome(container);
   setupDemoUI(container, onGameSelect);
+  setupGuidesNav(container, onGameSelect);
 
   renderShop(container);
   renderGames(container, onGameSelect);
@@ -256,6 +265,15 @@ function renderDemoBannerHTML() {
       <button type="button" class="demo-banner-exit" id="demoBannerExit">Выйти из демо</button>
     </div>
   `;
+}
+
+function setupGuidesNav(container, onGameSelect) {
+  const link = container.querySelector('#navGuides');
+  link?.addEventListener('click', (e) => {
+    e.preventDefault();
+    soundSystem.click();
+    onGameSelect('guides');
+  });
 }
 
 function setupDemoUI(container, onGameSelect) {
